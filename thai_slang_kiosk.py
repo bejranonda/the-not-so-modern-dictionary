@@ -14,6 +14,7 @@ from gtts import gTTS
 from playsound import playsound
 import speech_recognition as sr
 import playsound
+from datetime import datetime
 
 from input_slang_utils import speak_thai, detect_motion
 from slang_pdf_generator import printpdf
@@ -288,10 +289,39 @@ class SlangKiosk(QWidget):
         except:
             db = {}
 
-        db[self.data["word"]] = {
-            "meaning": self.data["meaning"],
-            "example": self.data["example"]
-        }
+        word = self.data["word"]
+        meaning = self.data["meaning"]
+        example = self.data["example"]
+
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        if word in db:
+            entry = db[word]
+
+            # รวมความหมาย ไม่ซ้ำ
+            if isinstance(entry["meaning"], list):
+                entry["meaning"] = list(set(entry["meaning"] + [meaning]))
+            else:
+                entry["meaning"] = list(set([entry["meaning"], meaning]))
+
+            # รวมตัวอย่าง ไม่ซ้ำ
+            if isinstance(entry["example"], list):
+                entry["example"] = list(set(entry["example"] + [example]))
+            else:
+                entry["example"] = list(set([entry["example"], example]))
+
+            # เพิ่ม reach และ update
+            entry["reach"] = entry.get("reach", 0) + 1
+            entry["update"] = now
+
+            db[word] = entry
+        else:
+            db[word] = {
+                "meaning": [meaning],
+                "example": [example],
+                "reach": 1,
+                "update": now
+            }
 
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(dict(sorted(db.items())), f, ensure_ascii=False, indent=2)

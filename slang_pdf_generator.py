@@ -46,22 +46,28 @@ def get_star_rating(reach, max_reach):
         return ""
        
 
-def draw_intro_page(c, total_words, y_start):
+def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, hottest_word, y_start):
     updated_date = datetime.now().strftime("%d/%m/%Y %H:%M")
-    text1 = f"📅 ปรับปรุงล่าสุด: {updated_date}"
-    text2 = f"🧾 จำนวนคำศัพท์ทั้งหมด: {total_words:,} คำ"
+    text_lines = [
+        f"🖨 พิมพ์ที่: Kunsthalle",
+        f"🔢 พิมพ์ครั้งที่: {total_reach:,}",
+        f"🏢 สำนักพิมพ์: ยุงลาย",
+        f"📝 ผู้แต่งล่าสุด: ???",
+        f"📅 ปรับปรุงล่าสุด: {updated_date}",
+        f"🧾 จำนวนคำศัพท์ทั้งหมด: {total_words:,} คำ",
+        f"📚 จำนวนความหมายทั้งหมด: {total_meanings:,} ความหมาย",
+        f"🆕 คำล่าสุด: {latest_word}",
+        f"🔥 คำที่ฮิตที่สุด: {hottest_word}"
+    ]
 
     draw_title(c, "📖 รายละเอียดพจนานุกรม", y_start)
     y = y_start - line_space * 3
 
-    y, _ = draw_mixed_text_wrapped(
-        c, text1, margin_left, y,
-        "THSarabun", content_font_size, "EmojiFont", content_font_size - 2)
-
-    y -= line_space
-    y, _ = draw_mixed_text_wrapped(
-        c, text2, margin_left, y,
-        "THSarabun", content_font_size, "EmojiFont", content_font_size - 2)
+    for line in text_lines:
+        y, _ = draw_mixed_text_wrapped(
+            c, line, margin_left, y,
+            "THSarabun", content_font_size, "EmojiFont", content_font_size - 2)
+        y -= line_space
 
     draw_page_number(c)
     c.showPage()
@@ -204,7 +210,7 @@ def make_foldable_booklet(input_path, output_path):
     output_doc.save(output_path)
 
 def printpdf(
-    json_path="user_added_slang.json",
+    json_path="output/user_added_slang.json",
     output_path="output/slang_dictionary.pdf",
     thai_font_path="fonts/THSarabunNew.ttf",
     thai_bold_font_path="fonts/THSarabunNew Bold.ttf",
@@ -212,7 +218,7 @@ def printpdf(
     template_pdf_path="template/Cute Star Border A4 Stationery Paper Document.pdf"
 ):
     if not os.path.exists(json_path):
-        print(f"❌ ไม่พบไฟล์ {json_path}")
+        print(f"❌ ไม่พบไฟล์ JSON {json_path}")
         return
 
     with open(json_path, "r", encoding="utf-8") as f:
@@ -233,11 +239,47 @@ def printpdf(
     c = canvas.Canvas(temp_output, pagesize=A4)
     x = margin_left
     y = margin_top
+    
+    total_meanings = 0
+    total_reach = 0
+    latest_word = ""
+    latest_time = ""
+    hottest_word = ""
+    max_reach = 0
 
-    draw_intro_page(c, total_words=len(data), y_start=margin_top)
+    ### Intro
+    for word, info in data.items():
+        meanings = info.get("meaning", [])
+        if isinstance(meanings, str):
+            meanings = [meanings]
+        total_meanings += len(meanings)
+
+        reach = info.get("reach", 0)
+        total_reach += reach
+
+        if reach > max_reach:
+            max_reach = reach
+            hottest_word = word
+
+        update_time = info.get("update", "")
+        if update_time > latest_time:
+            latest_time = update_time
+            latest_word = word
+
+    draw_intro_page(
+        c,
+        total_words=len(data),
+        total_meanings=total_meanings,
+        total_reach=total_reach,
+        latest_word=latest_word,
+        hottest_word=hottest_word,
+        y_start=margin_top
+    )
+
+    ### Content
     draw_title(c, "📚 พจนานุกรมคำสแลงไทย | Thai Slang Dictionary", margin_top)
     y = margin_top - line_space * 2
-
+    
     for word, info in data.items():
         if y < margin_newpage:
             draw_page_number(c)
@@ -247,6 +289,7 @@ def printpdf(
             y -= line_space * 2
         y = draw_entry(c, word, info, x, y, line_space, max_reach)
 
+    
     draw_page_number(c)
     c.save()
     os.rename(temp_output, intermediate_path)
