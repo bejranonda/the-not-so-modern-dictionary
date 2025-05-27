@@ -244,7 +244,17 @@ class SlangKiosk(QWidget):
         self.label.setText("🖨️ ต้องการพิมพ์ออกมาไหม? (พิมพ์ 'ใช่' หรือกด Esc เพื่อข้าม)")
         QTimer.singleShot(300, lambda: speak_thai("ต้องการพิมพ์ออกมาไหม"))
         self.reset_idle_timer()
-
+    def go_to_print_option(self):
+        self.step = 5
+        self.input.clear()
+        self.label.setText(
+            "<div style='font-size:38px;'>🖨️ ต้องการพิมพ์ออกมาไหม?<br>"
+            "<div style='font-size:42px;'>👉 พิมพ์ชื่อของคุณเพื่อลงในหน้าผู้แต่งล่าสุด<br><br>"
+            "<span style='font-size:32px;'>หากไม่ต้องการใส่ชื่อหรือพิมพ์ออกมา กด Escape เพื่อข้าม</span></div>"
+        )
+        QTimer.singleShot(300, lambda: speak_thai("พิมพ์ชื่อของคุณเพื่อลงในหน้าผู้แต่งล่าสุด"))
+        self.reset_idle_timer()
+    
     def next_step(self):
         text = self.input.text().strip()
         print(f"- Step: {self.step}")
@@ -262,13 +272,18 @@ class SlangKiosk(QWidget):
         elif self.step == 4:
             self.save_data()
             self.go_to_print_option()
+
         elif self.step == 5:
-            if text == "ใช่":
-                printpdf(self.data["word"], self.data["meaning"], self.data["example"])
-                self.label.setText("🖨️ กำลังพิมพ์ออกมา...")
+            if text:
+                self.data["author"] = text  # เพิ่ม author ลงใน self.data
+                self.save_data()            # ✅ บันทึกลง JSON ก่อน
+                printpdf()
+                self.label.setText(f"🖨️ กำลังพิมพ์... ขอบคุณ {text} มากนะ")
                 QTimer.singleShot(3000, self.show_standby)
             else:
                 self.show_standby()
+
+
         self.input.clear()
         self.reset_idle_timer()
 
@@ -282,49 +297,49 @@ class SlangKiosk(QWidget):
             self.show_standby()
 
     def save_data(self):
-        filename = "output/user_added_slang.json"
-        try:
-            with open(filename, "r", encoding="utf-8") as f:
-                db = json.load(f)
-        except:
-            db = {}
-
-        word = self.data["word"]
-        meaning = self.data["meaning"]
-        example = self.data["example"]
-
+        json_file = "output/user_added_slang.json"
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        word = self.data.get("word")
+        meaning = self.data.get("meaning")
+        example = self.data.get("example")
+        author = self.data.get("author", None)  # อาจไม่มี author ในรอบก่อนหน้า
 
-        if word in db:
-            entry = db[word]
-
-            # รวมความหมาย ไม่ซ้ำ
-            if isinstance(entry["meaning"], list):
-                entry["meaning"] = list(set(entry["meaning"] + [meaning]))
-            else:
-                entry["meaning"] = list(set([entry["meaning"], meaning]))
-
-            # รวมตัวอย่าง ไม่ซ้ำ
-            if isinstance(entry["example"], list):
-                entry["example"] = list(set(entry["example"] + [example]))
-            else:
-                entry["example"] = list(set([entry["example"], example]))
-
-            # เพิ่ม reach และ update
-            entry["reach"] = entry.get("reach", 0) + 1
-            entry["update"] = now
-
-            db[word] = entry
+        # โหลดข้อมูลเก่า
+        if os.path.exists(json_file):
+            with open(json_file, "r", encoding="utf-8") as f:
+                slang_data = json.load(f)
         else:
-            db[word] = {
+            slang_data = {}
+
+        if word not in slang_data:
+            slang_data[word] = {
                 "meaning": [meaning],
                 "example": [example],
                 "reach": 1,
-                "update": now
+                "update": now,
+                "author": [author] if author else []
             }
+        else:
+            entry = slang_data[word]
+            # เพิ่มความหมาย ถ้ายังไม่มี
+            if meaning not in entry["meaning"]:
+                entry["meaning"].append(meaning)
+            # เพิ่มตัวอย่าง ถ้ายังไม่มี
+            if example not in entry["example"]:
+                entry["example"].append(example)
+            # เพิ่ม reach
+            entry["reach"] = entry.get("reach", 0) + 1
+            # อัพเดตเวลา
+            entry["update"] = now
+            # เพิ่ม author ถ้าไม่ซ้ำ
+            if author and author not in entry.get("author", []):
+                entry["author"].append(author)
 
-        with open(filename, "w", encoding="utf-8") as f:
-            json.dump(dict(sorted(db.items())), f, ensure_ascii=False, indent=2)
+        # บันทึกกลับไฟล์ JSON
+        with open(json_file, "w", encoding="utf-8") as f:
+            json.dump(slang_data, f, ensure_ascii=False, indent=4)
+            print(f"✅ บันทึกลง JSON  {json_file}")
+
 
 def start_gui_and_get_entry():
     app = QApplication(sys.argv)
