@@ -9,6 +9,8 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase.pdfmetrics import stringWidth
+import locale
+locale.setlocale(locale.LC_COLLATE, 'th_TH.UTF-8')
 
 # 📐 Global constants
 width, height = A4
@@ -251,7 +253,7 @@ def printpdf(
     hottest_word = ""
     max_reach = 0
 
-    ### Intro
+    ### Statistic intro
     lastauthor = "ไม่ระบุ"
     for word, info in data.items():
         meanings = info.get("meaning", [])
@@ -293,7 +295,9 @@ def printpdf(
     draw_title(c, "📚 พจนานุกรมคำสแลงไทย | Thai Slang Dictionary", margin_top)
     y = margin_top - line_space * 2
     
-    for word, info in data.items():
+    sorted_words = sorted(data.keys(), key=locale.strxfrm)
+    for word in sorted_words:
+        info = data[word]
         if y < margin_newpage:
             draw_page_number(c)
             c.showPage()
