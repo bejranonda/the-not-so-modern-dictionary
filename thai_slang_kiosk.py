@@ -152,7 +152,7 @@ class SlangKiosk(QWidget):
         self.label.setText("👋 " + greeting + "\n\nกดคีย์ใดก็ได้เพื่อเริ่ม")
         #self.setStyleSheet("QWidget { background-color: #103366; }")
         self.frame.setStyleSheet("background-color: #20232a; border-radius: 30px; padding: 50px;")
-        QTimer.singleShot(100, lambda: speak_thai(random.choice(greeting_word)))
+        #QTimer.singleShot(100, lambda: speak_thai(random.choice(greeting_word)))
         self.idle_timer.stop()
         self.warning_timer.stop()
 

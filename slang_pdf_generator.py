@@ -48,18 +48,20 @@ def get_star_rating(reach, max_reach):
         return ""
        
 
-def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, hottest_word, y_start, lastauthor):
+def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, hottest_word, y_start, lastauthor, totalauthor):
     updated_date = datetime.now().strftime("%d/%m/%Y %H:%M")
     text_lines = [
         f"🖨 พิมพ์ที่: Kunsthalle",
         f"🔢 พิมพ์ครั้งที่: {total_reach:,}",
-        f"🏢 สำนักพิมพ์: ยุงลาย",
-        f"📝 ผู้แต่งล่าสุด: {lastauthor}",
         f"📅 ปรับปรุงล่าสุด: {updated_date}",
-        f"🧾 จำนวนคำศัพท์ทั้งหมด: {total_words:,} คำ",
-        f"📚 จำนวนความหมายทั้งหมด: {total_meanings:,} ความหมาย",
+        f"🏢 สำนักพิมพ์: ยุงลาย",
+        f"📝 ผู้แต่ง: {totalauthor} คน",
+        f"📝 ผู้แต่งล่าสุด: {lastauthor}",
+        f"🧾 คำศัพท์ทั้งหมด: {total_words:,} คำ",
         f"🆕 คำล่าสุด: {latest_word}",
         f"🔥 คำที่ฮิตที่สุด: {hottest_word}"
+        f"📚 ให้ความหมายทั้งหมด: {total_meanings:,} ความหมาย",
+
     ]
 
     draw_title(c, "📖 รายละเอียดพจนานุกรม", y_start)
@@ -251,10 +253,13 @@ def printpdf(
     latest_word = ""
     latest_time = ""
     hottest_word = ""
-    max_reach = 0
+#    max_reach = 0
 
     ### Statistic intro
     lastauthor = "ไม่ระบุ"
+    top_words = []  # กำหนดตัวแปรก่อน
+    authors_set = set()  # เพิ่มบรรทัดนี้ก่อนลูป
+    
     for word, info in data.items():
         meanings = info.get("meaning", [])
         if isinstance(meanings, str):
@@ -264,9 +269,13 @@ def printpdf(
         reach = info.get("reach", 0)
         total_reach += reach
 
-        if reach > max_reach:
-            max_reach = reach
-            hottest_word = word
+        top_words.append((word, reach))
+        
+        author = info.get("author", None)
+        if isinstance(author, list):
+            authors_set.update(author)
+        elif isinstance(author, str):
+            authors_set.add(author)
 
         update_time = info.get("update", "")
         if update_time > latest_time:
@@ -278,6 +287,12 @@ def printpdf(
             else:
                 lastauthor = author
 
+    top_words = sorted(top_words, key=lambda x: x[1], reverse=True)
+    top5_words = [f"{w} ({r})" for w, r in top_words[:5]]
+    hottest_words_text = ", ".join(top5_words)
+    
+    totalauthor = len(authors_set)
+
 
     draw_intro_page(
         c,
@@ -285,9 +300,10 @@ def printpdf(
         total_meanings=total_meanings,
         total_reach=total_reach,
         latest_word=latest_word,
-        hottest_word=hottest_word,
+        hottest_word=hottest_words_text,
         y_start=margin_top,
-        lastauthor=lastauthor
+        lastauthor=lastauthor,
+        totalauthor=totalauthor
     )
 
 
