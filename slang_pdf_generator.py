@@ -100,8 +100,8 @@ def draw_fortune_page(c, fortune_data):
         y -= line_space * 4
 
     # แสดงหัวข้อคำศัพท์
-    c.setFont("THSarabun-Bold", header_font_size*2)
-    c.drawString(margin_left, y, word)
+    c.setFont("THSarabun-Bold", header_font_size * 2.5)
+    c.drawCentredString(width / 2, y, word)
     y -= fortune_line_space * 2
 
     # แสดงข้อความคำทำนาย (wrap ข้อความ)
@@ -171,6 +171,61 @@ def draw_entry(c, word, info, x, y, line_height, max_reach, indent=10):
 
     y -= line_height * 2
     return y
+
+
+def draw_latest_word_page(c, word, info):
+    c.showPage()
+    y = margin_top
+    draw_title(c, "🆕 คำสแลงใหม่ล่าสุด", y)
+    y -= line_space * 3
+
+    # แสดงคำใหญ่
+    c.setFont("THSarabun-Bold", header_font_size * 2.5)
+    c.drawCentredString(width / 2, y, word)
+    y -= line_space * 4
+
+    meanings = info.get("meaning", [])
+    if isinstance(meanings, str):
+        meanings = [meanings]
+    for m in meanings:
+        y, _ = draw_mixed_text_wrapped(
+            c, f"📝 ความหมาย: {m}", margin_left, y,
+            "THSarabun", content_font_size * 1.5,
+            "EmojiFont", content_font_size * 1.5 - 2,
+            line_space * 2)
+        y -= line_space
+
+    examples = info.get("example", [])
+    if isinstance(examples, str):
+        examples = [examples]
+    for ex in examples:
+        y, _ = draw_mixed_text_wrapped(
+            c, f"💬 ตัวอย่าง: {ex}", margin_left, y,
+            "THSarabun", content_font_size * 1.5,
+            "EmojiFont", content_font_size * 1.5 - 2,
+            line_space * 2)
+        y -= line_space
+
+    # เพิ่มชื่อผู้แต่งล่าสุดถ้ามี
+    author_list = info.get("author")
+    if isinstance(author_list, list) and author_list:
+        author = author_list[-1]  # คนสุดท้ายใน list
+    elif isinstance(author_list, str):
+        author = author_list
+    else:
+        author = None
+
+    if author:
+        y -= line_space * 2
+        y, _ = draw_mixed_text_wrapped(
+            c, f"📝 ผู้แต่งล่าสุด: {author}", margin_left, y,
+            "THSarabun", content_font_size * 1.2,
+            "EmojiFont", content_font_size * 1.2 - 2,
+            line_space * 2)
+
+    draw_page_number(c)
+    c.showPage()
+
 
 def draw_mixed_text(c, text, x, y, font1, size1, font2, size2):
     current_x = x
@@ -373,6 +428,13 @@ def printpdf(
             y -= line_space * 2
         y = draw_entry(c, word, info, x, y, line_space, max_reach)
 
+    if latest_word in data:
+        draw_latest_word_page(c, latest_word, data[latest_word])
+        print(f"พบ latest_word: {latest_word}")
+    
+    else:
+        print(f"❌ ไม่พบ latest_word: {latest_word}")
+    
     # วาดหน้าคำทำนาย (เพิ่มหน้าสุดท้าย)
     if fortune_data:
         draw_fortune_page(c, fortune_data)
