@@ -11,6 +11,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase.pdfmetrics import stringWidth
 import locale
 locale.setlocale(locale.LC_COLLATE, 'th_TH.UTF-8')
+import random
 
 # 📐 Global constants
 width, height = A4
@@ -76,7 +77,48 @@ def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, ho
     draw_page_number(c)
     c.showPage()
 
+def draw_fortune_page(c, fortune_data):
+    draw_page_number(c)
+    c.showPage()
 
+    y = margin_top
+    draw_title(c, "🔮 คำทำนายคำสแลง", y)
+    y -= line_space * 4
+    indent = 10
+    fortune_line_space = line_space + 20  # เพิ่มช่องไฟระหว่างบรรทัดเฉพาะหน้านี้
+
+    # สุ่มเลือกคำเดียว
+    word = random.choice(list(fortune_data.keys()))
+    fortune = fortune_data[word]
+
+    # เช็คพื้นที่
+    if y < margin_bottom + fortune_line_space * 4:
+        draw_page_number(c)
+        c.showPage()
+        y = margin_top
+        draw_title(c, "🔮 คำทำนายคำสแลง", y)
+        y -= line_space * 4
+
+    # แสดงหัวข้อคำศัพท์
+    c.setFont("THSarabun-Bold", header_font_size*2)
+    c.drawString(margin_left, y, word)
+    y -= fortune_line_space * 2
+
+    # แสดงข้อความคำทำนาย (wrap ข้อความ)
+    y, _ = draw_mixed_text_wrapped(
+        c, fortune, margin_left + indent, y,
+        "THSarabun", content_font_size*2,
+        "EmojiFont", content_font_size*2 - 2,
+        fortune_line_space
+    )
+    y -= fortune_line_space
+
+    draw_page_number(c)
+    c.showPage()
+
+
+
+    
 def draw_entry(c, word, info, x, y, line_height, max_reach, indent=10):
     reach = info.get("reach", 1)
     stars = get_star_rating(reach, max_reach)
@@ -220,7 +262,8 @@ def printpdf(
     thai_bold_font_path="fonts/THSarabunNew Bold.ttf",
     emoji_font_path="fonts/NotoEmoji-Regular.ttf",
     template_pdf_path="template/Cute Star Border A4 Stationery Paper Document.pdf",
-    author=None
+    author=None,
+    fortune_json_path="template/thai_slang_fortune_99.json" 
 ):
     # ในฟังก์ชันถ้า author มีค่า ให้ใช้ค่า author แทน `
     lastauthor = author if author else "ไม่ระบุ"
@@ -287,6 +330,14 @@ def printpdf(
             else:
                 lastauthor = author
 
+    # อ่านไฟล์คำทำนาย
+    fortune_data = {}
+    if os.path.exists(fortune_json_path):
+        with open(fortune_json_path, "r", encoding="utf-8") as f:
+            fortune_data = json.load(f)
+    else:
+        print(f"❌ ไม่พบไฟล์คำทำนาย {fortune_json_path}")
+
     top_words = sorted(top_words, key=lambda x: x[1], reverse=True)
     top5_words = [f"{w} ({r})" for w, r in top_words[:5]]
     hottest_words_text = ", ".join(top5_words)
@@ -322,6 +373,10 @@ def printpdf(
             y -= line_space * 2
         y = draw_entry(c, word, info, x, y, line_space, max_reach)
 
+    # วาดหน้าคำทำนาย (เพิ่มหน้าสุดท้าย)
+    if fortune_data:
+        draw_fortune_page(c, fortune_data)
+    #c.save()
     
     draw_page_number(c)
     c.save()
