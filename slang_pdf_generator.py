@@ -82,7 +82,7 @@ def draw_fortune_page(c, fortune_data):
     c.showPage()
 
     y = margin_top
-    draw_title(c, "🔮 คำทำนายคำสแลง", y)
+    draw_title(c, "🔮 สแลงทำนาย", y)
     y -= line_space * 4
     indent = 10
     fortune_line_space = line_space + 20  # เพิ่มช่องไฟระหว่างบรรทัดเฉพาะหน้านี้
@@ -96,22 +96,31 @@ def draw_fortune_page(c, fortune_data):
         draw_page_number(c)
         c.showPage()
         y = margin_top
-        draw_title(c, "🔮 คำทำนายคำสแลง", y)
+        draw_title(c, "🔮 สแลงทำนาย", y)
         y -= line_space * 4
 
     # แสดงหัวข้อคำศัพท์
     c.setFont("THSarabun-Bold", header_font_size * 2.5)
     c.drawCentredString(width / 2, y, word)
     y -= fortune_line_space * 2
+    
+    # แสดงคำอธิบาย (wrap ข้อความ)
+    y, _ = draw_mixed_text_wrapped(
+        c, "สแลงทำนายสำหรับคุณ", margin_left + indent, y,
+        "THSarabun", content_font_size*2,
+        "EmojiFont", content_font_size - 2,
+        fortune_line_space*2
+    )
+    y -= fortune_line_space*1
 
     # แสดงข้อความคำทำนาย (wrap ข้อความ)
     y, _ = draw_mixed_text_wrapped(
         c, fortune, margin_left + indent, y,
-        "THSarabun", content_font_size*2,
-        "EmojiFont", content_font_size*2 - 2,
-        fortune_line_space
+        "THSarabun", content_font_size*3,
+        "EmojiFont", content_font_size*3 - 2,
+        fortune_line_space*2
     )
-    y -= fortune_line_space
+    y -= fortune_line_space*2
 
     draw_page_number(c)
     c.showPage()
