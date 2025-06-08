@@ -159,11 +159,11 @@ class SlangKiosk(QWidget):
         self.layout.setSpacing(30)
         self.layout.setAlignment(Qt.AlignCenter)
 
-        self.header = QLabel("📘 Your Thai Slang Dictionary")
+        self.header = QLabel("ปทานุกรมแบบสับ 📘 Not-So Modern Dictionary")
         self.header.setObjectName("HeaderLabel")
         self.header.setAlignment(Qt.AlignCenter)
 
-        self.description = QLabel("เพิ่มคำสแลง ให้กับพจนานุกรมของคุณ 📝✨")
+        self.description = QLabel("เพิ่มคำสแลง ให้กับปทานุกรมของคุณ 📝✨")
         self.description.setObjectName("DescLabel")
         self.description.setAlignment(Qt.AlignCenter)
 
@@ -375,9 +375,14 @@ class SlangKiosk(QWidget):
             entry["reach"] = entry.get("reach", 0) + 1
             # อัพเดตเวลา
             entry["update"] = now
-            # เพิ่ม author ถ้าไม่ซ้ำ
-            if author and author not in entry.get("author", []):
-                entry["author"].append(author)
+            
+            # จัดการ author
+            if author:
+                authors = entry.get("author", [])
+                if author in authors:
+                    authors.remove(author)
+                authors.append(author)  # ย้ายไปท้ายเสมอ
+                entry["author"] = authors
 
         # บันทึกกลับไฟล์ JSON
         with open(json_file, "w", encoding="utf-8") as f:

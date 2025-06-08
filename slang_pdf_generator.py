@@ -2,6 +2,8 @@
 
 import json
 import os
+import platform
+import subprocess
 import fitz  # PyMuPDF
 from datetime import datetime
 from reportlab.pdfgen import canvas
@@ -13,10 +15,11 @@ import locale
 locale.setlocale(locale.LC_COLLATE, 'th_TH.UTF-8')
 import random
 from PyPDF2 import PdfReader, PdfWriter
+import re
 
 # 📐 Global constants
 width, height = A4
-margin_left = 50
+margin_left = 70
 margin_right = margin_left
 margin_top = height - 80
 margin_bottom = 70
@@ -28,6 +31,17 @@ title_font_size = 20
 header_font_size = 17
 content_font_size = 14
 
+def get_main_thai_consonant(word):
+    """
+    Return the first Thai consonant character from the word.
+    Skips Thai vowels like เ, แ, โ, ใ, ไ which are leading vowels.
+    """
+    # พยัญชนะไทยช่วง \u0E01-\u0E2E
+    match = re.search(r'[\u0E01-\u0E2E]', word)
+    if match:
+        return match.group(0)
+    return word[0] if word else ''
+    
 def register_fonts(thai_font_path, thai_bold_font_path, thai_italic_font_path, emoji_font_path):
     pdfmetrics.registerFont(TTFont("Kinnari", thai_font_path))
     pdfmetrics.registerFont(TTFont("Kinnari-Bold", thai_bold_font_path))
@@ -62,19 +76,28 @@ def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, ho
         f"📝 ผู้แต่งล่าสุด: {lastauthor}",
         f"🧾 คำศัพท์ทั้งหมด: {total_words:,} คำ",
         f"🆕 คำล่าสุด: {latest_word}",
-        f"🔥 คำที่ฮิตที่สุด: {hottest_word}"
-        f"📚 ให้ความหมายทั้งหมด: {total_meanings:,} ความหมาย",
+        f"📚 คลังตัวอย่าง: {total_meanings:,} ชุด",
+        f"🔥 คำที่ฮิตที่สุด:",
 
     ]
 
-    draw_title(c, "📖 รายละเอียดปทานุกรม", y_start)
+    draw_title(c, "📖 ข้อมูลปทานุกรม", y_start)
     y = y_start - line_space * 3
 
+    # Statistic
     for line in text_lines:
         y, _ = draw_mixed_text_wrapped(
             c, line, margin_left, y,
-            "Kinnari", content_font_size, "EmojiFont", content_font_size - 2)
-        y -= line_space
+            "Kinnari", content_font_size*1.3, "EmojiFont", content_font_size*1.2)
+        y -= line_space*1.1
+
+    # List of hottest word
+    y += line_space*0.5
+    for line in hottest_word:
+        y, _ = draw_mixed_text_wrapped(
+            c, f"   • {line}", margin_left, y,
+            "Kinnari", content_font_size*1.3, "EmojiFont", content_font_size*1.2)
+        y -= line_space*1
 
     draw_page_number(c)
     c.showPage()
@@ -84,7 +107,7 @@ def draw_fortune_page(c, fortune_data):
     c.showPage()
 
     y = margin_top
-    draw_title(c, "🔮 ปทานุกรมทำนาย - FortuneDict", y)
+    draw_title(c, "🪄 ปทานุกรมทำนาย - FortuneDict 🪄", y)
     y -= line_space * 4
     indent = 10
 
@@ -97,21 +120,21 @@ def draw_fortune_page(c, fortune_data):
         draw_page_number(c)
         c.showPage()
         y = margin_top
-        draw_title(c, "ปทานุกรมทำนาย - FortueDict", y)
+        draw_title(c, "ศัพท์ทำนาย - FortueDict", y)
         y -= line_space * 4
 
     # แสดงสัญลักษณ์
-    c.setFont("EmojiFont", header_font_size*2)
+    c.setFont("EmojiFont", header_font_size*3)
     c.drawCentredString(width / 2, y, "🔮")
-    y -= line_space*3
+    y -= line_space*4
     # แสดงหัวข้อคำศัพท์
     c.setFont("Kinnari-Bold", header_font_size * 2.5)
     c.drawCentredString(width / 2, y, word)
     y -= line_space*2
     
     # แสดงคำอธิบาย (wrap ข้อความ)
-    c.setFont("Kinnari-Italic", header_font_size)
-    c.drawCentredString(width / 2, y, "ทำนายสำหรับคุณ")
+    c.setFont("Kinnari-Italic", header_font_size*1.5)
+    c.drawCentredString(width / 2, y, "ศัพท์ทำนายสำหรับคุณ")
 
     y -= line_space*4
 
@@ -158,7 +181,10 @@ def draw_entry(c, word, info, x, y, line_height, max_reach, indent=10):
             draw_page_number(c)
             c.showPage()
             y = margin_top
-            draw_title(c, "📚 ปทานุกรมแบบสับ", y)
+            # หาอักษรแรกของคำศัพท์ที่จะใช้แสดงในหัวเรื่อง
+            first_char_on_page = get_main_thai_consonant(word)  # ใช้ตัวอักษรแรกของคำนี้
+            draw_title(c, f"📚 ปทานุกรมแบบสับ - {first_char_on_page}", y)
+            #draw_title(c, "📚 ปทานุกรมแบบสับ", y)
             y -= line_height * 2
 
         y, _ = draw_mixed_text_wrapped(
@@ -175,7 +201,8 @@ def draw_entry(c, word, info, x, y, line_height, max_reach, indent=10):
             draw_page_number(c)
             c.showPage()
             y = margin_top
-            draw_title(c, "📚 ปทานุกรมแบบสับ", y)
+            first_char_on_page = get_main_thai_consonant(word)  # ใช้ตัวอักษรแรกของคำนี้
+            draw_title(c, f"📚 ปทานุกรมแบบสับ - {first_char_on_page}", y)
             y -= line_height * 2
 
         y, _ = draw_mixed_text_wrapped(
@@ -184,46 +211,66 @@ def draw_entry(c, word, info, x, y, line_height, max_reach, indent=10):
         y -= line_height * 0.2
 
     # Reach number
-    y += line_height * 0.5
+    y += line_height * 0.3
     y, _ = draw_mixed_text_wrapped(
         c, f" 📈 {reach}", x + indent, y,
-        "Kinnari", round(content_font_size*0.7), "EmojiFont", round(content_font_size*0.5), round(line_height * 0.7))
+        "Kinnari", round(content_font_size*0.9), "EmojiFont", round(content_font_size*0.8), round(line_height * 0.8))
 
     y -= line_height * 2
     return y
 
 
 def draw_latest_word_page(c, word, info):
-    c.showPage()
     y = margin_top
     draw_title(c, "🆕 ศัพท์ใหม่ล่าสุด", y)
-    y -= line_space * 4
+    y -= line_space * 3
 
     # แสดงคำใหญ่
     c.setFont("Kinnari-Bold", header_font_size * 2)
     c.drawCentredString(width / 2, y, word)
-    y -= line_space * 4
+    y -= line_space * 3
 
+    # Meaning
     meanings = info.get("meaning", [])
     if isinstance(meanings, str):
         meanings = [meanings]
+    meanings = meanings[-4:]  # แสดง 4 ชุดล่าสุด
+    
+    y, _ = draw_mixed_text_wrapped(
+    c, f"📝 ความหมาย:", margin_left, y,
+    "Kinnari", content_font_size * 1.8,
+    "EmojiFont", content_font_size * 1.8,
+    line_space*1)
+    y -= line_space
+
     for m in meanings:
         y, _ = draw_mixed_text_wrapped(
-            c, f"📝 ความหมาย: {m}", margin_left, y,
+            c, f" 🔹 {m}", margin_left, y,
             "Kinnari", content_font_size * 1.5,
-            "EmojiFont", content_font_size * 1.5 - 2,
-            line_space * 2)
+            "EmojiFont", content_font_size * 1.5,
+            line_space*1)
         y -= line_space
-
+    y -= line_space
+    
+    # Samples
     examples = info.get("example", [])
     if isinstance(examples, str):
         examples = [examples]
+    examples = examples[-4:]  # แสดง 4 ชุดล่าสุด
+    
+    y, _ = draw_mixed_text_wrapped(
+    c, f"💬 ตัวอย่าง:", margin_left, y,
+    "Kinnari", content_font_size * 1.8,
+    "EmojiFont", content_font_size * 1.8,
+    line_space*1)
+    y -= line_space
+    
     for ex in examples:
         y, _ = draw_mixed_text_wrapped(
-            c, f"💬 ตัวอย่าง: {ex}", margin_left, y,
+            c, f" 🔹 {ex}", margin_left, y,
             "Kinnari", content_font_size * 1.5,
-            "EmojiFont", content_font_size * 1.5 - 2,
-            line_space * 2)
+            "EmojiFont", content_font_size * 1.5,
+            line_space *1)
         y -= line_space
 
     # เพิ่มชื่อผู้แต่งล่าสุดถ้ามี
@@ -239,12 +286,12 @@ def draw_latest_word_page(c, word, info):
         y -= line_space * 2
         y, _ = draw_mixed_text_wrapped(
             c, f"📝 ผู้แต่งล่าสุด: {author}", margin_left, y,
-            "Kinnari", content_font_size * 1.2,
-            "EmojiFont", content_font_size * 1.2 - 2,
-            line_space * 2)
+            "Kinnari", content_font_size * 2,
+            "EmojiFont", content_font_size * 2,
+            line_space * 1.5)
 
     draw_page_number(c)
-    #c.showPage()
+    c.showPage()
 
 
 def draw_mixed_text(c, text, x, y, font1, size1, font2, size2):
@@ -300,45 +347,62 @@ def draw_page_number(c):
 def add_template_background(template_path, input_pdf_path, output_pdf_path):
     template_doc = fitz.open(template_path)
     input_doc = fitz.open(input_pdf_path)
-    template_page = template_doc.load_page(0)
-    bg_pix = template_page.get_pixmap(alpha=False)
-    bg_img_rect = template_page.rect
-    for page_num in range(len(input_doc)):
-        page = input_doc.load_page(page_num)
-        page.insert_image(bg_img_rect, pixmap=bg_pix, overlay=False)
-    input_doc.save(output_pdf_path)
+
+    try:
+        template_page = template_doc.load_page(0)
+        bg_pix = template_page.get_pixmap(alpha=False)
+        bg_img_rect = template_page.rect
+
+        # ใส่ background เฉพาะหน้าที่ 5 ถึงหน้าสุดท้าย (index 4 ขึ้นไป)
+        for page_num in range(4, len(input_doc)):
+            page = input_doc.load_page(page_num)
+            page.insert_image(bg_img_rect, pixmap=bg_pix, overlay=False)
+
+        input_doc.save(output_pdf_path)
+    finally:
+        template_doc.close()
+        input_doc.close()
 
 def make_foldable_booklet(input_path, output_path):
     doc = fitz.open(input_path)
     total_pages = len(doc)
     w, h = 842, 595
     if total_pages < 8:
+        print(f"PDF total_pages: {total_pages}")    
         for _ in range(8 - total_pages):
             doc.new_page(width=w, height=h)
+            
     section_w, section_h = w / 4, h / 2
-    page_order = [7, 0, 1, 6, 5, 2, 3, 4]
+    page_order = [0, 1, 2, 3, 4, 5, random.randint(6, total_pages-2), total_pages-1]
+    #page_order_standard = [7, 0, 1, 6, 5, 2, 3, 4]
     output_doc = fitz.open()
     new_page = output_doc.new_page(width=w, height=h)
     for i, idx in enumerate(page_order):
         if idx >= len(doc): continue
         src_page = doc.load_page(idx)
         text = src_page.get_text("text").strip()
-        if not text: continue
+        #if not text: continue
         col, row = i % 4, 0 if i < 4 else 1
         x0, y0 = col * section_w, row * section_h
         target_rect = fitz.Rect(x0, y0, x0 + section_w, y0 + section_h)
-        new_page.show_pdf_page(target_rect, doc, idx)
+        
+        # rotate the first 4 pages
+        rotation = 180 if i < 4 else 0
+        new_page.show_pdf_page(target_rect, doc, idx, rotate=rotation)
+        #new_page.show_pdf_page(target_rect, doc, idx)
     output_doc.save(output_path)
 
-def merge_pdfs(base_pdf_path, append_pdf_path, output_pdf_path):
+def merge_pdfs(append_pdf_path, base_pdf_path, output_pdf_path):
     writer = PdfWriter()
 
-    base_pdf = PdfReader(base_pdf_path)
-    for page in base_pdf.pages:
-        writer.add_page(page)
-
+    # เพิ่ม append ก่อน → กลายเป็นหน้า 1 เป็นต้นไป
     append_pdf = PdfReader(append_pdf_path)
     for page in append_pdf.pages:
+        writer.add_page(page)
+
+    # ตามด้วย base
+    base_pdf = PdfReader(base_pdf_path)
+    for page in base_pdf.pages:
         writer.add_page(page)
 
     with open(output_pdf_path, 'wb') as out_f:
@@ -430,12 +494,13 @@ def printpdf(
         print(f"❌ ไม่พบไฟล์คำทำนาย {fortune_json_path}")
 
     top_words = sorted(top_words, key=lambda x: x[1], reverse=True)
-    top5_words = [f"{w} ({r})" for w, r in top_words[:5]]
-    hottest_words_text = ", ".join(top5_words)
+    #top5_words = [f" {w} ({r})" for w, r in top_words[:5]]
+    #hottest_words_text = " • ".join(top5_words)
+    hottest_words_text = [f"{w} ({r})" for w, r in top_words[:5]]
     
     totalauthor = len(authors_set)
 
-
+    ### Intro page
     draw_intro_page(
         c,
         total_words=len(data),
@@ -447,30 +512,39 @@ def printpdf(
         lastauthor=lastauthor,
         totalauthor=totalauthor
     )
-
-
+    
+    ### Latest word page
+    if latest_word in data:
+        draw_latest_word_page(c, latest_word, data[latest_word])
+        print(f"พบ latest_word: {latest_word}")        
+    else:
+        print(f"❌ ไม่พบ latest_word: {latest_word}")
+        
     ### Content
     draw_title(c, "📚 ปทานุกรมแบบสับ | The Not-So Modern Dictionary ", margin_top)
     y = margin_top - line_space * 2
     
     sorted_words = sorted(data.keys(), key=locale.strxfrm)
-    for word in sorted_words:
+    first_char_on_page = None
+
+    for i, word in enumerate(sorted_words):
         info = data[word]
+
+        # ตรวจว่าควรเริ่มหน้าใหม่หรือไม่
         if y < margin_newpage:
             draw_page_number(c)
             c.showPage()
             y = margin_top
-            draw_title(c, "📚 ปทานุกรมแบบสับ", y)
+
+            # หาอักษรแรกของคำศัพท์ที่จะใช้แสดงในหัวเรื่อง
+            first_char_on_page = get_main_thai_consonant(word)  # ใช้ตัวอักษรแรกของคำนี้
+            draw_title(c, f"📚 ปทานุกรมแบบสับ - {first_char_on_page}", y)
             y -= line_space * 2
+
+        # วาดรายการคำศัพท์
         y = draw_entry(c, word, info, x, y, line_space, max_reach)
 
-    if latest_word in data:
-        draw_latest_word_page(c, latest_word, data[latest_word])
-        print(f"พบ latest_word: {latest_word}")
-    
-    else:
-        print(f"❌ ไม่พบ latest_word: {latest_word}")
-    
+   
     # วาดหน้าคำทำนาย (เพิ่มหน้าสุดท้าย)
     if fortune_data:
         draw_fortune_page(c, fortune_data)
@@ -495,4 +569,20 @@ def printpdf(
 
     # สร้าง booklet จากไฟล์ output_path (ไฟล์สุดท้ายที่มีพื้นหลังแล้วหรือไฟล์ merged)
     output_booklet = output_path.replace(".pdf", "_booklet.pdf")
+    print(f"Input PDF: {output_path}")
     make_foldable_booklet(input_path=output_path, output_path=output_booklet)
+    
+    ### พิมพ์ออกมา
+    try:
+        print(f"Platform: {platform.system()}")
+        # ตรวจสอบระบบปฏิบัติการ
+        if platform.system() == "Linux" or platform.system() == "Darwin":  # macOS ก็ใช้ lp ได้
+            print("🖨 กำลังพิมพ์ output_booklet.pdf ผ่านคำสั่ง lp...")
+            subprocess.run(["lp", "output_booklet.pdf"], check=True)
+        elif platform.system() == "Windows":
+            print("🖨 กำลังพิมพ์ output_booklet.pdf ผ่านคำสั่ง print (Windows)...")
+            subprocess.run(["print", "output_booklet.pdf"], shell=True, check=True)
+        else:
+            print("⚠️ ไม่รู้จักระบบปฏิบัติการ ไม่สามารถพิมพ์ไฟล์ได้อัตโนมัติ")
+    except Exception as e:
+        print(f"❌ เกิดข้อผิดพลาดในการสั่งพิมพ์: {e}")
