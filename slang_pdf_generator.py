@@ -407,7 +407,125 @@ def merge_pdfs(append_pdf_path, base_pdf_path, output_pdf_path):
 
     with open(output_pdf_path, 'wb') as out_f:
         writer.write(out_f)
+
+
+def print_pdf_file(pdf_path, printer_name=None):
+    """
+    Prints a PDF file to the specified printer on Windows or Linux/macOS.
+    For Windows, it attempts to use PowerShell for silent printing,
+    then falls back to specific PDF viewers (Adobe Reader, SumatraPDF) if needed.
+    For Windows without a named printer, it opens the print dialog.
+    For Linux/macOS, it uses the `lpr` command.
+    """
+    # Convert to absolute path
+    abs_pdf_path = os.path.abspath(pdf_path)
+
+    print(f"กำลังสั่งพิมพ์ไฟล์: {abs_pdf_path}")
+    if not os.path.exists(abs_pdf_path):
+        print(f"❌ ข้อผิดพลาด: ไม่พบไฟล์ PDF ที่ {abs_pdf_path} ไม่สามารถสั่งพิมพ์ได้")
+        return
+    
+    system = platform.system()
+    print(f"ระบบปฏิบัติการที่ตรวจพบ: {system}")
+
+    if system == "Windows":
+        printed_successfully = False
         
+        # --- Attempt 1: Using PowerShell with PrintTo verb (relies on default app association) ---
+        if printer_name:
+            cmd = f'PowerShell.exe -Command "Start-Process -FilePath \'{abs_pdf_path}\' -Verb PrintTo -ArgumentList \'{printer_name}\'"'
+            print(f"คำสั่ง Windows (PowerShell - PrintTo): {cmd}")
+            try:
+                subprocess.run(cmd, shell=True, check=True, creationflags=subprocess.SW_HIDE) # SW_HIDE to try to hide window
+                print(f"✅ สั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' ไปยังเครื่องพิมพ์ '{printer_name}' บน Windows เรียบร้อยแล้ว (ผ่าน PowerShell PrintTo)")
+                print("หากไม่เห็นงานพิมพ์ โปรดตรวจสอบคิวงานพิมพ์ของเครื่องพิมพ์และโปรแกรมดู PDF เริ่มต้น")
+                printed_successfully = True
+            except subprocess.CalledProcessError as e:
+                print(f"❌ ข้อผิดพลาดในการสั่งพิมพ์ (PowerShell PrintTo): {e.stderr.decode('utf-8') if e.stderr else 'ไม่มีรายละเอียด'}")
+                print("   สาเหตุอาจเกิดจาก: ไม่มีแอปพลิเคชันเชื่อมโยงกับไฟล์ PDF หรือการเชื่อมโยงเสียหาย")
+                print("   กำลังลองวิธีอื่น...")
+            except FileNotFoundError:
+                print(f"❌ ข้อผิดพลาด: ไม่พบ PowerShell หรือ Start-Process. กำลังลองวิธีอื่น...")
+            except Exception as e:
+                print(f"❌ ข้อผิดพลาดที่ไม่คาดคิดในการสั่งพิมพ์ (PowerShell PrintTo): {e}. กำลังลองวิธีอื่น...")
+        
+        # --- Attempt 2: Using known PDF viewers directly (if Attempt 1 fails or no printer_name) ---
+        if not printed_successfully and printer_name:
+            # Try Adobe Reader
+            adobe_reader_paths = [
+                r"C:\Program Files (x86)\Adobe\Acrobat Reader DC\Reader\AcroRd32.exe",
+                r"C:\Program Files\Adobe\Acrobat Reader DC\Reader\AcroRd32.exe"
+            ]
+            for adobe_path in adobe_reader_paths:
+                if os.path.exists(adobe_path):
+                    cmd = [adobe_path, "/N", "/T", abs_pdf_path, printer_name]
+                    print(f"คำสั่ง Windows (Adobe Reader): {' '.join(cmd)}")
+                    try:
+                        subprocess.run(cmd, check=True, creationflags=subprocess.SW_HIDE)
+                        print(f"✅ สั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' ไปยังเครื่องพิมพ์ '{printer_name}' บน Windows เรียบร้อยแล้ว (ผ่าน Adobe Reader)")
+                        printed_successfully = True
+                        break
+                    except Exception as e:
+                        print(f"❌ ข้อผิดพลาดในการสั่งพิมพ์ (Adobe Reader): {e}")
+                        continue
+            
+            if not printed_successfully:
+                # Try SumatraPDF
+                sumatra_paths = [
+                    r"C:\Program Files\SumatraPDF\SumatraPDF.exe",
+                    r"C:\Program Files (x86)\SumatraPDF\SumatraPDF.exe"
+                ]
+                for sumatra_path in sumatra_paths:
+                    if os.path.exists(sumatra_path):
+                        cmd = [sumatra_path, "-print-to", printer_name, abs_pdf_path]
+                        print(f"คำสั่ง Windows (SumatraPDF): {' '.join(cmd)}")
+                        try:
+                            subprocess.run(cmd, check=True, creationflags=subprocess.SW_HIDE)
+                            print(f"✅ สั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' ไปยังเครื่องพิมพ์ '{printer_name}' บน Windows เรียบร้อยแล้ว (ผ่าน SumatraPDF)")
+                            printed_successfully = True
+                            break
+                        except Exception as e:
+                            print(f"❌ ข้อผิดพลาดในการสั่งพิมพ์ (SumatraPDF): {e}")
+                            continue
+
+        # --- Final Fallback for Windows if all silent methods fail or no printer_name ---
+        if not printed_successfully:
+            print(f"⚠️ ไม่สามารถสั่งพิมพ์แบบเงียบได้ หรือไม่มีชื่อเครื่องพิมพ์ที่ระบุ")
+            print(f"   กำลังสั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' โดยเปิดกล่องโต้ตอบการพิมพ์ (โปรดกดพิมพ์ด้วยตนเอง)")
+            try:
+                os.startfile(abs_pdf_path, "print")
+                print("✅ คำสั่งเปิดกล่องโต้ตอบการพิมพ์ถูกส่งแล้ว")
+            except Exception as e:
+                print(f"❌ ข้อผิดพลาดในการเปิดกล่องโต้ตอบการพิมพ์: {e}")
+                print("   โปรดตรวจสอบการตั้งค่าโปรแกรมดู PDF เริ่มต้นและสิทธิ์การเข้าถึง")
+                print("   หากปัญหายังคงอยู่: โปรดติดตั้งโปรแกรมดู PDF เช่น Adobe Reader หรือ SumatraPDF และตั้งค่าให้เป็นโปรแกรมเริ่มต้นสำหรับไฟล์ PDF")
+
+    elif system == "Darwin" or system == "Linux": # Darwin คือ macOS
+        try:
+            # ใช้คำสั่ง lpr บน Linux/macOS (ระบบ CUPS)
+            cmd = ["lpr"]
+            if printer_name:
+                cmd.extend(["-P", printer_name])
+            cmd.append(abs_pdf_path)
+            
+            print(f"คำสั่ง Linux/macOS (lpr): {' '.join(cmd)}")
+            subprocess.run(cmd, check=True)
+            print(f"✅ สั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' ไปยังเครื่องพิมพ์ '{printer_name if printer_name else 'default'}' บน {system} เรียบร้อยแล้ว")
+            print("หากไม่เห็นงานพิมพ์ โปรดตรวจสอบคิวงานพิมพ์ของเครื่องพิมพ์")
+        except subprocess.CalledProcessError as e:
+            print(f"❌ ข้อผิดพลาดในการสั่งพิมพ์บน {system}: การเรียกใช้ 'lpr' ล้มเหลว. รหัสข้อผิดผิดพลาด: {e.returncode}")
+            print(f"   รายละเอียด: {e.stderr.decode('utf-8') if e.stderr else 'ไม่มี'}")
+            print("   โปรดตรวจสอบว่าเครื่องพิมพ์ถูกติดตั้งและกำหนดค่าอย่างถูกต้องบน CUPS")
+        except FileNotFoundError:
+            print(f"❌ ข้อผิดพลาด: ไม่พบคำสั่ง 'lpr'.")
+            print(f"   โปรดตรวจสอบว่า CUPS ถูกติดตั้งและตั้งค่าอย่างถูกต้องบน {system} ของคุณ")
+        except Exception as e:
+            print(f"❌ ข้อผิดพลาดที่ไม่คาดคิดในการสั่งพิมพ์บน {system}: {e}")
+            print("   โปรดตรวจสอบการตั้งค่าเครื่องพิมพ์และสิทธิ์การเข้าถึง")
+    else:
+        print(f"❌ ระบบปฏิบัติการ {system} ไม่รองรับคำสั่งพิมพ์อัตโนมัติในสคริปต์นี้")
+        
+
 def printpdf(
     json_path="output/user_added_slang.json",
     output_path="output/slang_dictionary.pdf",
@@ -573,16 +691,4 @@ def printpdf(
     make_foldable_booklet(input_path=output_path, output_path=output_booklet)
     
     ### พิมพ์ออกมา
-    try:
-        print(f"Platform: {platform.system()}")
-        # ตรวจสอบระบบปฏิบัติการ
-        if platform.system() == "Linux" or platform.system() == "Darwin":  # macOS ก็ใช้ lp ได้
-            print("🖨 กำลังพิมพ์ output_booklet.pdf ผ่านคำสั่ง lp...")
-            subprocess.run(["lp", "output_booklet.pdf"], check=True)
-        elif platform.system() == "Windows":
-            print("🖨 กำลังพิมพ์ output_booklet.pdf ผ่านคำสั่ง print (Windows)...")
-            subprocess.run(["print", "output_booklet.pdf"], shell=True, check=True)
-        else:
-            print("⚠️ ไม่รู้จักระบบปฏิบัติการ ไม่สามารถพิมพ์ไฟล์ได้อัตโนมัติ")
-    except Exception as e:
-        print(f"❌ เกิดข้อผิดพลาดในการสั่งพิมพ์: {e}")
+    print_pdf_file(output_booklet)
