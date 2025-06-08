@@ -1,4 +1,4 @@
-# thai_slang_dict_main.py
+## thai_slang_dict_main.py
 
 import speech_recognition as sr
 from gtts import gTTS
@@ -114,9 +114,10 @@ def main_loop():
         printpdf(
             json_path="output/user_added_slang.json",
             output_path="output/slang_dictionary.pdf",
-            thai_font_path="fonts/THSarabunNew.ttf",
+            thai_font_path="fonts/Kinnari.ttf",
             emoji_font_path="fonts/NotoEmoji-Regular.ttf"
         )
+        #exit()
         while True:
             print("🚀 Starting AI")
             play_flipping()

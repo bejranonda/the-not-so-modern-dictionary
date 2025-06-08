@@ -197,7 +197,7 @@ def main_loop():
     printpdf(
         json_path="user_added_slang.json",
         output_path="output/slang_dictionary.pdf",
-        thai_font_path="fonts/THSarabunNew.ttf",
+        thai_font_path="fonts/KinnariNew.ttf",
         emoji_font_path="fonts/NotoEmoji-Regular.ttf"
     )
     while True:

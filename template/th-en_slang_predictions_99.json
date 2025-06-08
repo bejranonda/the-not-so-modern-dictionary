@@ -1,0 +1,430 @@
+{
+  "ปัง": {
+    "th": "สิ่งที่คุณทำจะออกมาปังแบบไม่ต้องพยายามมาก",
+    "en": "Everything you do will shine effortlessly."
+  },
+  "ต๊าช": {
+    "th": "คุณจะได้รับข่าวดีที่ต๊าชจนต้องกรี๊ดออกมา",
+    "en": "Exciting news will make you scream with joy."
+  },
+  "กรุบกริบ": {
+    "th": "ความสุขเล็ก ๆ กำลังมาแบบกรุบกริบ",
+    "en": "Little joys are gently coming your way."
+  },
+  "จึ้ง": {
+    "th": "บางสิ่งจะทำให้คุณจึ้งจนต้องหยุดมอง",
+    "en": "Something will amaze you and stop you in your tracks."
+  },
+  "ดือ": {
+    "th": "คุณจะเจอสิ่งดือ ๆ ที่ทำให้ใจเต้นแรง",
+    "en": "You’ll encounter something so good it makes your heart race."
+  },
+  "เฟียซ": {
+    "th": "พลังเฟียซของคุณจะทำให้คนรอบข้างอึ้งทึ่ง",
+    "en": "Your fierce energy will impress everyone around you."
+  },
+  "เกินต้าน": {
+    "th": "เสน่ห์ของคุณเกินต้าน ใครจะต้านไหว!",
+    "en": "Your charm is totally irresistible!"
+  },
+  "เขินแทน": {
+    "th": "คุณจะเจอเรื่องน่าเอ็นดูจนเขินแทนตัวเอง",
+    "en": "Something adorably awkward will make you blush for yourself."
+  },
+  "เบ้าหน้าฟ้าประทาน": {
+    "th": "คุณจะเปล่งประกายเบ้าหน้าฟ้าประทานจนคนทัก",
+    "en": "Your divine looks will get lots of compliments."
+  },
+  "สับ": {
+    "th": "คุณจะสับคอนเทนต์หรือโปรเจกต์แบบไม่มีใครเทียบได้",
+    "en": "You’ll slay your project like no other!"
+  },
+  "ละมุน": {
+    "th": "ช่วงเวลาละมุนจะทำให้คุณยิ้มทั้งวัน",
+    "en": "Soft moments will bring smiles all day."
+  },
+  "น่ารักตะมุตะมิ": {
+    "th": "จะมีเหตุการณ์น่ารักตะมุตะมิที่ทำให้ใจฟู",
+    "en": "Cute and fluffy things will fill your heart."
+  },
+  "ตุยเย่": {
+    "th": "ระวังอะไรบางอย่างจะตุยเย่ แต่คุณก็จะฟื้นมาแบบแซ่บกว่าเดิม",
+    "en": "Something may knock you out, but you’ll bounce back even stronger."
+  },
+  "เลอค่า": {
+    "th": "สิ่งที่คุณมีจะเลอค่าเกินกว่าที่คนอื่นจะมองข้าม",
+    "en": "What you offer is precious—don’t let anyone overlook it."
+  },
+  "ตะมุตะมิ": {
+    "th": "อารมณ์ตะมุตะมิจะทำให้ทุกอย่างดูนุ่มนวล",
+    "en": "A soft and fluffy mood will sweeten everything around you."
+  },
+  "เด๋อ": {
+    "th": "แม้จะมีความเด๋อเล็ก ๆ แต่จะกลายเป็นเสน่ห์ของคุณ",
+    "en": "Your clumsiness will be your charm."
+  },
+  "คิ้วท์": {
+    "th": "ความคิ้วท์ของคุณจะสะกดทุกสายตา",
+    "en": "Your cuteness will captivate everyone."
+  },
+  "ลั้นลา": {
+    "th": "นี่คือวันแห่งการลั้นลาอย่างแท้จริง",
+    "en": "This is your day to be carefree and cheerful."
+  },
+  "ดือมาก": {
+    "th": "สิ่งดี ๆ ดือมากกำลังจะเข้ามาแบบไม่ทันตั้งตัว",
+    "en": "Something really good will come to you unexpectedly."
+  },
+  "เกรี้ยวกราด": {
+    "th": "พลังเกรี้ยวกราดจะช่วยให้คุณตัดสินใจอย่างเด็ดขาด",
+    "en": "Your bold energy will help you make firm decisions."
+  },
+  "เริ่ด": {
+    "th": "คุณจะได้พบกับเหตุการณ์เริ่ด ๆ ที่คาดไม่ถึง",
+    "en": "Something unexpectedly fabulous is about to happen."
+  },
+  "เฉียบ": {
+    "th": "คุณจะทำอะไรได้เฉียบจนคนรอบข้างทึ่ง",
+    "en": "Your actions will be sharp and impressive."
+  },
+  "ปั๊วะ": {
+    "th": "คุณจะปั๊วะในทุกมุมมอง ทั้งภายในและภายนอก",
+    "en": "You’ll shine from the inside out."
+  },
+  "จิกหมอน": {
+    "th": "มีเหตุการณ์ให้คุณต้องจิกหมอนด้วยความฟินแน่นอน",
+    "en": "Prepare to squeal with delight over something romantic."
+  },
+  "ไฟลุก": {
+    "th": "พลังงานของคุณไฟลุกแบบไม่มีแผ่ว",
+    "en": "Your fiery energy will burn bright all day long."
+  },
+  "สดใสกรุบกริบ": {
+    "th": "อารมณ์สดใสกรุบกริบจะอยู่กับคุณทั้งวัน",
+    "en": "A light, bubbly mood will stay with you all day."
+  },
+  "ฮอต": {
+    "th": "คุณจะฮอตจนทุกสายตามองตาม",
+    "en": "You’ll be so hot, heads will turn."
+  },
+  "แซ่บไฟลุก": {
+    "th": "ความแซ่บไฟลุกของคุณจะทำให้ทั้งวันเต็มไปด้วยพลัง",
+    "en": "Your fiery fierceness will energize the whole day."
+  },
+  "ฟาดมาก": {
+    "th": "คุณจะฟาดมากแบบไม่มีใครกล้าต้าน",
+    "en": "You’ll slay so hard, no one can resist."
+  },
+  "แง้ว": {
+    "th": "คุณจะได้ยินคำพูดหรือข้อความที่ทำให้ต้องร้องแง้วด้วยความเขิน",
+    "en": "You’ll hear something that makes you squeal with bashful joy."
+  },
+  "ฟาดเรียบ": {
+    "th": "คุณจะฟาดเรียบทุกปัญหาแบบไม่มีเหลือ",
+    "en": "You’ll slay every problem without leaving a trace."
+  },
+  "เบอร์แรง": {
+    "th": "ทุกอย่างมาเบอร์แรง แต่คุณจะรับมือได้อย่างมีสไตล์",
+    "en": "Things come at you full force—but you’ll handle them in style."
+  },
+  "อินจัด": {
+    "th": "คุณจะอินจัดกับเรื่องบางอย่างจนหยุดคิดไม่ได้",
+    "en": "You’ll get so emotionally into something, it’ll take over your thoughts."
+  },
+  "ฟิน": {
+    "th": "เหตุการณ์เล็ก ๆ จะทำให้คุณฟินทั้งวัน",
+    "en": "Little things will leave you feeling blissfully happy."
+  },
+  "เป๊ะปัง": {
+    "th": "ทุกอย่างจะเป๊ะปังดั่งใจฝัน",
+    "en": "Everything will turn out perfectly, just like you imagined."
+  },
+  "ปุ๊กลุก": {
+    "th": "คุณจะเจอกับอะไรที่ปุ๊กลุกน่ารักเกินต้าน",
+    "en": "Something irresistibly cute will brighten your day."
+  },
+  "ขิง": {
+    "th": "คุณอาจจะขิงความสำเร็จเล็ก ๆ และไม่มีใครว่าอะไรเลย",
+    "en": "You’ll be low-key bragging—and everyone will love it."
+  },
+  "นก": {
+    "th": "อย่าเพิ่งเสียใจหากคุณนกในเรื่องบางอย่าง เพราะสิ่งที่ดีกว่ากำลังมา",
+    "en": "Don’t worry if you miss out—something better is on its way."
+  },
+  "ป่วยการเมือง": {
+    "th": "คุณอาจรู้สึกป่วยการเมือง แต่จงจำว่าคุณยังมีพลังเปลี่ยนแปลง",
+    "en": "You may feel politically drained, but remember: your voice still matters."
+  },
+  "ว้าวซ่า": {
+    "th": "จะมีอะไรให้คุณต้องร้องว้าวซ่าหลายรอบ",
+    "en": "Get ready for multiple wow moments."
+  },
+  "โหดสัส": {
+    "th": "อะไรบางอย่างจะโหดสัส แต่มันจะทำให้คุณเก่งขึ้น",
+    "en": "Something brutal is coming—but it’ll make you stronger."
+  },
+  "ดาร์ค": {
+    "th": "อารมณ์ดาร์คอาจมาแวะเยี่ยมชั่วคราว แต่อย่าปล่อยให้มันอยู่เกินเวลา",
+    "en": "A dark mood may pass by—just don’t let it stay too long."
+  },
+  "ปั่น": {
+    "th": "มีคนพยายามจะปั่นคุณ แต่คุณจะหัวเราะใส่และเดินต่อได้อย่างชิค ๆ",
+    "en": "Someone will try to mess with you, but you’ll laugh it off with flair."
+  },
+  "หลัวในมโน": {
+    "th": "หลัวในมโนจะชัดเจนยิ่งกว่าความจริง",
+    "en": "Your imaginary crush will feel more real than ever."
+  },
+  "โป๊ะ": {
+    "th": "ระวังโป๊ะเรื่องเล็ก ๆ ที่กลายเป็นเรื่องฮาได้",
+    "en": "Watch out for little slip-ups—they might end up hilarious."
+  },
+  "สายมู": {
+    "th": "พลังสายมูจะหนุนหลังคุณแบบเต็มแม็กซ์",
+    "en": "Your spiritual vibes will back you up in full force."
+  },
+  "จกตา": {
+    "th": "ระวังโดนจกตาเรื่องภาพลักษณ์หรือคำพูดของใครบางคน",
+    "en": "Be cautious—you might get fooled by someone’s looks or words."
+  },
+  "ยืนหนึ่ง": {
+    "th": "คุณจะยืนหนึ่งในสิ่งที่ทำแบบไม่มีใครกลบได้",
+    "en": "You’ll be the undeniable best at what you do."
+  },
+  "ใจบาง": {
+    "th": "เรื่องเล็ก ๆ จะทำให้ใจคุณบางได้ง่ายมาก",
+    "en": "Little things will make your heart extra sensitive."
+  },
+  "ฟาดหน้า": {
+    "th": "คุณอาจต้องฟาดหน้าความจริงบางอย่าง แต่ผลลัพธ์จะดีเกินคาด",
+    "en": "You might have to face a harsh truth—but the result will surprise you."
+  },
+  "แบ๊วแตก": {
+    "th": "ถึงคุณจะดูนิ่ง ๆ แต่วันนี้อาจเผลอแบ๊วแตกแบบน่ารักไม่รู้ตัว",
+    "en": "You might accidentally let your cute side show."
+  },
+  "ซิส": {
+    "th": "ซิสจะมีบทบาทสำคัญในวันที่วุ่นวาย กลายเป็นเพื่อนแท้ของคุณ",
+    "en": "Your 'sis' will step up and be your rock."
+  },
+  "ยูนีค": {
+    "th": "ความยูนีคของคุณจะโดดเด่นไม่แพ้ใคร",
+    "en": "Your uniqueness will make you shine brightly."
+  },
+  "ลักยิ้ม": {
+    "th": "รอยยิ้มของคุณหรือใครบางคนจะละลายใจทั้งวัน",
+    "en": "A smile—yours or someone else’s—will melt your heart."
+  },
+  "ปังไม่หยุด": {
+    "th": "พลังงานปังไม่หยุดจะทำให้คุณรู้สึกว่าอะไร ๆ ก็เป็นไปได้",
+    "en": "You’ll feel unstoppable—anything is possible."
+  },
+  "ยั่วๆ บดๆ": {
+    "th": "คุณจะมีโมเมนต์ยั่ว ๆ บด ๆ โดยไม่รู้ตัว",
+    "en": "You’ll unintentionally radiate irresistible charm."
+  },
+  "เซ็งเป็ด": {
+    "th": "แม้จะมีช่วงเซ็งเป็ด แต่อย่าเพิ่งหมดหวัง เพราะจุดเปลี่ยนกำลังมา",
+    "en": "You might feel blah, but a turning point is coming."
+  },
+  "หวานเจี๊ยบ": {
+    "th": "บางอย่างจะหวานเจี๊ยบแบบเกินคาด จนคุณยิ้มไม่หุบ",
+    "en": "Something unexpectedly sweet will keep you smiling all day."
+  },
+  "หนูล่า": {
+    "th": "พลังหนูล่าจะพาคุณทะลุเป้าหมายที่วางไว้",
+    "en": "Your fierce ambition will crush your goals."
+  },
+  "วาร์ป": {
+    "th": "คุณจะได้วาร์ปไปสู่โอกาสใหม่โดยไม่ทันตั้งตัว",
+    "en": "You'll suddenly warp into a new opportunity without expecting it."
+  },
+  "ต๊าซ": {
+    "th": "ความต๊าซของคุณจะทำให้ใคร ๆ ต้องเหลียวมอง",
+    "en": "Your fabulous energy will make heads turn."
+  },
+  "ลั่น": {
+    "th": "คุณจะเผลอลั่นบางอย่างที่กลายเป็นจุดเริ่มของสิ่งดี ๆ",
+    "en": "You’ll accidentally say something that sparks something great."
+  },
+  "จี๊ด": {
+    "th": "ความรู้สึกจี๊ดจ๊าดจะพุ่งมาแบบไม่ทันตั้งตัว",
+    "en": "A sudden jolt of intense feeling will strike."
+  },
+  "เดือด": {
+    "th": "เรื่องเดือด ๆ กำลังจะเกิด แต่คุณจะควบคุมสถานการณ์ได้",
+    "en": "A heated moment is coming—but you’ll handle it smoothly."
+  },
+  "เมาท์": {
+    "th": "คุณจะได้เมาท์แบบจัดเต็มกับใครบางคนที่เข้าใจคุณสุด ๆ",
+    "en": "A juicy chat with someone who gets you is on the way."
+  },
+  "หาทำ": {
+    "th": "คุณอาจจะหาทำอะไรแปลก ๆ แต่ผลลัพธ์จะเซอร์ไพรส์มาก",
+    "en": "You’ll try something unusual—and the result will surprise you."
+  },
+  "แซ่บ": {
+    "th": "ความแซ่บในตัวคุณจะดึงดูดทุกสายตา",
+    "en": "Your sassiness will attract everyone’s attention."
+  },
+  "กร๊าวใจ": {
+    "th": "จะมีบางอย่างมากระแทกใจแบบกร๊าว ๆ",
+    "en": "Something delightfully flirty will hit you right in the feels."
+  },
+  "ลุคคุณหนู": {
+    "th": "ลุคคุณหนูของคุณจะทำให้คนเข้าใจผิด แต่ก็ได้ประโยชน์",
+    "en": "Your posh look will cause some confusion—but it’ll work in your favor."
+  },
+  "ผัวทิพย์": {
+    "th": "ผัวทิพย์จะมีบทบาทเด่นในความคิดคุณ",
+    "en": "Your imaginary bae will take center stage in your thoughts."
+  },
+  "ร้องขอชีวิต": {
+    "th": "เหตุการณ์หนึ่งจะทำให้คุณร้องขอชีวิต แต่คุณจะรอดอย่างเฉียดฉิว",
+    "en": "You’ll face a near-meltdown moment—but survive with style."
+  },
+  "ยืนงงในดงตีน": {
+    "th": "คุณอาจรู้สึกเหมือนยืนงงในดงตีน แต่จะพบทางออกได้เอง",
+    "en": "You may feel overwhelmed—but you’ll find your way through."
+  },
+  "ขายขำ": {
+    "th": "มุกที่ขายขำของคุณจะได้ผลเกินคาด",
+    "en": "Your jokes will hit harder than you expect."
+  },
+  "กริบ": {
+    "th": "บางช่วงจะเงียบกริบ แต่มันคือโอกาสทองให้พักใจ",
+    "en": "A silent moment will be your golden chance to recharge."
+  },
+  "กรอบ": {
+    "th": "แม้คุณจะกรอบนิด ๆ แต่ไอเดียยังล้นอยู่",
+    "en": "You might feel broke, but your ideas are still rich."
+  },
+  "ดีด": {
+    "th": "พลังดีดจะทำให้คุณคิดอะไรแปลกใหม่สุด ๆ",
+    "en": "A burst of quirky energy will inspire bold ideas."
+  },
+  "หลุด": {
+    "th": "จะมีบางอย่างหลุดออกมาแบบไม่ได้ตั้งใจ แต่ทำให้ทุกคนยิ้ม",
+    "en": "An unintentional reveal will bring unexpected smiles."
+  },
+  "มโนแซ่บ": {
+    "th": "จินตนาการของคุณจะแซ่บเว่อร์เกินความจริงไปไกล",
+    "en": "Your spicy imagination will outrun reality."
+  },
+  "นัว": {
+    "th": "สถานการณ์บางอย่างจะนัว ๆ ชวนสับสน แต่ก็สนุกดี",
+    "en": "A messy situation will confuse you—but it’ll be fun."
+  },
+  "เพ้อเจ้อ": {
+    "th": "คุณจะเพ้อเจ้อเรื่องบางอย่างจนกลายเป็นไอเดียสร้างสรรค์",
+    "en": "Your rambling thoughts will become a source of creativity."
+  },
+  "เหวอ": {
+    "th": "คุณจะเหวอจากเหตุการณ์ไม่คาดคิด แต่จะปรับตัวได้ไวมาก",
+    "en": "A surprise will leave you stunned—but you’ll bounce back fast."
+  },
+  "นัวเนีย": {
+    "th": "ความนัวเนียจะทำให้คุณรู้สึกอบอุ่นใจ",
+    "en": "Affectionate moments will warm your heart."
+  },
+  "ช็อตฟีล": {
+    "th": "มีบางอย่างจะมาช็อตฟีลคุณเบา ๆ แต่ก็ไม่ได้แย่",
+    "en": "A little vibe-killer might show up—but it won’t ruin your day."
+  },
+  "เลิ่กลั่ก": {
+    "th": "ความเลิ่กลั่กของคุณจะน่ารักจนคนรอบตัวหลง",
+    "en": "Your awkwardness will only make you more lovable."
+  },
+  "ฟาดมากแม่": {
+    "th": "คุณจะฟาดมากแม่แบบไม่มีใครต้านได้",
+    "en": "You’ll serve major energy—no one can top it."
+  },
+  "ตายอย่างสงบ": {
+    "th": "คุณจะยอมแพ้บางเรื่องอย่างสงบ แต่พบพลังใหม่หลังจากนั้น",
+    "en": "You’ll let go peacefully—only to rise stronger."
+  },
+  "ทาสแมว": {
+    "th": "พลังทาสแมวจะทำให้คุณหลงใหลความน่ารักทั้งวัน",
+    "en": "You’ll be helpless against cuteness—especially cat-related."
+  },
+  "ดุ๊บๆ": {
+    "th": "จังหวะดุ๊บๆ จะพาคุณเข้าสู่โหมดสนุกจนลืมเวลา",
+    "en": "The vibe will be so upbeat you’ll lose track of time."
+  },
+  "กรี๊ดสลบ": {
+    "th": "มีเรื่องให้คุณกรี๊ดสลบด้วยความดีใจหรือความตื่นเต้น",
+    "en": "Something will make you scream with joy or excitement."
+  },
+  "จิกกัด": {
+    "th": "คุณอาจต้องจิกกัดใครสักคนเพื่อปกป้องตัวเอง",
+    "en": "You might need to throw some shade to protect yourself."
+  },
+  "เปย์หนัก": {
+    "th": "โอกาสเปย์หนักจะมาถึงคุณแบบไม่ทันตั้งตัว",
+    "en": "A chance to splurge generously will come unexpectedly."
+  },
+  "ชิลมาก": {
+    "th": "คุณจะชิลมากจนทุกอย่างผ่านไปด้วยดี",
+    "en": "You’ll be super chill and everything will go smoothly."
+  },
+  "ยืนกราน": {
+    "th": "คุณจะยืนกรานในสิ่งที่เชื่ออย่างมั่นคง",
+    "en": "You’ll firmly stand your ground on what you believe."
+  },
+  "แซ่บเวอร์": {
+    "th": "ความแซ่บเวอร์ของคุณจะทำให้ทุกคนหันมามอง",
+    "en": "Your extreme fierceness will turn all eyes on you."
+  },
+  "เฟล": {
+    "th": "มีเหตุการณ์เฟลที่ทำให้คุณต้องหัวเราะกับตัวเอง",
+    "en": "A fail moment will make you laugh at yourself."
+  },
+  "ฟาดปัง": {
+    "th": "คุณจะฟาดปังในทุกเรื่องที่ลงมือทำ",
+    "en": "You’ll slay spectacularly in everything you do."
+  },
+  "จ๋วย": {
+    "th": "คุณจะเจอสิ่งจ๋วย ๆ ที่ทำให้หัวใจพองโต",
+    "en": "You’ll encounter something so sweet it will warm your heart."
+  },
+  "มองบน": {
+    "th": "คุณจะเจอเรื่องให้ต้องมองบนด้วยความเหนื่อยหน่าย แต่ก็ผ่านไปได้",
+    "en": "You'll encounter something that makes you roll your eyes, but you'll get through it."
+  },
+  "ต๊อกแต๊ก": {
+    "th": "จะมีเรื่องเล็ก ๆ น้อย ๆ เข้ามาให้คุณจัดการแบบต๊อกแต๊ก",
+    "en": "Small, fiddly tasks will come your way, requiring a bit of nimble handling."
+  },
+  "ปิ๊ง": {
+    "th": "คุณจะปิ๊งไอเดียใหม่ ๆ หรือรู้สึกปิ๊งกับใครบางคน",
+    "en": "You'll be struck by brilliant new ideas or feel a sudden spark of attraction."
+  },
+  "จ๊าบ": {
+    "th": "สไตล์หรือผลงานของคุณจะดูจ๊าบโดดเด่นไม่เหมือนใคร",
+    "en": "Your style or work will be uniquely cool and outstanding."
+  },
+  "เบเบ": {
+    "th": "เรื่องยาก ๆ จะกลายเป็นเรื่องเบเบ ทำได้อย่างง่ายดาย",
+    "en": "Difficult tasks will become effortless, handled with ease."
+  },
+  "นอย": {
+    "th": "ระวังอารมณ์นอย ๆ จะเข้ามาเยือน แต่ก็แค่ชั่วคราว",
+    "en": "Beware of a fleeting anxious mood, but it will pass."
+  },
+  "เท": {
+    "th": "อาจมีบางอย่างที่ต้อง 'เท' ทิ้งไป เพื่อให้มีที่ว่างสำหรับสิ่งที่ดีกว่า",
+    "en": "You might need to 'dump' something to make space for better things."
+  },
+  "ลำไย": {
+    "th": "อาจมีเรื่องจุกจิกกวนใจให้รู้สึก 'ลำไย' บ้าง แต่คุณจะรับมือได้",
+    "en": "You might feel a bit annoyed by minor nuisances, but you'll handle them."
+  },
+  "ส้มหล่น": {
+    "th": "โชคดีแบบ 'ส้มหล่น' กำลังจะเกิดขึ้นกับคุณโดยไม่คาดฝัน",
+    "en": "Unexpected good fortune will 'fall into your lap'."
+  },
+  "เหม่อ": {
+    "th": "คุณอาจเหม่อลอยไปบ้าง แต่กลับได้แรงบันดาลใจจากช่วงเวลานั้น",
+    "en": "You might find yourself zoning out, but inspiration will strike during those moments."
+  }
+}

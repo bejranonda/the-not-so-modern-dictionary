@@ -1,4 +1,4 @@
-# input_slang_kiosk.py
+## thai_slang_kiosk.py
 
 import sys
 import json

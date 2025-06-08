@@ -1,4 +1,4 @@
-# slang_pdf_generator.py
+## slang_pdf_generator.py
 
 import json
 import os
@@ -12,6 +12,7 @@ from reportlab.pdfbase.pdfmetrics import stringWidth
 import locale
 locale.setlocale(locale.LC_COLLATE, 'th_TH.UTF-8')
 import random
+from PyPDF2 import PdfReader, PdfWriter
 
 # 📐 Global constants
 width, height = A4
@@ -23,17 +24,18 @@ margin_newpage = 100
 line_space = 20
 usable_width = width - margin_left - margin_right
 
-title_font_size = 28
-header_font_size = 25
-content_font_size = 20
+title_font_size = 20
+header_font_size = 17
+content_font_size = 14
 
-def register_fonts(thai_font_path, thai_bold_font_path, emoji_font_path):
-    pdfmetrics.registerFont(TTFont("THSarabun", thai_font_path))
-    pdfmetrics.registerFont(TTFont("THSarabun-Bold", thai_bold_font_path))
+def register_fonts(thai_font_path, thai_bold_font_path, thai_italic_font_path, emoji_font_path):
+    pdfmetrics.registerFont(TTFont("Kinnari", thai_font_path))
+    pdfmetrics.registerFont(TTFont("Kinnari-Bold", thai_bold_font_path))
+    pdfmetrics.registerFont(TTFont("Kinnari-Italic", thai_italic_font_path))
     pdfmetrics.registerFont(TTFont("EmojiFont", emoji_font_path))
 
 def draw_title(c, text, y):
-    draw_mixed_text_centered(c, text, width / 2, y, "THSarabun", title_font_size, "EmojiFont", title_font_size)
+    draw_mixed_text_centered(c, text, width / 2, y, "Kinnari", title_font_size, "EmojiFont", title_font_size)
 
 def get_star_rating(reach, max_reach):
     if max_reach == 0:
@@ -52,7 +54,7 @@ def get_star_rating(reach, max_reach):
 def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, hottest_word, y_start, lastauthor, totalauthor):
     updated_date = datetime.now().strftime("%d/%m/%Y %H:%M")
     text_lines = [
-        f"🖨 พิมพ์ที่: Kunsthalle",
+        f"🖨 พิมพ์ที่: Bangkok Kunsthalle",
         f"🔢 พิมพ์ครั้งที่: {total_reach:,}",
         f"📅 ปรับปรุงล่าสุด: {updated_date}",
         f"🏢 สำนักพิมพ์: ยุงลาย",
@@ -65,13 +67,13 @@ def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, ho
 
     ]
 
-    draw_title(c, "📖 รายละเอียดพจนานุกรม", y_start)
+    draw_title(c, "📖 รายละเอียดปทานุกรม", y_start)
     y = y_start - line_space * 3
 
     for line in text_lines:
         y, _ = draw_mixed_text_wrapped(
             c, line, margin_left, y,
-            "THSarabun", content_font_size, "EmojiFont", content_font_size - 2)
+            "Kinnari", content_font_size, "EmojiFont", content_font_size - 2)
         y -= line_space
 
     draw_page_number(c)
@@ -82,48 +84,57 @@ def draw_fortune_page(c, fortune_data):
     c.showPage()
 
     y = margin_top
-    draw_title(c, "🔮 สแลงทำนาย", y)
+    draw_title(c, "🔮 ปทานุกรมทำนาย - FortuneDict", y)
     y -= line_space * 4
     indent = 10
-    fortune_line_space = line_space + 20  # เพิ่มช่องไฟระหว่างบรรทัดเฉพาะหน้านี้
 
     # สุ่มเลือกคำเดียว
     word = random.choice(list(fortune_data.keys()))
     fortune = fortune_data[word]
 
     # เช็คพื้นที่
-    if y < margin_bottom + fortune_line_space * 4:
+    if y < margin_bottom + line_space * 4:
         draw_page_number(c)
         c.showPage()
         y = margin_top
-        draw_title(c, "🔮 สแลงทำนาย", y)
+        draw_title(c, "ปทานุกรมทำนาย - FortueDict", y)
         y -= line_space * 4
 
+    # แสดงสัญลักษณ์
+    c.setFont("EmojiFont", header_font_size*2)
+    c.drawCentredString(width / 2, y, "🔮")
+    y -= line_space*3
     # แสดงหัวข้อคำศัพท์
-    c.setFont("THSarabun-Bold", header_font_size * 2.5)
+    c.setFont("Kinnari-Bold", header_font_size * 2.5)
     c.drawCentredString(width / 2, y, word)
-    y -= fortune_line_space * 2
+    y -= line_space*2
     
     # แสดงคำอธิบาย (wrap ข้อความ)
-    y, _ = draw_mixed_text_wrapped(
-        c, "สแลงทำนายสำหรับคุณ", margin_left + indent, y,
-        "THSarabun", content_font_size*2,
-        "EmojiFont", content_font_size - 2,
-        fortune_line_space*2
-    )
-    y -= fortune_line_space*1
+    c.setFont("Kinnari-Italic", header_font_size)
+    c.drawCentredString(width / 2, y, "ทำนายสำหรับคุณ")
 
-    # แสดงข้อความคำทำนาย (wrap ข้อความ)
-    y, _ = draw_mixed_text_wrapped(
-        c, fortune, margin_left + indent, y,
-        "THSarabun", content_font_size*3,
-        "EmojiFont", content_font_size*3 - 2,
-        fortune_line_space*2
-    )
-    y -= fortune_line_space*2
+    y -= line_space*4
 
+    # แสดงข้อความคำทำนาย ไทย
+    y, _ = draw_mixed_text_wrapped(
+        c, fortune["th"], margin_left + indent, y,
+        "Kinnari", content_font_size*2,
+        "EmojiFont", content_font_size*2,
+        round(line_space*2.5)
+    )
+    y -= line_space*1
+
+    # แสดงข้อความคำทำนาย อังกฤษ
+    y, _ = draw_mixed_text_wrapped(
+        c, fortune["en"], margin_left + indent, y,
+        "Kinnari", content_font_size*2,
+        "EmojiFont", content_font_size*2,
+        round(line_space*2.5)
+    )
+    y -= line_space*2
+    
     draw_page_number(c)
-    c.showPage()
+    #c.showPage()
 
 
 
@@ -134,8 +145,8 @@ def draw_entry(c, word, info, x, y, line_height, max_reach, indent=10):
 
     # Header + stars
     y, _ = draw_mixed_text_wrapped(
-        c, f"  {word}{stars}", x, y,
-        "THSarabun-Bold", header_font_size, "EmojiFont", header_font_size - 15, line_height)
+        c, f" {word}{stars}", x, y,
+        "Kinnari-Bold", header_font_size, "EmojiFont", round(header_font_size * 0.7), line_height)
     y -= line_height * 0.2
 
     # Meanings
@@ -147,12 +158,12 @@ def draw_entry(c, word, info, x, y, line_height, max_reach, indent=10):
             draw_page_number(c)
             c.showPage()
             y = margin_top
-            draw_title(c, "📚 พจนานุกรมคำสแลงไทย", y)
+            draw_title(c, "📚 ปทานุกรมแบบสับ", y)
             y -= line_height * 2
 
         y, _ = draw_mixed_text_wrapped(
             c, f"📝 {m}", x + indent, y,
-            "THSarabun", content_font_size, "EmojiFont", content_font_size - 2, line_height)
+            "Kinnari", content_font_size, "EmojiFont", content_font_size - 2, line_height)
         y -= line_height * 0.2
 
     # Examples
@@ -164,19 +175,19 @@ def draw_entry(c, word, info, x, y, line_height, max_reach, indent=10):
             draw_page_number(c)
             c.showPage()
             y = margin_top
-            draw_title(c, "📚 พจนานุกรมคำสแลงไทย", y)
+            draw_title(c, "📚 ปทานุกรมแบบสับ", y)
             y -= line_height * 2
 
         y, _ = draw_mixed_text_wrapped(
             c, f"💬 {ex}", x + indent, y,
-            "THSarabun", content_font_size, "EmojiFont", content_font_size - 2, line_height)
+            "Kinnari", content_font_size, "EmojiFont", content_font_size - 2, line_height)
         y -= line_height * 0.2
 
     # Reach number
     y += line_height * 0.5
     y, _ = draw_mixed_text_wrapped(
-        c, f"📈 {reach}", x + indent, y,
-        "THSarabun", content_font_size - 8, "EmojiFont", content_font_size - 12, line_height * 0.5)
+        c, f" 📈 {reach}", x + indent, y,
+        "Kinnari", round(content_font_size*0.7), "EmojiFont", round(content_font_size*0.5), round(line_height * 0.7))
 
     y -= line_height * 2
     return y
@@ -185,11 +196,11 @@ def draw_entry(c, word, info, x, y, line_height, max_reach, indent=10):
 def draw_latest_word_page(c, word, info):
     c.showPage()
     y = margin_top
-    draw_title(c, "🆕 คำสแลงใหม่ล่าสุด", y)
-    y -= line_space * 3
+    draw_title(c, "🆕 ศัพท์ใหม่ล่าสุด", y)
+    y -= line_space * 4
 
     # แสดงคำใหญ่
-    c.setFont("THSarabun-Bold", header_font_size * 2.5)
+    c.setFont("Kinnari-Bold", header_font_size * 2)
     c.drawCentredString(width / 2, y, word)
     y -= line_space * 4
 
@@ -199,7 +210,7 @@ def draw_latest_word_page(c, word, info):
     for m in meanings:
         y, _ = draw_mixed_text_wrapped(
             c, f"📝 ความหมาย: {m}", margin_left, y,
-            "THSarabun", content_font_size * 1.5,
+            "Kinnari", content_font_size * 1.5,
             "EmojiFont", content_font_size * 1.5 - 2,
             line_space * 2)
         y -= line_space
@@ -210,7 +221,7 @@ def draw_latest_word_page(c, word, info):
     for ex in examples:
         y, _ = draw_mixed_text_wrapped(
             c, f"💬 ตัวอย่าง: {ex}", margin_left, y,
-            "THSarabun", content_font_size * 1.5,
+            "Kinnari", content_font_size * 1.5,
             "EmojiFont", content_font_size * 1.5 - 2,
             line_space * 2)
         y -= line_space
@@ -228,12 +239,12 @@ def draw_latest_word_page(c, word, info):
         y -= line_space * 2
         y, _ = draw_mixed_text_wrapped(
             c, f"📝 ผู้แต่งล่าสุด: {author}", margin_left, y,
-            "THSarabun", content_font_size * 1.2,
+            "Kinnari", content_font_size * 1.2,
             "EmojiFont", content_font_size * 1.2 - 2,
             line_space * 2)
 
     draw_page_number(c)
-    c.showPage()
+    #c.showPage()
 
 
 def draw_mixed_text(c, text, x, y, font1, size1, font2, size2):
@@ -279,11 +290,11 @@ def draw_mixed_text_wrapped(c, text, x, y, font1, size1, font2, size2, line_heig
 def draw_page_number(c):
     page_num = c.getPageNumber()
     text = f"- {page_num} -"
-    font_size = 14
-    text_width = stringWidth(text, "THSarabun", font_size)
+    font_size = 12
+    text_width = stringWidth(text, "Kinnari", font_size)
     x = (width - text_width) / 2
     y = 25
-    c.setFont("THSarabun", font_size)
+    c.setFont("Kinnari", font_size)
     c.drawString(x, y, text)
 
 def add_template_background(template_path, input_pdf_path, output_pdf_path):
@@ -319,15 +330,31 @@ def make_foldable_booklet(input_path, output_path):
         new_page.show_pdf_page(target_rect, doc, idx)
     output_doc.save(output_path)
 
+def merge_pdfs(base_pdf_path, append_pdf_path, output_pdf_path):
+    writer = PdfWriter()
+
+    base_pdf = PdfReader(base_pdf_path)
+    for page in base_pdf.pages:
+        writer.add_page(page)
+
+    append_pdf = PdfReader(append_pdf_path)
+    for page in append_pdf.pages:
+        writer.add_page(page)
+
+    with open(output_pdf_path, 'wb') as out_f:
+        writer.write(out_f)
+        
 def printpdf(
     json_path="output/user_added_slang.json",
     output_path="output/slang_dictionary.pdf",
-    thai_font_path="fonts/THSarabunNew.ttf",
-    thai_bold_font_path="fonts/THSarabunNew Bold.ttf",
+    thai_font_path="fonts/Kinnari.ttf",
+    thai_bold_font_path="fonts/Kinnari-Bold.ttf",
+    thai_italic_font_path="fonts/Kinnari-Italic.ttf",
     emoji_font_path="fonts/NotoEmoji-Regular.ttf",
     template_pdf_path="template/Cute Star Border A4 Stationery Paper Document.pdf",
+    cover_append_file="template/PP1-4.pdf",  # ไฟล์ PDF ที่จะเพิ่มหน้า
     author=None,
-    fortune_json_path="template/thai_slang_fortune_99.json" 
+    fortune_json_path="template/th-en_slang_predictions_99.json"
 ):
     # ในฟังก์ชันถ้า author มีค่า ให้ใช้ค่า author แทน `
     lastauthor = author if author else "ไม่ระบุ"
@@ -340,7 +367,7 @@ def printpdf(
         data = json.load(f)
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    register_fonts(thai_font_path, thai_bold_font_path, emoji_font_path)
+    register_fonts(thai_font_path, thai_bold_font_path, thai_italic_font_path, emoji_font_path)
 
     temp_output = output_path.replace(".pdf", "_temp.pdf")
     intermediate_path = output_path.replace(".pdf", "_plain.pdf")
@@ -423,7 +450,7 @@ def printpdf(
 
 
     ### Content
-    draw_title(c, "📚 พจนานุกรมคำสแลงไทย | Thai Slang Dictionary", margin_top)
+    draw_title(c, "📚 ปทานุกรมแบบสับ | The Not-So Modern Dictionary ", margin_top)
     y = margin_top - line_space * 2
     
     sorted_words = sorted(data.keys(), key=locale.strxfrm)
@@ -433,7 +460,7 @@ def printpdf(
             draw_page_number(c)
             c.showPage()
             y = margin_top
-            draw_title(c, "📚 พจนานุกรมคำสแลงไทย", y)
+            draw_title(c, "📚 ปทานุกรมแบบสับ", y)
             y -= line_space * 2
         y = draw_entry(c, word, info, x, y, line_space, max_reach)
 
@@ -453,10 +480,19 @@ def printpdf(
     c.save()
     os.rename(temp_output, intermediate_path)
 
-    if os.path.exists(template_pdf_path):
-        add_template_background(template_pdf_path, intermediate_path, output_path)
-    else:
-        os.rename(intermediate_path, output_path)
+    # รวม PDF (เพิ่มหน้าจาก cover_append_file เข้าไปใน intermediate_path)
+    base_file = intermediate_path            # ไฟล์ที่เพิ่งบันทึกเสร็จ
+    output_file = base_file.replace('.pdf', '_complete.pdf')
 
+    merge_pdfs(cover_append_file, base_file, output_file)
+    print(f"Created merged PDF: {output_file}")
+
+    # ถ้ามี template PDF ใช้ทำพื้นหลังบนไฟล์ output_file (ที่รวมหน้าแล้ว)
+    if os.path.exists(template_pdf_path):
+        add_template_background(template_pdf_path, output_file, output_path)
+    else:
+        os.rename(output_file, output_path)
+
+    # สร้าง booklet จากไฟล์ output_path (ไฟล์สุดท้ายที่มีพื้นหลังแล้วหรือไฟล์ merged)
     output_booklet = output_path.replace(".pdf", "_booklet.pdf")
     make_foldable_booklet(input_path=output_path, output_path=output_booklet)
