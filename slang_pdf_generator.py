@@ -28,7 +28,7 @@ printer_active = False
 
 # 📐 Global constants
 width, height = A4
-margin_left = 60
+margin_left = 50
 margin_right = margin_left
 margin_top = height - 80
 margin_bottom = 60
@@ -86,11 +86,13 @@ def get_star_rating(reach, max_reach):
 def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, hottest_word, y_start, lastauthor, totalauthor):
     """Draw the introduction page with statistics."""
     updated_date = datetime.now().strftime("%d/%m/%Y %H:%M")
+    intro_fontsize_factor = 1.6
+    
     text_lines = [
             f"🏢 สำนักพิมพ์ | Publisher : ยุงลาย - Yunglai",
             f"🖨 พิมพ์ที่ | Printed at : Bangkok Kunsthalle",
             f"🔢 พิมพ์ครั้งที่ | Print Count : {total_reach:,}",
-            f"📅 ปรับปรุงล่าสุด | Last Updated : {updated_date}",
+            f"📅 ปรับปรุง | Last Updated : {updated_date}",
             f"🧾 คำศัพท์ทั้งหมด | Total Words : {total_words:,}",
             f"🆕 คำล่าสุด | Latest Word : {latest_word}",
             f"📝 จำนวนผู้แต่ง | Total Authors : {totalauthor}",
@@ -106,16 +108,16 @@ def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, ho
     for line in text_lines:
         y, _ = draw_mixed_text_wrapped(
             c, line, margin_left, y,
-            "Kinnari", content_font_size*1.3, "EmojiFont", content_font_size*1.2)
-        y -= line_space*1.1
+            "Kinnari", content_font_size*intro_fontsize_factor, "EmojiFont", content_font_size*intro_fontsize_factor)
+        y -= line_space*intro_fontsize_factor*0.7
 
     # List of hottest word
-    y += line_space*0.5
+    y += line_space*0.5*intro_fontsize_factor
     for line in hottest_word:
         y, _ = draw_mixed_text_wrapped(
             c, f"    • {line}", margin_left, y,
-            "Kinnari", content_font_size*1.3, "EmojiFont", content_font_size*1.2)
-        y -= line_space*1
+            "Kinnari", content_font_size*intro_fontsize_factor, "EmojiFont", content_font_size*intro_fontsize_factor)
+        y -= line_space*intro_fontsize_factor*0.6
 
     draw_page_number(c)
     c.showPage()
@@ -849,32 +851,60 @@ def printpdf(
     while current_word_idx < len(sorted_words):
         word = sorted_words[current_word_idx]
         info = data[word]
-
+        
+        
         # Try to draw the entry (or its continuation) in the left column
-        new_y_left, finished_in_col, meaning_idx_left, example_idx_left = \
-            draw_entry(c, word, info, column1_x, y_left_col, line_space, max_reach, column_width,
-                       current_meaning_idx=current_meaning_idx, current_example_idx=current_example_idx,
-                       draw_header=draw_header_for_current_word)
+        print(f"Start y_left_col: {y_left_col}")
+
+        print(f"Left word: {word}")
+        
+        ## Check left column margin
+        if y_left_col > margin_bottom + 60 :
+            new_y_left, finished_in_col, meaning_idx_left, example_idx_left = \
+                draw_entry(c, word, info, column1_x, y_left_col, line_space, max_reach, column_width,
+                           current_meaning_idx=current_meaning_idx, current_example_idx=current_example_idx,
+                           draw_header=draw_header_for_current_word)
+        else:
+            new_y_left, finished_in_col, meaning_idx_left, example_idx_left = \
+                draw_entry(c, word, info, column1_x, y_left_col - 60 - margin_bottom, line_space, max_reach, column_width,
+                           current_meaning_idx=current_meaning_idx, current_example_idx=current_example_idx,
+                           draw_header=draw_header_for_current_word)
+
+            
+        print(f"finished_in_col: {finished_in_col}")
+        print(f"new_y_left: {new_y_left}")
         
         if finished_in_col: # Entire word entry fit in the left column
             y_left_col = new_y_left
             current_word_idx += 1 # Move to the next word in the sorted list
             current_meaning_idx = 0 # Reset indices for the next word
             current_example_idx = 0
+            
+            print(f"finished_in_col y_left_col: {y_left_col}")
+            print(f"finished_in_col y_right_col: {y_right_col}")
+            
             draw_header_for_current_word = True # Next word will need its header drawn
         else: # Word entry did NOT completely fit in the left column
             # Update the y-coordinate of the left column to where drawing stopped
             y_left_col = new_y_left 
             current_meaning_idx = meaning_idx_left
             current_example_idx = example_idx_left
-            draw_header_for_current_word = False # Don't draw header if continuing this word
+            #draw_header_for_current_word = False # Don't draw header if continuing this word
+            
+            print(f"not finished_in_col y_left_col: {y_left_col}")
+            print(f"not finished_in_col y_right_col: {y_right_col}")
 
             # Now, try to draw the remaining part of the current word in the right column
+            print(f"Right word: {word}")
+            print(f"draw_header_for_current_word: {draw_header_for_current_word}")
+
             new_y_right, finished_in_col, meaning_idx_right, example_idx_right = \
                 draw_entry(c, word, info, column2_x, y_right_col, line_space, max_reach, column_width,
                            current_meaning_idx=current_meaning_idx, current_example_idx=current_example_idx,
-                           draw_header=False) # Definitely no header if continuing in second column
-
+                           draw_header=draw_header_for_current_word) # Definitely no header if continuing in second column
+            
+            print(f"After 2.Draw finished_in_col: {finished_in_col}")
+            print(f"After 2.Draw new_y_left: {new_y_left}")
             if finished_in_col: # Remainder fit in the right column
                 y_right_col = new_y_right
                 current_word_idx += 1 # Move to the next word
@@ -892,6 +922,9 @@ def printpdf(
                 y_left_col = y_left_col_start_of_page # Reset Y for new page
                 y_right_col = y_right_col_start_of_page
                 
+                print(f"2.finished_in_col y_left_col: {y_left_col}")
+                print(f"2.finished_in_col y_right_col: {y_right_col}")
+        
                 # Draw new page title (still for the current word being processed)
                 first_char_on_page = get_main_thai_consonant(word)
                 draw_title(c, f"The Not-So Modern Dictionary 📚 {first_char_on_page}", margin_top)
@@ -900,6 +933,8 @@ def printpdf(
                 # The loop will re-attempt drawing the current word in the left column of the new page
                 # using the updated `current_meaning_idx`, `current_example_idx`, and `draw_header_for_current_word=False`.
                 # No increment of current_word_idx here as the word is not finished yet.
+                
+
 
     # After iterating through all words, ensure the last page has its number drawn
     draw_page_number(c)
@@ -927,7 +962,8 @@ def printpdf(
     doc.close()
     
     # template PDF ใช้ทำพื้นหลังบนไฟล์ output_file (ที่รวมหน้าแล้ว)
-    output_temp = output_path.replace(".pdf", "_temp.pdf")
+    output_temp = output_path.replace(".pdf", "_temp2.pdf")
+    #os.remove(output_temp)
     
     ## First page
     add_template_background(template_pdf_path1, output_file, output_temp,4,4)
