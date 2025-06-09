@@ -56,7 +56,7 @@ def speak_both(text):
     threading.Thread(target=play, daemon=True).start()
 
 
-def detect_motion(threshold=500000, timeout=3):
+def detect_motion(threshold=1000000, timeout=5):
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("ไม่สามารถเปิดกล้องได้")
