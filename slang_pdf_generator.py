@@ -338,12 +338,19 @@ def draw_latest_word_page(c, word, info):
         author = None
 
     if author:
-        y -= line_space * 1.5
+        y -= line_space * 1.6
         y, _ = draw_mixed_text_wrapped(
-            c, f"📝 ผู้แต่งล่าสุด | Latest Author: {author}", margin_left, y, # Translated label
+            c, f"📝 ผู้แต่งล่าสุด | Latest Author", margin_left, y, # Translated label
+            "Kinnari", content_font_size * 1.5,
+            "EmojiFont", content_font_size * 1.5,
+            line_space * 1.5)
+        y -= line_space*1.1
+        y, _ = draw_mixed_text_wrapped(
+            c, f"    {author}", margin_left, y, # Translated label
             "Kinnari", content_font_size * 2,
             "EmojiFont", content_font_size * 2,
             line_space * 1.5)
+
 
     draw_page_number(c)
     c.showPage()
