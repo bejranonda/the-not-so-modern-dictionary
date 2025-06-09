@@ -17,15 +17,21 @@ import random
 from PyPDF2 import PdfReader, PdfWriter
 import re
 
+## Template
+template_pdf_path1 = "template/pp1.pdf"
+template_pdf_path2 = "template/pp2.pdf"
+template_pdf_path3 = "template/pp3.pdf"
+template_pdf_path4 = "template/pp4.pdf"
+
 ## Printer enable
 printer_active = False
 
 # 📐 Global constants
 width, height = A4
-margin_left = 70
+margin_left = 60
 margin_right = margin_left
 margin_top = height - 80
-margin_bottom = 70
+margin_bottom = 60
 margin_newpage = 100 # Adjusted for column logic: this is the minimum Y for content
 line_space = 20
 usable_width = width - margin_left - margin_right
@@ -116,6 +122,7 @@ def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, ho
 
 def draw_fortune_page(c, fortune_data):
     """Draw the fortune telling page with a random word and its prediction."""
+    fortune_fontsize_factor = 0.7 
     y = margin_top
     draw_title(c, "🪄 ปทานุกรมทำนาย - FortuneDict 🪄", y)
     y -= line_space * 4
@@ -126,37 +133,37 @@ def draw_fortune_page(c, fortune_data):
     fortune = fortune_data[word]
 
     # Display symbol
-    c.setFont("EmojiFont", header_font_size*3)
+    c.setFont("EmojiFont", header_font_size*3*fortune_fontsize_factor)
     c.drawCentredString(width / 2, y, "🔮")
     y -= line_space*4
     # Display word heading
-    c.setFont("Kinnari-Bold", header_font_size * 2.5)
+    c.setFont("Kinnari-Bold", header_font_size * 2.5*fortune_fontsize_factor)
     c.drawCentredString(width / 2, y, word)
     y -= line_space*2
     
     # Display explanation (wrapped text)
-    c.setFont("Kinnari-Italic", header_font_size*1.5)
+    c.setFont("Kinnari-Italic", header_font_size*1.5*fortune_fontsize_factor)
     c.drawCentredString(width / 2, y, "ศัพท์ทำนายสำหรับคุณ")
 
-    y -= line_space*4
+    y -= line_space*6*fortune_fontsize_factor
 
-    # Display Thai fortune text
+    # Display Thai fortune text   
     y, _ = draw_mixed_text_wrapped(
         c, fortune["th"], margin_left + indent, y,
-        "Kinnari", content_font_size*2,
-        "EmojiFont", content_font_size*2,
-        round(line_space*2.5)
+        "Kinnari", content_font_size*2*fortune_fontsize_factor,
+        "EmojiFont", content_font_size*2*fortune_fontsize_factor,
+        round(line_space*2.5*fortune_fontsize_factor)
     )
-    y -= line_space*1
+    y -= line_space*1*fortune_fontsize_factor
 
     # Display English fortune text
     y, _ = draw_mixed_text_wrapped(
         c, fortune["en"], margin_left + indent, y,
-        "Kinnari", content_font_size*2,
-        "EmojiFont", content_font_size*2,
-        round(line_space*2.5)
+        "Kinnari", content_font_size*2*fortune_fontsize_factor,
+        "EmojiFont", content_font_size*2*fortune_fontsize_factor,
+        round(line_space*2.5*fortune_fontsize_factor)
     )
-    y -= line_space*2
+    y -= line_space*2*fortune_fontsize_factor
     
     draw_page_number(c)
 
@@ -187,7 +194,7 @@ def draw_entry(c, word, info, x, y_start, line_height, max_reach, column_width, 
                                                     "Kinnari-Bold", header_font_size * entry_fontsize_factor,
                                                     "EmojiFont", round(header_font_size * 0.7 * entry_fontsize_factor),
                                                     line_height, max_text_width=column_width, dry_run=True)
-        estimated_header_height = current_y - temp_y_header + (line_height * 0.2 * entry_fontsize_factor) + (line_height * 0.5 * entry_fontsize_factor) # Add spacing
+        estimated_header_height = current_y - temp_y_header + (line_height * 0.2 * entry_fontsize_factor) # Add spacing
         
         if current_y - estimated_header_height < margin_bottom:
             # Header itself doesn't fit or not enough space for even minimal content
@@ -198,7 +205,7 @@ def draw_entry(c, word, info, x, y_start, line_height, max_reach, column_width, 
             c, header_text, x, current_y,
             "Kinnari-Bold", header_font_size * entry_fontsize_factor, "EmojiFont", round(header_font_size * 0.7 * entry_fontsize_factor), line_height, max_text_width=column_width)
         current_y -= line_height * 0.2 * entry_fontsize_factor
-        current_y -= line_height * 0.5 * entry_fontsize_factor # Space after header
+        #current_y -= line_height * 0.5 * entry_fontsize_factor # Space after header
 
     # Meanings
     meanings = info.get("meaning", [])
@@ -209,7 +216,7 @@ def draw_entry(c, word, info, x, y_start, line_height, max_reach, column_width, 
     for idx in range(meaning_resume_idx, len(meanings)):
         m = meanings[idx]
         
-        temp_y_meaning, _ = draw_mixed_text_wrapped(c, f"📝 {m}", x + indent, current_y,
+        temp_y_meaning, _ = draw_mixed_text_wrapped(c, f"📝 {m[:50]}", x + indent, current_y,
                                                     "Kinnari", content_font_size * entry_fontsize_factor,
                                                     "EmojiFont", (content_font_size - 2) * entry_fontsize_factor,
                                                     line_height, max_text_width=column_width - indent, dry_run=True)
@@ -236,7 +243,7 @@ def draw_entry(c, word, info, x, y_start, line_height, max_reach, column_width, 
         for idx in range(example_resume_idx, len(examples)):
             ex = examples[idx]
             
-            temp_y_example, _ = draw_mixed_text_wrapped(c, f"💬 {ex}", x + indent, current_y,
+            temp_y_example, _ = draw_mixed_text_wrapped(c, f"💬 {ex[:50]}", x + indent, current_y,
                                                         "Kinnari", content_font_size * entry_fontsize_factor,
                                                         "EmojiFont", (content_font_size - 2) * entry_fontsize_factor,
                                                         line_height, max_text_width=column_width - indent, dry_run=True)
@@ -276,6 +283,7 @@ def draw_entry(c, word, info, x, y_start, line_height, max_reach, column_width, 
 
 def draw_latest_word_page(c, word, info):
     """Draw a page dedicated to the latest added word."""
+    latest_fontsize_factor = 0.7 
     y = margin_top
     draw_title(c, "The Not-So Modern Dictionary 🤩 The New Entry", y)
     y -= line_space * 3
@@ -293,18 +301,18 @@ def draw_latest_word_page(c, word, info):
     
     y, _ = draw_mixed_text_wrapped(
     c, f"📝 ความหมาย | Meaning", margin_left, y, # Translated label
-    "Kinnari", content_font_size * 1.8,
-    "EmojiFont", content_font_size * 1.8,
-    line_space*1)
+    "Kinnari", content_font_size * 2*latest_fontsize_factor,
+    "EmojiFont", content_font_size * 2*latest_fontsize_factor,
+    line_space*2*latest_fontsize_factor)
     y -= line_space
 
     for m in meanings:
         y, _ = draw_mixed_text_wrapped(
-            c, f" 🔹 {m}", margin_left, y,
-            "Kinnari", content_font_size * 1.5,
-            "EmojiFont", content_font_size * 1.5,
-            line_space*1)
-        y -= line_space*0.9
+            c, f" 🔹 {m[:50]}", margin_left, y,
+            "Kinnari", content_font_size * 2*latest_fontsize_factor,
+            "EmojiFont", content_font_size * 2*latest_fontsize_factor,
+            line_space*2*latest_fontsize_factor)
+        y -= line_space*2*latest_fontsize_factor
     y -= line_space
     
     # Samples
@@ -315,18 +323,18 @@ def draw_latest_word_page(c, word, info):
     
     y, _ = draw_mixed_text_wrapped(
     c, f"💬 ตัวอย่าง | Examples", margin_left, y, # Translated label
-    "Kinnari", content_font_size * 1.8,
-    "EmojiFont", content_font_size * 1.8,
-    line_space*1)
+    "Kinnari", content_font_size * 2*latest_fontsize_factor,
+    "EmojiFont", content_font_size * 2*latest_fontsize_factor,
+    line_space*2*latest_fontsize_factor)
     y -= line_space
     
     for ex in examples:
         y, _ = draw_mixed_text_wrapped(
-            c, f" 🔹 {ex}", margin_left, y,
-            "Kinnari", content_font_size * 1.5,
-            "EmojiFont", content_font_size * 1.5,
-            line_space *1)
-        y -= line_space*0.9
+            c, f" 🔹 {ex[:50]}", margin_left, y,
+            "Kinnari", content_font_size * 2*latest_fontsize_factor,
+            "EmojiFont", content_font_size * 2*latest_fontsize_factor,
+            line_space *2*latest_fontsize_factor)
+        y -= line_space*2*latest_fontsize_factor
 
     # Add latest author if available
     author_list = info.get("author")
@@ -338,18 +346,18 @@ def draw_latest_word_page(c, word, info):
         author = None
 
     if author:
-        y -= line_space * 1.6
+        y -= line_space * 2
         y, _ = draw_mixed_text_wrapped(
             c, f"📝 ผู้แต่งล่าสุด | Latest Author", margin_left, y, # Translated label
-            "Kinnari", content_font_size * 1.5,
-            "EmojiFont", content_font_size * 1.5,
-            line_space * 1.5)
-        y -= line_space*1.1
+            "Kinnari", content_font_size * 2*latest_fontsize_factor,
+            "EmojiFont", content_font_size * 2*latest_fontsize_factor,
+            line_space * 2*latest_fontsize_factor)
+        y -= line_space*2*latest_fontsize_factor
         y, _ = draw_mixed_text_wrapped(
-            c, f"    {author}", margin_left, y, # Translated label
-            "Kinnari", content_font_size * 2,
-            "EmojiFont", content_font_size * 2,
-            line_space * 1.5)
+            c, f" 🔹 {author[:40]}", margin_left, y, # Translated label
+            "Kinnari", content_font_size * 2*latest_fontsize_factor,
+            "EmojiFont", content_font_size * 2*latest_fontsize_factor,
+            line_space * 2*latest_fontsize_factor)
 
 
     draw_page_number(c)
@@ -423,27 +431,69 @@ def draw_page_number(c):
     c.setFont("Kinnari", font_size)
     c.drawString(x, y, text)
 
-def add_template_background(template_path, input_pdf_path, output_pdf_path):
-    """Add a background template to specific pages of a PDF."""
+def add_template_background(template_path, input_pdf_path, output_pdf_path, apply_from_page_index=None, apply_to_page_index=None):
+    """
+    Add a background template to specific pages of a PDF using PyMuPDF (fitz).
+    Reads the input PDF, applies the template to specified pages, and writes a new PDF.
+    """
+    if not os.path.exists(template_path):
+        print(f"❌ Error: Template file not found at '{template_path}'. Cannot apply background.")
+        # If template is missing, copy input to output and return
+        try:
+            fitz.open(input_pdf_path).save(output_pdf_path)
+            print(f"Copied '{input_pdf_path}' to '{output_pdf_path}' as template was not found.")
+        except Exception as e_copy:
+            print(f"❌ Failed to copy PDF when template was missing: {e_copy}")
+        return
+
     template_doc = fitz.open(template_path)
     input_doc = fitz.open(input_pdf_path)
+    output_doc = fitz.open() # Create a new, empty fitz document for output
 
     try:
         template_page = template_doc.load_page(0)
         bg_pix = template_page.get_pixmap(alpha=False)
         bg_img_rect = template_page.rect
 
-        # ใส่ background เฉพาะหน้าที่ 5 ถึงหน้าสุดท้าย (index 4 ขึ้นไป)
-        for page_num in range(4, len(input_doc)):
-            page = input_doc.load_page(page_num)
-            page.insert_image(bg_img_rect, pixmap=bg_pix, overlay=False)
+        start_page_idx = apply_from_page_index if apply_from_page_index is not None else 4
+        end_page_idx = apply_to_page_index if apply_to_page_index is not None else len(input_doc) - 1
+        
+        start_page_idx = max(0, start_page_idx)
+        end_page_idx = min(len(input_doc) - 1, end_page_idx)
 
-        input_doc.save(output_pdf_path)
+        #print(f"Applying background '{os.path.basename(template_path)}' from page index {start_page_idx} to {end_page_idx} of {len(input_doc)} pages in {os.path.basename(input_pdf_path)}")
+
+        for i in range(len(input_doc)):
+            page = input_doc.load_page(i)
+            
+            # Create a new page in the output_doc from the current page of input_doc
+            # This ensures we're not modifying the original document in a way that fitz dislikes.
+            new_output_page = output_doc.new_page(-1, width=page.rect.width, height=page.rect.height)
+            new_output_page.show_pdf_page(page.rect, input_doc, i) # Copy content of original page
+
+            if start_page_idx <= i <= end_page_idx:
+                # Insert background image onto the new output page
+                new_output_page.insert_image(bg_img_rect, pixmap=bg_pix, overlay=False)
+            
+        output_doc.save(output_pdf_path)
+        #print(f"✅ Background applied successfully to {os.path.basename(output_pdf_path)}")
+        
+    except Exception as e:
+        print(f"❌ Error applying template background to PDF '{input_pdf_path}' with template '{template_path}': {e}")
+        # In case of error, copy the input to output to keep the chain flowing
+        try:
+            fitz.open(input_pdf_path).save(output_pdf_path)
+            print(f"Copied '{input_pdf_path}' to '{output_pdf_path}' due to error in templating.")
+        except Exception as e_copy:
+            print(f"❌ Also failed to copy PDF after templating error: {e_copy}")
     finally:
         template_doc.close()
         input_doc.close()
+        output_doc.close() # Ensure the new output document is also closed
+        
 
-def make_foldable_booklet(input_path, output_path):
+
+def make_foldable_booklet(input_path, output_path, random_page = None):
     """Rearrange pages of a PDF to create a foldable booklet layout."""
     doc = fitz.open(input_path)
     total_pages = len(doc)
@@ -482,8 +532,11 @@ def make_foldable_booklet(input_path, output_path):
     
     # The original page_order has a random element, which is unusual for a standard booklet.
     # Keeping it as is, but noting this for future improvements.
-    page_order = [0, 1, 2, 3, 4, 5, random.randint(6, total_pages - 2) if total_pages > 6 else 6, total_pages - 1 if total_pages > 0 else 0]
-    
+    if random_page is None:
+        page_order = [0, 1, 2, 3, 4, 5, random.randint(7, total_pages - 2) if total_pages > 6 else 6, total_pages - 1 if total_pages > 0 else 0]
+    else:
+        page_order = [0, 1, 2, 3, 4, 5, random_page-1, total_pages - 1 if total_pages > 0 else 0]
+        
     # Create a new document for the booklet output
     output_doc = fitz.open()
     new_page = output_doc.new_page(width=w, height=h) # A4 landscape size
@@ -668,7 +721,6 @@ def printpdf(
     thai_bold_font_path="fonts/Kinnari-Bold.ttf",
     thai_italic_font_path="fonts/Kinnari-Italic.ttf",
     emoji_font_path="fonts/NotoEmoji-Regular.ttf",
-    template_pdf_path="template/Cute Star Border A4 Stationery Paper Document.pdf",
     cover_append_file="template/PP1-4.pdf",  # ไฟล์ PDF ที่จะเพิ่มหน้า
     author=None,
     fortune_json_path="template/th-en_slang_predictions_99.json"
@@ -870,16 +922,37 @@ def printpdf(
     merge_pdfs(cover_append_file, base_file, output_file)
     print(f"Created merged PDF: {output_file}")
 
-    # ถ้ามี template PDF ใช้ทำพื้นหลังบนไฟล์ output_file (ที่รวมหน้าแล้ว)
-    if os.path.exists(template_pdf_path):
-        add_template_background(template_pdf_path, output_file, output_path)
-    else:
-        os.rename(output_file, output_path)
+    doc = fitz.open(output_file)
+    total_pages = len(doc)
+    doc.close()
+    
+    # template PDF ใช้ทำพื้นหลังบนไฟล์ output_file (ที่รวมหน้าแล้ว)
+    output_temp = output_path.replace(".pdf", "_temp.pdf")
+    
+    ## First page
+    add_template_background(template_pdf_path1, output_file, output_temp,4,4)
+    os.remove(output_file)
+    os.rename(output_temp, output_file)
+    
+    ## Second page
+    add_template_background(template_pdf_path2, output_file, output_temp,5,5)
+    os.remove(output_file)
+    os.rename(output_temp, output_file)
+
+    ## Random page
+    random_page = random.randint(7, total_pages - 2) if total_pages > 6 else 6
+    print(f"random_page: {random_page}")
+    add_template_background(template_pdf_path3, output_file, output_temp, random_page-1, random_page-1)
+    os.remove(output_file)
+    os.rename(output_temp, output_file)
+    
+    ## FortuneDict
+    add_template_background(template_pdf_path4, output_file, output_path,total_pages-1,total_pages-1)
 
     # สร้าง booklet จากไฟล์ output_path (ไฟล์สุดท้ายที่มีพื้นหลังแล้วหรือไฟล์ merged)
     output_booklet = output_path.replace(".pdf", "_booklet.pdf")
     print(f"Input PDF: {output_path}")
-    make_foldable_booklet(input_path=output_path, output_path=output_booklet)
+    make_foldable_booklet(input_path=output_path, output_path=output_booklet, random_page=random_page)
     
     ### พิมพ์ออกมา
     if printer_active :
