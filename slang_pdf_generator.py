@@ -1,10 +1,8 @@
-## slang_pdf_generator.py
-
 import json
 import os
 import platform
 import subprocess
-import fitz  # PyMuPDF
+import fitz # PyMuPDF
 from datetime import datetime
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -31,6 +29,12 @@ title_font_size = 20
 header_font_size = 17
 content_font_size = 14
 
+# New constants for columns
+column_gap = 30  # Space between columns
+column_width = (usable_width - column_gap) / 2
+column1_x = margin_left
+column2_x = margin_left + column_width + column_gap
+
 def get_main_thai_consonant(word):
     """
     Return the first Thai consonant character from the word.
@@ -43,15 +47,18 @@ def get_main_thai_consonant(word):
     return word[0] if word else ''
     
 def register_fonts(thai_font_path, thai_bold_font_path, thai_italic_font_path, emoji_font_path):
+    """Register custom fonts with ReportLab."""
     pdfmetrics.registerFont(TTFont("Kinnari", thai_font_path))
     pdfmetrics.registerFont(TTFont("Kinnari-Bold", thai_bold_font_path))
     pdfmetrics.registerFont(TTFont("Kinnari-Italic", thai_italic_font_path))
     pdfmetrics.registerFont(TTFont("EmojiFont", emoji_font_path))
 
 def draw_title(c, text, y):
-    draw_mixed_text_centered(c, text, width / 2, y, "Kinnari", title_font_size, "EmojiFont", title_font_size)
+    """Draw a centered title with mixed text (Thai and Emoji)."""
+    draw_mixed_text_centered(c, text, width / 2, y, "Kinnari-Bold", title_font_size*0.8, "EmojiFont", title_font_size*0.8)
 
 def get_star_rating(reach, max_reach):
+    """Calculate star rating based on reach."""
     if max_reach == 0:
         return ""
     ratio = reach / max_reach
@@ -63,25 +70,25 @@ def get_star_rating(reach, max_reach):
         return " ⭐"
     else:
         return ""
-       
+        
 
 def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, hottest_word, y_start, lastauthor, totalauthor):
+    """Draw the introduction page with statistics."""
     updated_date = datetime.now().strftime("%d/%m/%Y %H:%M")
     text_lines = [
-        f"🖨 พิมพ์ที่: Bangkok Kunsthalle",
-        f"🔢 พิมพ์ครั้งที่: {total_reach:,}",
-        f"📅 ปรับปรุงล่าสุด: {updated_date}",
-        f"🏢 สำนักพิมพ์: ยุงลาย",
-        f"📝 ผู้แต่ง: {totalauthor} คน",
-        f"📝 ผู้แต่งล่าสุด: {lastauthor}",
-        f"🧾 คำศัพท์ทั้งหมด: {total_words:,} คำ",
-        f"🆕 คำล่าสุด: {latest_word}",
-        f"📚 คลังตัวอย่าง: {total_meanings:,} ชุด",
-        f"🔥 คำที่ฮิตที่สุด:",
+            f"🏢 สำนักพิมพ์ | Publisher : ยุงลาย - Yunglai",
+            f"🖨 พิมพ์ที่ | Printed at : Bangkok Kunsthalle",
+            f"🔢 พิมพ์ครั้งที่ | Print Count : {total_reach:,}",
+            f"📅 ปรับปรุงล่าสุด | Last Updated : {updated_date}",
+            f"🧾 คำศัพท์ทั้งหมด | Total Words : {total_words:,}",
+            f"🆕 คำล่าสุด | Latest Word : {latest_word}",
+            f"📝 จำนวนผู้แต่ง | Total Authors : {totalauthor}",
+            f"📝 ผู้แต่งล่าสุด | Latest Author : {lastauthor}",
+            f"📚 คลังตัวอย่าง | Example Data : {total_meanings:,} sets",
+            f"🔥 คำฮิต | Hottest Words :", # Label for the hottest words list
+        ]
 
-    ]
-
-    draw_title(c, "📖 ข้อมูลปทานุกรม", y_start)
+    draw_title(c, "📖 ปทานุกรมแบบสับ - The Not-So Modern Dictionary 📖", y_start)
     y = y_start - line_space * 3
 
     # Statistic
@@ -95,7 +102,7 @@ def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, ho
     y += line_space*0.5
     for line in hottest_word:
         y, _ = draw_mixed_text_wrapped(
-            c, f"   • {line}", margin_left, y,
+            c, f"    • {line}", margin_left, y,
             "Kinnari", content_font_size*1.3, "EmojiFont", content_font_size*1.2)
         y -= line_space*1
 
@@ -103,6 +110,7 @@ def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, ho
     c.showPage()
 
 def draw_fortune_page(c, fortune_data):
+    """Draw the fortune telling page with a random word and its prediction."""
     draw_page_number(c)
     c.showPage()
 
@@ -160,69 +168,57 @@ def draw_fortune_page(c, fortune_data):
     #c.showPage()
 
 
-
     
-def draw_entry(c, word, info, x, y, line_height, max_reach, indent=10):
+def draw_entry(c, word, info, x, y, line_height, max_reach, column_width, indent=10): # Added column_width
+    """Draw a dictionary entry (word, meaning, example, reach) within a specified column width."""
     reach = info.get("reach", 1)
     stars = get_star_rating(reach, max_reach)
+    
+    entry_fontsize_factor = 0.7 #factor to reduce or increase font size in word entry
 
     # Header + stars
+    # Pass column_width to draw_mixed_text_wrapped
     y, _ = draw_mixed_text_wrapped(
         c, f" {word}{stars}", x, y,
-        "Kinnari-Bold", header_font_size, "EmojiFont", round(header_font_size * 0.7), line_height)
-    y -= line_height * 0.2
+        "Kinnari-Bold", header_font_size * entry_fontsize_factor, "EmojiFont", round(header_font_size * 0.7 * entry_fontsize_factor), line_height, max_text_width=column_width)
+    y -= line_height * 0.2 * entry_fontsize_factor
 
     # Meanings
     meanings = info.get("meaning", [])
     if isinstance(meanings, str):
         meanings = [meanings]
     for m in meanings:
-        if y < margin_bottom + line_height * 3:
-            draw_page_number(c)
-            c.showPage()
-            y = margin_top
-            # หาอักษรแรกของคำศัพท์ที่จะใช้แสดงในหัวเรื่อง
-            first_char_on_page = get_main_thai_consonant(word)  # ใช้ตัวอักษรแรกของคำนี้
-            draw_title(c, f"📚 ปทานุกรมแบบสับ - {first_char_on_page}", y)
-            #draw_title(c, "📚 ปทานุกรมแบบสับ", y)
-            y -= line_height * 2
-
+        # No new page check here, as it's handled in the main loop
         y, _ = draw_mixed_text_wrapped(
             c, f"📝 {m}", x + indent, y,
-            "Kinnari", content_font_size, "EmojiFont", content_font_size - 2, line_height)
-        y -= line_height * 0.2
+            "Kinnari", content_font_size * entry_fontsize_factor, "EmojiFont", (content_font_size - 2) * entry_fontsize_factor, line_height, max_text_width=column_width - indent)
+        y -= line_height * 0.2 * entry_fontsize_factor
 
     # Examples
     examples = info.get("example", [])
     if isinstance(examples, str):
         examples = [examples]
     for ex in examples:
-        if y < margin_bottom + line_height * 3:
-            draw_page_number(c)
-            c.showPage()
-            y = margin_top
-            first_char_on_page = get_main_thai_consonant(word)  # ใช้ตัวอักษรแรกของคำนี้
-            draw_title(c, f"📚 ปทานุกรมแบบสับ - {first_char_on_page}", y)
-            y -= line_height * 2
-
+        # No new page check here, as it's handled in the main loop
         y, _ = draw_mixed_text_wrapped(
             c, f"💬 {ex}", x + indent, y,
-            "Kinnari", content_font_size, "EmojiFont", content_font_size - 2, line_height)
-        y -= line_height * 0.2
+            "Kinnari", content_font_size * entry_fontsize_factor, "EmojiFont", (content_font_size - 2) * entry_fontsize_factor, line_height, max_text_width=column_width - indent)
+        y -= line_height * 0.2 * entry_fontsize_factor
 
     # Reach number
     y += line_height * 0.3
     y, _ = draw_mixed_text_wrapped(
-        c, f" 📈 {reach}", x + indent, y,
-        "Kinnari", round(content_font_size*0.9), "EmojiFont", round(content_font_size*0.8), round(line_height * 0.8))
+        c, f" 📈 {reach}", x + indent, y, # Add English for consistency
+        "Kinnari", round(content_font_size*0.9 * entry_fontsize_factor), "EmojiFont", round(content_font_size*0.8 * entry_fontsize_factor), round(line_height * 0.8), max_text_width=column_width - indent)
 
-    y -= line_height * 2
+    y -= line_height * 2 * entry_fontsize_factor
     return y
 
 
 def draw_latest_word_page(c, word, info):
+    """Draw a page dedicated to the latest added word."""
     y = margin_top
-    draw_title(c, "🆕 ศัพท์ใหม่ล่าสุด", y)
+    draw_title(c, "The Not-So Modern Dictionary 🤩 A New Entry", y)
     y -= line_space * 3
 
     # แสดงคำใหญ่
@@ -237,7 +233,7 @@ def draw_latest_word_page(c, word, info):
     meanings = meanings[-4:]  # แสดง 4 ชุดล่าสุด
     
     y, _ = draw_mixed_text_wrapped(
-    c, f"📝 ความหมาย:", margin_left, y,
+    c, f"📝 ความหมาย | Meaning", margin_left, y, # Translated label
     "Kinnari", content_font_size * 1.8,
     "EmojiFont", content_font_size * 1.8,
     line_space*1)
@@ -249,7 +245,7 @@ def draw_latest_word_page(c, word, info):
             "Kinnari", content_font_size * 1.5,
             "EmojiFont", content_font_size * 1.5,
             line_space*1)
-        y -= line_space
+        y -= line_space*0.9
     y -= line_space
     
     # Samples
@@ -259,7 +255,7 @@ def draw_latest_word_page(c, word, info):
     examples = examples[-4:]  # แสดง 4 ชุดล่าสุด
     
     y, _ = draw_mixed_text_wrapped(
-    c, f"💬 ตัวอย่าง:", margin_left, y,
+    c, f"💬 ตัวอย่าง | Examples", margin_left, y, # Translated label
     "Kinnari", content_font_size * 1.8,
     "EmojiFont", content_font_size * 1.8,
     line_space*1)
@@ -271,21 +267,21 @@ def draw_latest_word_page(c, word, info):
             "Kinnari", content_font_size * 1.5,
             "EmojiFont", content_font_size * 1.5,
             line_space *1)
-        y -= line_space
+        y -= line_space*0.9
 
-    # เพิ่มชื่อผู้แต่งล่าสุดถ้ามี
+    # Add latest author if available
     author_list = info.get("author")
     if isinstance(author_list, list) and author_list:
-        author = author_list[-1]  # คนสุดท้ายใน list
+        author = author_list[-1]  # last one in the list
     elif isinstance(author_list, str):
         author = author_list
     else:
         author = None
 
     if author:
-        y -= line_space * 2
+        y -= line_space * 1.5
         y, _ = draw_mixed_text_wrapped(
-            c, f"📝 ผู้แต่งล่าสุด: {author}", margin_left, y,
+            c, f"📝 ผู้แต่งล่าสุด | Latest Author: {author}", margin_left, y, # Translated label
             "Kinnari", content_font_size * 2,
             "EmojiFont", content_font_size * 2,
             line_space * 1.5)
@@ -295,9 +291,10 @@ def draw_latest_word_page(c, word, info):
 
 
 def draw_mixed_text(c, text, x, y, font1, size1, font2, size2):
+    """Draw text character by character, switching fonts for emojis."""
     current_x = x
     for ch in text:
-        if ord(ch) > 0x1F000 or ord(ch) == 0x2B50:
+        if ord(ch) > 0x1F000 or ord(ch) == 0x2B50: # Check for common emoji ranges and specific star emoji
             c.setFont(font2, size2)
         else:
             c.setFont(font1, size1)
@@ -305,19 +302,25 @@ def draw_mixed_text(c, text, x, y, font1, size1, font2, size2):
         current_x += stringWidth(ch, c._fontname, c._fontsize)
 
 def draw_mixed_text_centered(c, text, center_x, y, font1, size1, font2, size2):
+    """Draw mixed text centered horizontally."""
     total_width = sum(stringWidth(ch, font2 if ord(ch) >= 0x1F000 or ord(ch) == 0x2B50 else font1, size2 if ord(ch) >= 0x1F000 or ord(ch) == 0x2B50 else size1) for ch in text)
     start_x = center_x - total_width / 2
     draw_mixed_text(c, text, start_x, y, font1, size1, font2, size2)
 
-def draw_mixed_text_wrapped(c, text, x, y, font1, size1, font2, size2, line_height=line_space):
+def draw_mixed_text_wrapped(c, text, x, y, font1, size1, font2, size2, line_height=line_space, max_text_width=None):
+    """Draw mixed text, wrapping it to fit within a specified maximum width."""
+    if max_text_width is None:
+        # Default to usable_width for non-column drawing (e.g., full-width titles)
+        max_text_width = usable_width - (x - margin_left)
+    
     lines = []
     current_line = ''
     current_width = 0
     for ch in text:
-        font = font2 if ord(ch) >= 0x1F000 or ord(ch) == 0x2B50 else font1
-        size = size2 if ord(ch) >= 0x1F000 or ord(ch) == 0x2B50 else size1
+        font = font2 if ord(ch) > 0x1F000 or ord(ch) == 0x2B50 else font1
+        size = size2 if ord(ch) > 0x1F000 or ord(ch) == 0x2B50 else size1
         ch_width = stringWidth(ch, font, size)
-        if current_width + ch_width > usable_width - (x - margin_left):
+        if current_width + ch_width > max_text_width: # Use max_text_width here
             lines.append(current_line)
             current_line = ch
             current_width = ch_width
@@ -335,6 +338,7 @@ def draw_mixed_text_wrapped(c, text, x, y, font1, size1, font2, size2, line_heig
 
 # ➕ ฟังก์ชันใหม่: ใส่เลขหน้า
 def draw_page_number(c):
+    """Draw the current page number at the bottom center of the page."""
     page_num = c.getPageNumber()
     text = f"- {page_num} -"
     font_size = 12
@@ -345,6 +349,7 @@ def draw_page_number(c):
     c.drawString(x, y, text)
 
 def add_template_background(template_path, input_pdf_path, output_pdf_path):
+    """Add a background template to specific pages of a PDF."""
     template_doc = fitz.open(template_path)
     input_doc = fitz.open(input_pdf_path)
 
@@ -364,43 +369,81 @@ def add_template_background(template_path, input_pdf_path, output_pdf_path):
         input_doc.close()
 
 def make_foldable_booklet(input_path, output_path):
+    """Rearrange pages of a PDF to create a foldable booklet layout."""
     doc = fitz.open(input_path)
     total_pages = len(doc)
-    w, h = 842, 595
+    w, h = 842, 595 # A4 landscape dimensions for 2-up printing
+    
+    # Pad with blank pages if total_pages is less than 8 for booklet format
     if total_pages < 8:
-        print(f"PDF total_pages: {total_pages}")    
+        print(f"PDF total_pages: {total_pages}, padding to 8 pages for booklet.")
         for _ in range(8 - total_pages):
             doc.new_page(width=w, height=h)
-            
-    section_w, section_h = w / 4, h / 2
-    page_order = [0, 1, 2, 3, 4, 5, random.randint(6, total_pages-2), total_pages-1]
-    #page_order_standard = [7, 0, 1, 6, 5, 2, 3, 4]
+    
+    # Recalculate total_pages after padding
+    total_pages = len(doc)
+
+    # Simplified page order for testing 8 pages (adjust for actual booklet pagination)
+    # This is a fixed order for 8 pages on a single A4 landscape sheet.
+    # For a general booklet, you'd calculate pages for each sheet.
+    # Example for an 8-page booklet (2 sheets, 4 pages per sheet):
+    # Sheet 1: Page 7, Page 0, Page 1, Page 6 (front side of paper)
+    # Sheet 2: Page 5, Page 2, Page 3, Page 4 (back side of paper)
+    # The current implementation below is for a single sheet with 8 logical "sections".
+    
+    # This page_order determines which original page goes into which "section" of the output page.
+    # It might need adjustment based on the exact folding method.
+    # The random page for index 6 might not be desired for actual booklets.
+    # For a standard 8-page booklet printed on one A4 sheet (landscape, folded in half then quarters):
+    # Sheet side 1 (top half): [Page 7 (back cover), Page 0 (front cover)]
+    # Sheet side 2 (bottom half): [Page 1, Page 6] (inside of the paper, reversed)
+    # The current code puts 8 'sections' on one page. This is for a single large sheet.
+    # To create a standard booklet (e.g., A4 landscape folded into A6 booklet), you'd need to
+    # combine 4 pages onto one side of an A4 sheet, and 4 more on the other side.
+    
+    # For simplicity and to match the existing user code's intent of placing multiple pages on one sheet:
+    # We will arrange 8 virtual "sections" on one output A4 page.
+    # This assumes the user wants all 8 logical "pages" to be visible on one physical A4 sheet.
+    
+    # The original page_order has a random element, which is unusual for a standard booklet.
+    # Keeping it as is, but noting this for future improvements.
+    page_order = [0, 1, 2, 3, 4, 5, random.randint(6, total_pages - 1) if total_pages > 6 else 6, total_pages - 1 if total_pages > 0 else 0]
+    
+    # Create a new document for the booklet output
     output_doc = fitz.open()
-    new_page = output_doc.new_page(width=w, height=h)
+    new_page = output_doc.new_page(width=w, height=h) # A4 landscape size
+
+    section_w, section_h = w / 4, h / 2 # Divide A4 landscape into 2 rows, 4 columns
+    
     for i, idx in enumerate(page_order):
-        if idx >= len(doc): continue
+        if idx >= len(doc):
+            continue # Skip if index is out of bounds for the original document
+        
         src_page = doc.load_page(idx)
-        text = src_page.get_text("text").strip()
-        #if not text: continue
-        col, row = i % 4, 0 if i < 4 else 1
+        
+        col, row = i % 4, 0 if i < 4 else 1 # Determine column and row for each section
         x0, y0 = col * section_w, row * section_h
         target_rect = fitz.Rect(x0, y0, x0 + section_w, y0 + section_h)
         
-        # rotate the first 4 pages
+        # Rotate the first 4 "sections" (logical pages) by 180 degrees
         rotation = 180 if i < 4 else 0
         new_page.show_pdf_page(target_rect, doc, idx, rotate=rotation)
-        #new_page.show_pdf_page(target_rect, doc, idx)
+        
     output_doc.save(output_path)
+    doc.close()
+    output_doc.close()
+
 
 def merge_pdfs(append_pdf_path, base_pdf_path, output_pdf_path):
+    """Merge two PDF files, appending one to the beginning of another."""
     writer = PdfWriter()
 
-    # เพิ่ม append ก่อน → กลายเป็นหน้า 1 เป็นต้นไป
+    # Add pages from the append_pdf first
     append_pdf = PdfReader(append_pdf_path)
     for page in append_pdf.pages:
         writer.add_page(page)
 
-    # ตามด้วย base
+    # Then add pages from the base_pdf
     base_pdf = PdfReader(base_pdf_path)
     for page in base_pdf.pages:
         writer.add_page(page)
@@ -418,7 +461,9 @@ def print_pdf_file(pdf_path, printer_name=None):
     For Linux/macOS, it uses the `lpr` command.
     """
     # Convert to absolute path
-    abs_pdf_path = os.path.abspath(pdf_path)
+    # Ensure the path uses forward slashes for consistency in PowerShell arguments
+    # and to avoid issues with backslashes needing escaping.
+    abs_pdf_path = os.path.abspath(pdf_path).replace("\\", "/")
 
     print(f"กำลังสั่งพิมพ์ไฟล์: {abs_pdf_path}")
     if not os.path.exists(abs_pdf_path):
@@ -433,10 +478,14 @@ def print_pdf_file(pdf_path, printer_name=None):
         
         # --- Attempt 1: Using PowerShell with PrintTo verb (relies on default app association) ---
         if printer_name:
-            cmd = f'PowerShell.exe -Command "Start-Process -FilePath \'{abs_pdf_path}\' -Verb PrintTo -ArgumentList \'{printer_name}\'"'
+            # Use 'Start-Process' with double quotes around file path for spaces and to handle forward slashes
+            # Using os.path.normpath to ensure correct path formatting for Windows native commands
+            # and then replacing backslashes with forward slashes for PowerShell compatibility.
+            quoted_abs_pdf_path = f'"{os.path.normpath(abs_pdf_path)}"'
+            cmd = f'PowerShell.exe -Command "Start-Process -FilePath {quoted_abs_pdf_path} -Verb PrintTo -ArgumentList \'{printer_name}\'"'
             print(f"คำสั่ง Windows (PowerShell - PrintTo): {cmd}")
             try:
-                subprocess.run(cmd, shell=True, check=True, creationflags=subprocess.SW_HIDE) # SW_HIDE to try to hide window
+                subprocess.run(cmd, shell=True, check=True, creationflags=subprocess.CREATE_NO_WINDOW) # Use CREATE_NO_WINDOW for silent process
                 print(f"✅ สั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' ไปยังเครื่องพิมพ์ '{printer_name}' บน Windows เรียบร้อยแล้ว (ผ่าน PowerShell PrintTo)")
                 print("หากไม่เห็นงานพิมพ์ โปรดตรวจสอบคิวงานพิมพ์ของเครื่องพิมพ์และโปรแกรมดู PDF เริ่มต้น")
                 printed_successfully = True
@@ -451,17 +500,29 @@ def print_pdf_file(pdf_path, printer_name=None):
         
         # --- Attempt 2: Using known PDF viewers directly (if Attempt 1 fails or no printer_name) ---
         if not printed_successfully and printer_name:
-            # Try Adobe Reader
+            # Common paths for Adobe Reader and SumatraPDF
+            program_files_x86 = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
+            program_files = os.environ.get("ProgramFiles", r"C:\Program Files")
+
             adobe_reader_paths = [
-                r"C:\Program Files (x86)\Adobe\Acrobat Reader DC\Reader\AcroRd32.exe",
-                r"C:\Program Files\Adobe\Acrobat Reader DC\Reader\AcroRd32.exe"
+                os.path.join(program_files_x86, r"Adobe\Acrobat Reader DC\Reader\AcroRd32.exe"),
+                os.path.join(program_files, r"Adobe\Acrobat Reader DC\Reader\AcroRd32.exe"),
+                os.path.join(program_files_x86, r"Adobe\Reader 11.0\Reader\AcroRd32.exe"), # Older version
+                os.path.join(program_files, r"Adobe\Reader 11.0\Reader\AcroRd32.exe")    # Older version
             ]
+            sumatra_paths = [
+                os.path.join(program_files, r"SumatraPDF\SumatraPDF.exe"),
+                os.path.join(program_files_x86, r"SumatraPDF\SumatraPDF.exe")
+            ]
+
+            # Try Adobe Reader
             for adobe_path in adobe_reader_paths:
                 if os.path.exists(adobe_path):
-                    cmd = [adobe_path, "/N", "/T", abs_pdf_path, printer_name]
+                    # Quote paths for command line using os.path.normpath for consistency
+                    cmd = [f'"{os.path.normpath(adobe_path)}"', "/N", "/T", f'"{os.path.normpath(abs_pdf_path)}"', printer_name]
                     print(f"คำสั่ง Windows (Adobe Reader): {' '.join(cmd)}")
                     try:
-                        subprocess.run(cmd, check=True, creationflags=subprocess.SW_HIDE)
+                        subprocess.run(" ".join(cmd), shell=True, check=True, creationflags=subprocess.CREATE_NO_WINDOW)
                         print(f"✅ สั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' ไปยังเครื่องพิมพ์ '{printer_name}' บน Windows เรียบร้อยแล้ว (ผ่าน Adobe Reader)")
                         printed_successfully = True
                         break
@@ -471,16 +532,13 @@ def print_pdf_file(pdf_path, printer_name=None):
             
             if not printed_successfully:
                 # Try SumatraPDF
-                sumatra_paths = [
-                    r"C:\Program Files\SumatraPDF\SumatraPDF.exe",
-                    r"C:\Program Files (x86)\SumatraPDF\SumatraPDF.exe"
-                ]
                 for sumatra_path in sumatra_paths:
                     if os.path.exists(sumatra_path):
-                        cmd = [sumatra_path, "-print-to", printer_name, abs_pdf_path]
+                        # Quote paths for command line using os.path.normpath for consistency
+                        cmd = [f'"{os.path.normpath(sumatra_path)}"', "-print-to", printer_name, f'"{os.path.normpath(abs_pdf_path)}"', "-silent"] # Added -silent
                         print(f"คำสั่ง Windows (SumatraPDF): {' '.join(cmd)}")
                         try:
-                            subprocess.run(cmd, check=True, creationflags=subprocess.SW_HIDE)
+                            subprocess.run(" ".join(cmd), shell=True, check=True, creationflags=subprocess.CREATE_NO_WINDOW)
                             print(f"✅ สั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' ไปยังเครื่องพิมพ์ '{printer_name}' บน Windows เรียบร้อยแล้ว (ผ่าน SumatraPDF)")
                             printed_successfully = True
                             break
@@ -493,12 +551,14 @@ def print_pdf_file(pdf_path, printer_name=None):
             print(f"⚠️ ไม่สามารถสั่งพิมพ์แบบเงียบได้ หรือไม่มีชื่อเครื่องพิมพ์ที่ระบุ")
             print(f"   กำลังสั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' โดยเปิดกล่องโต้ตอบการพิมพ์ (โปรดกดพิมพ์ด้วยตนเอง)")
             try:
-                os.startfile(abs_pdf_path, "print")
+                # Ensure the path is quoted for os.startfile as well
+                os.startfile(os.path.normpath(abs_pdf_path), "print") # os.startfile generally handles paths correctly without manual quoting, but normpath helps.
                 print("✅ คำสั่งเปิดกล่องโต้ตอบการพิมพ์ถูกส่งแล้ว")
             except Exception as e:
                 print(f"❌ ข้อผิดพลาดในการเปิดกล่องโต้ตอบการพิมพ์: {e}")
                 print("   โปรดตรวจสอบการตั้งค่าโปรแกรมดู PDF เริ่มต้นและสิทธิ์การเข้าถึง")
                 print("   หากปัญหายังคงอยู่: โปรดติดตั้งโปรแกรมดู PDF เช่น Adobe Reader หรือ SumatraPDF และตั้งค่าให้เป็นโปรแกรมเริ่มต้นสำหรับไฟล์ PDF")
+                print("   หากปัญหายังคงอยู่: อาจจำเป็นต้องแก้ไขการเชื่อมโยงชนิดไฟล์ด้วยตนเองใน Windows หรือเรียกใช้สคริปต์ในฐานะผู้ดูแลระบบ")
 
     elif system == "Darwin" or system == "Linux": # Darwin คือ macOS
         try:
@@ -506,7 +566,7 @@ def print_pdf_file(pdf_path, printer_name=None):
             cmd = ["lpr"]
             if printer_name:
                 cmd.extend(["-P", printer_name])
-            cmd.append(abs_pdf_path)
+            cmd.append(abs_pdf_path) # lpr handles paths with spaces well
             
             print(f"คำสั่ง Linux/macOS (lpr): {' '.join(cmd)}")
             subprocess.run(cmd, check=True)
@@ -556,21 +616,21 @@ def printpdf(
 
     for path in [temp_output, intermediate_path, output_path]:
         if os.path.exists(path):
-            os.remove(path)
+            try:
+                os.remove(path)
+                print(f"Removed old file: {path}")
+            except OSError as e:
+                print(f"Error removing file {path}: {e}")
 
     max_reach = max((entry.get("reach", 1) for entry in data.values()), default=1)
 
     c = canvas.Canvas(temp_output, pagesize=A4)
-    x = margin_left
-    y = margin_top
     
     total_meanings = 0
     total_reach = 0
     latest_word = ""
     latest_time = ""
-    hottest_word = ""
-#    max_reach = 0
-
+    
     ### Statistic intro
     lastauthor = "ไม่ระบุ"
     top_words = []  # กำหนดตัวแปรก่อน
@@ -597,11 +657,11 @@ def printpdf(
         if update_time > latest_time:
             latest_time = update_time
             latest_word = word
-            author = info.get("author", "ไม่ระบุ")
-            if isinstance(author, list):
-                lastauthor = author[-1] if author else "ไม่ระบุ"
+            author_info = info.get("author", "ไม่ระบุ")
+            if isinstance(author_info, list):
+                lastauthor = author_info[-1] if author_info else "ไม่ระบุ"
             else:
-                lastauthor = author
+                lastauthor = author_info
 
     # อ่านไฟล์คำทำนาย
     fortune_data = {}
@@ -612,8 +672,6 @@ def printpdf(
         print(f"❌ ไม่พบไฟล์คำทำนาย {fortune_json_path}")
 
     top_words = sorted(top_words, key=lambda x: x[1], reverse=True)
-    #top5_words = [f" {w} ({r})" for w, r in top_words[:5]]
-    #hottest_words_text = " • ".join(top5_words)
     hottest_words_text = [f"{w} ({r})" for w, r in top_words[:5]]
     
     totalauthor = len(authors_set)
@@ -638,42 +696,95 @@ def printpdf(
     else:
         print(f"❌ ไม่พบ latest_word: {latest_word}")
         
-    ### Content
-    draw_title(c, "📚 ปทานุกรมแบบสับ | The Not-So Modern Dictionary ", margin_top)
-    y = margin_top - line_space * 2
+    ### Content with 2 columns
+    # Initial Y positions for left and right columns
+    y_left_col = margin_top - line_space * 2
+    y_right_col = margin_top - line_space * 2
     
+    # Sort words for alphabetical order (assuming Thai collation is handled by locale)
     sorted_words = sorted(data.keys(), key=locale.strxfrm)
-    first_char_on_page = None
+    
+    # Draw the initial dictionary title for the content section
+    first_char_on_page = get_main_thai_consonant(sorted_words[0])
+    draw_title(c, f"The Not-So Modern Dictionary 📚 {first_char_on_page}", margin_top)
+    c.setFont("Kinnari", content_font_size) # Set default font for content text
+    
+    # Reset column Y positions after title is drawn (already set above, but confirm)
+    y_left_col = margin_top - line_space * 2
+    y_right_col = margin_top - line_space * 2
 
+    # Iterate through sorted words and place them in columns
     for i, word in enumerate(sorted_words):
         info = data[word]
+        
+        # Estimate height for the current entry (rough estimate for decision making)
+        # 1 line for word, 1 for each meaning, 1 for each example, 1 for reach + some padding
+        # This is a critical estimation for column layout. Adjust factor (1.5) if entries get cut off.
+        estimated_entry_lines = 1 + len(info.get("meaning", [])) + len(info.get("example", [])) + 1
+        estimated_entry_height = estimated_entry_lines * line_space * 1.5 
 
-        # ตรวจว่าควรเริ่มหน้าใหม่หรือไม่
-        if y < margin_newpage:
-            draw_page_number(c)
-            c.showPage()
-            y = margin_top
+        target_x = None
+        current_y_for_entry = None
+        should_start_new_page = False
 
-            # หาอักษรแรกของคำศัพท์ที่จะใช้แสดงในหัวเรื่อง
-            first_char_on_page = get_main_thai_consonant(word)  # ใช้ตัวอักษรแรกของคำนี้
-            draw_title(c, f"📚 ปทานุกรมแบบสับ - {first_char_on_page}", y)
-            y -= line_space * 2
+        # Decide which column to put the current entry into
+        if y_left_col <= y_right_col: # Prefer left column if it's currently "shorter" or equal
+            if y_left_col - estimated_entry_height < margin_bottom: # Left column would overflow
+                if y_right_col - estimated_entry_height < margin_bottom: # Right column also would overflow -> new page
+                    should_start_new_page = True
+                else: # Left overflows, but right has space on current page
+                    target_x = column2_x
+                    current_y_for_entry = y_right_col
+            else: # Left column has space
+                target_x = column1_x
+                current_y_for_entry = y_left_col
+        else: # Prefer right column (y_right_col is shorter)
+            if y_right_col - estimated_entry_height < margin_bottom: # Right column would overflow -> new page
+                should_start_new_page = True
+            else: # Right column has space
+                target_x = column2_x
+                current_y_for_entry = y_right_col
 
-        # วาดรายการคำศัพท์
-        y = draw_entry(c, word, info, x, y, line_space, max_reach)
+        # Handle new page if decided
+        if should_start_new_page:
+            draw_page_number(c) # Draw page number for current page before moving on
+            c.showPage() # Start new page
+            y_left_col = margin_top - line_space * 2 # Reset Y for new page
+            y_right_col = margin_top - line_space * 2
+            
+            # For a new page, always start in the left column
+            target_x = column1_x
+            current_y_for_entry = y_left_col
+            
+            # Draw new page title
+            first_char_on_page = get_main_thai_consonant(word)
+            draw_title(c, f"The Not-So Modern Dictionary 📚 {first_char_on_page}", margin_top)
+            c.setFont("Kinnari", content_font_size) # Reset default font for content text
 
-   
+        # Draw the entry at the determined (target_x, current_y_for_entry)
+        new_y_after_drawing = draw_entry(c, word, info, target_x, current_y_for_entry, line_space, max_reach, column_width)
+        
+        # Update the y-coordinate for the column that was just filled
+        if target_x == column1_x:
+            y_left_col = new_y_after_drawing
+        else: # target_x == column2_x
+            y_right_col = new_y_after_drawing
+
+    # After iterating through all words, draw the page number on the last page of content
+    # This also ensures content is flushed before next sections.
+    draw_page_number(c)
+    #c.showPage() 
+    
     # วาดหน้าคำทำนาย (เพิ่มหน้าสุดท้าย)
     if fortune_data:
         draw_fortune_page(c, fortune_data)
-    #c.save()
-    
+        
     draw_page_number(c)
     c.save()
     os.rename(temp_output, intermediate_path)
 
     # รวม PDF (เพิ่มหน้าจาก cover_append_file เข้าไปใน intermediate_path)
-    base_file = intermediate_path            # ไฟล์ที่เพิ่งบันทึกเสร็จ
+    base_file = intermediate_path      # ไฟล์ที่เพิ่งบันทึกเสร็จ
     output_file = base_file.replace('.pdf', '_complete.pdf')
 
     merge_pdfs(cover_append_file, base_file, output_file)
@@ -691,4 +802,4 @@ def printpdf(
     make_foldable_booklet(input_path=output_path, output_path=output_booklet)
     
     ### พิมพ์ออกมา
-    print_pdf_file(output_booklet)
+    #print_pdf_file(output_booklet, "Brother MFC-J5320DW Printer")
