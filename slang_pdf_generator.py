@@ -1,3 +1,5 @@
+## slang_pdf_generator.py
+
 import json
 import os
 import platform
@@ -15,13 +17,16 @@ import random
 from PyPDF2 import PdfReader, PdfWriter
 import re
 
+## Printer enable
+printer_active = False
+
 # 📐 Global constants
 width, height = A4
 margin_left = 70
 margin_right = margin_left
 margin_top = height - 80
 margin_bottom = 70
-margin_newpage = 100
+margin_newpage = 100 # Adjusted for column logic: this is the minimum Y for content
 line_space = 20
 usable_width = width - margin_left - margin_right
 
@@ -111,9 +116,6 @@ def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, ho
 
 def draw_fortune_page(c, fortune_data):
     """Draw the fortune telling page with a random word and its prediction."""
-    draw_page_number(c)
-    c.showPage()
-
     y = margin_top
     draw_title(c, "🪄 ปทานุกรมทำนาย - FortuneDict 🪄", y)
     y -= line_space * 4
@@ -123,30 +125,22 @@ def draw_fortune_page(c, fortune_data):
     word = random.choice(list(fortune_data.keys()))
     fortune = fortune_data[word]
 
-    # เช็คพื้นที่
-    if y < margin_bottom + line_space * 4:
-        draw_page_number(c)
-        c.showPage()
-        y = margin_top
-        draw_title(c, "ศัพท์ทำนาย - FortueDict", y)
-        y -= line_space * 4
-
-    # แสดงสัญลักษณ์
+    # Display symbol
     c.setFont("EmojiFont", header_font_size*3)
     c.drawCentredString(width / 2, y, "🔮")
     y -= line_space*4
-    # แสดงหัวข้อคำศัพท์
+    # Display word heading
     c.setFont("Kinnari-Bold", header_font_size * 2.5)
     c.drawCentredString(width / 2, y, word)
     y -= line_space*2
     
-    # แสดงคำอธิบาย (wrap ข้อความ)
+    # Display explanation (wrapped text)
     c.setFont("Kinnari-Italic", header_font_size*1.5)
     c.drawCentredString(width / 2, y, "ศัพท์ทำนายสำหรับคุณ")
 
     y -= line_space*4
 
-    # แสดงข้อความคำทำนาย ไทย
+    # Display Thai fortune text
     y, _ = draw_mixed_text_wrapped(
         c, fortune["th"], margin_left + indent, y,
         "Kinnari", content_font_size*2,
@@ -155,7 +149,7 @@ def draw_fortune_page(c, fortune_data):
     )
     y -= line_space*1
 
-    # แสดงข้อความคำทำนาย อังกฤษ
+    # Display English fortune text
     y, _ = draw_mixed_text_wrapped(
         c, fortune["en"], margin_left + indent, y,
         "Kinnari", content_font_size*2,
@@ -165,60 +159,125 @@ def draw_fortune_page(c, fortune_data):
     y -= line_space*2
     
     draw_page_number(c)
-    #c.showPage()
-
 
     
-def draw_entry(c, word, info, x, y, line_height, max_reach, column_width, indent=10): # Added column_width
-    """Draw a dictionary entry (word, meaning, example, reach) within a specified column width."""
-    reach = info.get("reach", 1)
-    stars = get_star_rating(reach, max_reach)
-    
-    entry_fontsize_factor = 0.7 #factor to reduce or increase font size in word entry
+def draw_entry(c, word, info, x, y_start, line_height, max_reach, column_width, indent=10,
+               current_meaning_idx=0, current_example_idx=0, draw_header=True):
+    """
+    Draw parts of a dictionary entry within a column.
+    Returns (new_y, finished_drawing_entry_completely, next_meaning_idx, next_example_idx).
+    If finished_drawing_entry_completely is False, it means the column ran out of space
+    and the caller needs to resume drawing this entry in another column/page.
+    """
+    current_y = y_start
+    entry_fontsize_factor = 0.7 
 
-    # Header + stars
-    # Pass column_width to draw_mixed_text_wrapped
-    y, _ = draw_mixed_text_wrapped(
-        c, f" {word}{stars}", x, y,
-        "Kinnari-Bold", header_font_size * entry_fontsize_factor, "EmojiFont", round(header_font_size * 0.7 * entry_fontsize_factor), line_height, max_text_width=column_width)
-    y -= line_height * 0.2 * entry_fontsize_factor
+    # Define reach and stars universally at the beginning of the function
+    # This prevents the "local variable 'reach' referenced before assignment" error
+    reach = info.get("reach", 1) 
+    stars = get_star_rating(reach, max_reach) # stars needs reach to be defined
+
+    # Draw word and stars only if draw_header is True
+    if draw_header:
+        
+        header_text = f" {word}{stars}"
+        
+        # Estimate height for header
+        temp_y_header, _ = draw_mixed_text_wrapped(c, header_text, x, current_y,
+                                                    "Kinnari-Bold", header_font_size * entry_fontsize_factor,
+                                                    "EmojiFont", round(header_font_size * 0.7 * entry_fontsize_factor),
+                                                    line_height, max_text_width=column_width, dry_run=True)
+        estimated_header_height = current_y - temp_y_header + (line_height * 0.2 * entry_fontsize_factor) + (line_height * 0.5 * entry_fontsize_factor) # Add spacing
+        
+        if current_y - estimated_header_height < margin_bottom:
+            # Header itself doesn't fit or not enough space for even minimal content
+            # This is a critical check for starting an entry.
+            return y_start, False, current_meaning_idx, current_example_idx # No space, nothing drawn for this call
+
+        current_y, _ = draw_mixed_text_wrapped(
+            c, header_text, x, current_y,
+            "Kinnari-Bold", header_font_size * entry_fontsize_factor, "EmojiFont", round(header_font_size * 0.7 * entry_fontsize_factor), line_height, max_text_width=column_width)
+        current_y -= line_height * 0.2 * entry_fontsize_factor
+        current_y -= line_height * 0.5 * entry_fontsize_factor # Space after header
 
     # Meanings
     meanings = info.get("meaning", [])
     if isinstance(meanings, str):
         meanings = [meanings]
-    for m in meanings:
-        # No new page check here, as it's handled in the main loop
-        y, _ = draw_mixed_text_wrapped(
-            c, f"📝 {m}", x + indent, y,
+    
+    meaning_resume_idx = current_meaning_idx
+    for idx in range(meaning_resume_idx, len(meanings)):
+        m = meanings[idx]
+        
+        temp_y_meaning, _ = draw_mixed_text_wrapped(c, f"📝 {m}", x + indent, current_y,
+                                                    "Kinnari", content_font_size * entry_fontsize_factor,
+                                                    "EmojiFont", (content_font_size - 2) * entry_fontsize_factor,
+                                                    line_height, max_text_width=column_width - indent, dry_run=True)
+        estimated_meaning_height = current_y - temp_y_meaning + (line_height * 0.2 * entry_fontsize_factor) # Add spacing
+        
+        if current_y - estimated_meaning_height < margin_bottom:
+            # This meaning won't fit entirely. Stop here and return current state.
+            return current_y, False, idx, current_example_idx
+
+        current_y, _ = draw_mixed_text_wrapped(
+            c, f"📝 {m}", x + indent, current_y,
             "Kinnari", content_font_size * entry_fontsize_factor, "EmojiFont", (content_font_size - 2) * entry_fontsize_factor, line_height, max_text_width=column_width - indent)
-        y -= line_height * 0.2 * entry_fontsize_factor
+        current_y -= line_height * 0.15 * entry_fontsize_factor
+        meaning_resume_idx = idx + 1 # Update index to reflect what was drawn
 
     # Examples
     examples = info.get("example", [])
     if isinstance(examples, str):
         examples = [examples]
-    for ex in examples:
-        # No new page check here, as it's handled in the main loop
-        y, _ = draw_mixed_text_wrapped(
-            c, f"💬 {ex}", x + indent, y,
-            "Kinnari", content_font_size * entry_fontsize_factor, "EmojiFont", (content_font_size - 2) * entry_fontsize_factor, line_height, max_text_width=column_width - indent)
-        y -= line_height * 0.2 * entry_fontsize_factor
+    
+    example_resume_idx = current_example_idx
+    # Only proceed to examples if all meanings have been drawn
+    if meaning_resume_idx == len(meanings):
+        for idx in range(example_resume_idx, len(examples)):
+            ex = examples[idx]
+            
+            temp_y_example, _ = draw_mixed_text_wrapped(c, f"💬 {ex}", x + indent, current_y,
+                                                        "Kinnari", content_font_size * entry_fontsize_factor,
+                                                        "EmojiFont", (content_font_size - 2) * entry_fontsize_factor,
+                                                        line_height, max_text_width=column_width - indent, dry_run=True)
+            estimated_example_height = current_y - temp_y_example + (line_height * 0.2 * entry_fontsize_factor) # Add spacing
 
-    # Reach number
-    y += line_height * 0.3
-    y, _ = draw_mixed_text_wrapped(
-        c, f" 📈 {reach}", x + indent, y, # Add English for consistency
-        "Kinnari", round(content_font_size*0.9 * entry_fontsize_factor), "EmojiFont", round(content_font_size*0.8 * entry_fontsize_factor), round(line_height * 0.8), max_text_width=column_width - indent)
+            if current_y - estimated_example_height < margin_bottom:
+                # This example won't fit entirely. Stop here and return current state.
+                return current_y, False, meaning_resume_idx, idx
 
-    y -= line_height * 2 * entry_fontsize_factor
-    return y
+            current_y, _ = draw_mixed_text_wrapped(
+                c, f"💬 {ex}", x + indent, current_y,
+                "Kinnari", content_font_size * entry_fontsize_factor, "EmojiFont", (content_font_size - 2) * entry_fontsize_factor, line_height, max_text_width=column_width - indent)
+            current_y -= line_height * 0.15 * entry_fontsize_factor
+            example_resume_idx = idx + 1 # Update index to reflect what was drawn
+
+    # Reach number (only if all meanings and examples have been drawn)
+    if meaning_resume_idx == len(meanings) and example_resume_idx == len(examples):
+        current_y += line_height * 0.3
+        temp_y_reach, _ = draw_mixed_text_wrapped(c, f" 📈 {reach} | Reach: {reach}", x + indent, current_y, # Added English for reach
+                                                "Kinnari", round(content_font_size*0.9 * entry_fontsize_factor),
+                                                "EmojiFont", round(content_font_size*0.8 * entry_fontsize_factor),
+                                                round(line_height * 0.8), max_text_width=column_width - indent, dry_run=True)
+        estimated_reach_height = current_y - temp_y_reach + (line_height * 2 * entry_fontsize_factor) # Add spacing
+        
+        if current_y - estimated_reach_height < margin_bottom:
+            # Reach won't fit. Return state.
+            return current_y, False, meaning_resume_idx, example_resume_idx
+
+        current_y, _ = draw_mixed_text_wrapped(
+            c, f" 📈 {reach}", x + indent, current_y, # Added English for reach
+            "Kinnari", round(content_font_size*0.9 * entry_fontsize_factor), "EmojiFont", round(content_font_size*0.8 * entry_fontsize_factor), round(line_height * 0.8), max_text_width=column_width - indent)
+        current_y -= line_height * 2 * entry_fontsize_factor
+        return current_y, True, 0, 0 # All content fit, reset indices for next word
+
+    return current_y, False, meaning_resume_idx, example_resume_idx # Not all content fit, return current progress
 
 
 def draw_latest_word_page(c, word, info):
     """Draw a page dedicated to the latest added word."""
     y = margin_top
-    draw_title(c, "The Not-So Modern Dictionary 🤩 A New Entry", y)
+    draw_title(c, "The Not-So Modern Dictionary 🤩 The New Entry", y)
     y -= line_space * 3
 
     # แสดงคำใหญ่
@@ -307,34 +366,43 @@ def draw_mixed_text_centered(c, text, center_x, y, font1, size1, font2, size2):
     start_x = center_x - total_width / 2
     draw_mixed_text(c, text, start_x, y, font1, size1, font2, size2)
 
-def draw_mixed_text_wrapped(c, text, x, y, font1, size1, font2, size2, line_height=line_space, max_text_width=None):
-    """Draw mixed text, wrapping it to fit within a specified maximum width."""
+def draw_mixed_text_wrapped(c, text, x, y, font1, size1, font2, size2, line_height=line_space, max_text_width=None, dry_run=False):
+    """Draw mixed text, wrapping it to fit within a specified maximum width.
+       If dry_run is True, it calculates height without drawing.
+    """
     if max_text_width is None:
-        # Default to usable_width for non-column drawing (e.g., full-width titles)
         max_text_width = usable_width - (x - margin_left)
     
-    lines = []
+    lines_count = 0
     current_line = ''
     current_width = 0
+    start_y_for_dry_run = y # Store original y for calculating total height if dry_run
+
     for ch in text:
         font = font2 if ord(ch) > 0x1F000 or ord(ch) == 0x2B50 else font1
         size = size2 if ord(ch) > 0x1F000 or ord(ch) == 0x2B50 else size1
         ch_width = stringWidth(ch, font, size)
-        if current_width + ch_width > max_text_width: # Use max_text_width here
-            lines.append(current_line)
+        if current_width + ch_width > max_text_width:
+            lines_count += 1
+            if not dry_run:
+                draw_mixed_text(c, current_line, x, y, font1, size1, font2, size2)
+                y -= line_height
             current_line = ch
             current_width = ch_width
         else:
             current_line += ch
             current_width += ch_width
     if current_line:
-        lines.append(current_line)
+        lines_count += 1 # Count the last line
+        if not dry_run:
+            draw_mixed_text(c, current_line, x, y, font1, size1, font2, size2)
+            y -= line_height
 
-    for line in lines:
-        draw_mixed_text(c, line, x, y, font1, size1, font2, size2)
-        y -= line_height
-
-    return y, len(lines)
+    if dry_run:
+        # Return estimated y (start_y - total_height) and lines count
+        return start_y_for_dry_run - (lines_count * line_height), lines_count
+    else:
+        return y, lines_count
 
 # ➕ ฟังก์ชันใหม่: ใส่เลขหน้า
 def draw_page_number(c):
@@ -407,7 +475,7 @@ def make_foldable_booklet(input_path, output_path):
     
     # The original page_order has a random element, which is unusual for a standard booklet.
     # Keeping it as is, but noting this for future improvements.
-    page_order = [0, 1, 2, 3, 4, 5, random.randint(6, total_pages - 1) if total_pages > 6 else 6, total_pages - 1 if total_pages > 0 else 0]
+    page_order = [0, 1, 2, 3, 4, 5, random.randint(6, total_pages - 2) if total_pages > 6 else 6, total_pages - 1 if total_pages > 0 else 0]
     
     # Create a new document for the booklet output
     output_doc = fitz.open()
@@ -701,85 +769,90 @@ def printpdf(
     y_left_col = margin_top - line_space * 2
     y_right_col = margin_top - line_space * 2
     
+    # Store initial Y positions for column reset on new page
+    y_left_col_start_of_page = y_left_col
+    y_right_col_start_of_page = y_right_col
+
     # Sort words for alphabetical order (assuming Thai collation is handled by locale)
     sorted_words = sorted(data.keys(), key=locale.strxfrm)
     
     # Draw the initial dictionary title for the content section
-    first_char_on_page = get_main_thai_consonant(sorted_words[0])
+    first_char_on_page = get_main_thai_consonant(sorted_words[0]) if sorted_words else ""
     draw_title(c, f"The Not-So Modern Dictionary 📚 {first_char_on_page}", margin_top)
     c.setFont("Kinnari", content_font_size) # Set default font for content text
     
-    # Reset column Y positions after title is drawn (already set above, but confirm)
-    y_left_col = margin_top - line_space * 2
-    y_right_col = margin_top - line_space * 2
-
-    # Iterate through sorted words and place them in columns
-    for i, word in enumerate(sorted_words):
+    # Initialize state for current word being processed
+    current_word_idx = 0
+    current_meaning_idx = 0
+    current_example_idx = 0
+    draw_header_for_current_word = True # Flag to draw word/stars only once per word
+    
+    while current_word_idx < len(sorted_words):
+        word = sorted_words[current_word_idx]
         info = data[word]
+
+        # Try to draw the entry (or its continuation) in the left column
+        new_y_left, finished_in_col, meaning_idx_left, example_idx_left = \
+            draw_entry(c, word, info, column1_x, y_left_col, line_space, max_reach, column_width,
+                       current_meaning_idx=current_meaning_idx, current_example_idx=current_example_idx,
+                       draw_header=draw_header_for_current_word)
         
-        # Estimate height for the current entry (rough estimate for decision making)
-        # 1 line for word, 1 for each meaning, 1 for each example, 1 for reach + some padding
-        # This is a critical estimation for column layout. Adjust factor (1.5) if entries get cut off.
-        estimated_entry_lines = 1 + len(info.get("meaning", [])) + len(info.get("example", [])) + 1
-        estimated_entry_height = estimated_entry_lines * line_space * 1.5 
+        if finished_in_col: # Entire word entry fit in the left column
+            y_left_col = new_y_left
+            current_word_idx += 1 # Move to the next word in the sorted list
+            current_meaning_idx = 0 # Reset indices for the next word
+            current_example_idx = 0
+            draw_header_for_current_word = True # Next word will need its header drawn
+        else: # Word entry did NOT completely fit in the left column
+            # Update the y-coordinate of the left column to where drawing stopped
+            y_left_col = new_y_left 
+            current_meaning_idx = meaning_idx_left
+            current_example_idx = example_idx_left
+            draw_header_for_current_word = False # Don't draw header if continuing this word
 
-        target_x = None
-        current_y_for_entry = None
-        should_start_new_page = False
+            # Now, try to draw the remaining part of the current word in the right column
+            new_y_right, finished_in_col, meaning_idx_right, example_idx_right = \
+                draw_entry(c, word, info, column2_x, y_right_col, line_space, max_reach, column_width,
+                           current_meaning_idx=current_meaning_idx, current_example_idx=current_example_idx,
+                           draw_header=False) # Definitely no header if continuing in second column
 
-        # Decide which column to put the current entry into
-        if y_left_col <= y_right_col: # Prefer left column if it's currently "shorter" or equal
-            if y_left_col - estimated_entry_height < margin_bottom: # Left column would overflow
-                if y_right_col - estimated_entry_height < margin_bottom: # Right column also would overflow -> new page
-                    should_start_new_page = True
-                else: # Left overflows, but right has space on current page
-                    target_x = column2_x
-                    current_y_for_entry = y_right_col
-            else: # Left column has space
-                target_x = column1_x
-                current_y_for_entry = y_left_col
-        else: # Prefer right column (y_right_col is shorter)
-            if y_right_col - estimated_entry_height < margin_bottom: # Right column would overflow -> new page
-                should_start_new_page = True
-            else: # Right column has space
-                target_x = column2_x
-                current_y_for_entry = y_right_col
+            if finished_in_col: # Remainder fit in the right column
+                y_right_col = new_y_right
+                current_word_idx += 1 # Move to the next word
+                current_meaning_idx = 0 # Reset indices
+                current_example_idx = 0
+                draw_header_for_current_word = True # Next word will need its header
+            else: # Remainder did NOT fit in the right column, need a new page
+                y_right_col = new_y_right # Update right column y to reflect partial drawing
+                current_meaning_idx = meaning_idx_right # Update indices for next page
+                current_example_idx = example_idx_right
+                
+                # New page logic
+                draw_page_number(c)
+                c.showPage()
+                y_left_col = y_left_col_start_of_page # Reset Y for new page
+                y_right_col = y_right_col_start_of_page
+                
+                # Draw new page title (still for the current word being processed)
+                first_char_on_page = get_main_thai_consonant(word)
+                draw_title(c, f"The Not-So Modern Dictionary 📚 {first_char_on_page}", margin_top)
+                c.setFont("Kinnari", content_font_size) # Reset default font for content text
+                
+                # The loop will re-attempt drawing the current word in the left column of the new page
+                # using the updated `current_meaning_idx`, `current_example_idx`, and `draw_header_for_current_word=False`.
+                # No increment of current_word_idx here as the word is not finished yet.
 
-        # Handle new page if decided
-        if should_start_new_page:
-            draw_page_number(c) # Draw page number for current page before moving on
-            c.showPage() # Start new page
-            y_left_col = margin_top - line_space * 2 # Reset Y for new page
-            y_right_col = margin_top - line_space * 2
-            
-            # For a new page, always start in the left column
-            target_x = column1_x
-            current_y_for_entry = y_left_col
-            
-            # Draw new page title
-            first_char_on_page = get_main_thai_consonant(word)
-            draw_title(c, f"The Not-So Modern Dictionary 📚 {first_char_on_page}", margin_top)
-            c.setFont("Kinnari", content_font_size) # Reset default font for content text
-
-        # Draw the entry at the determined (target_x, current_y_for_entry)
-        new_y_after_drawing = draw_entry(c, word, info, target_x, current_y_for_entry, line_space, max_reach, column_width)
-        
-        # Update the y-coordinate for the column that was just filled
-        if target_x == column1_x:
-            y_left_col = new_y_after_drawing
-        else: # target_x == column2_x
-            y_right_col = new_y_after_drawing
-
-    # After iterating through all words, draw the page number on the last page of content
-    # This also ensures content is flushed before next sections.
+    # After iterating through all words, ensure the last page has its number drawn
     draw_page_number(c)
-    #c.showPage() 
+    # The c.showPage() here ensures all content drawn is flushed, before the next section
+    # which might be a fortune page.
+    c.showPage() 
     
     # วาดหน้าคำทำนาย (เพิ่มหน้าสุดท้าย)
     if fortune_data:
         draw_fortune_page(c, fortune_data)
         
-    draw_page_number(c)
+    draw_page_number(c) # Draw page number on the final fortune page
     c.save()
     os.rename(temp_output, intermediate_path)
 
@@ -802,4 +875,8 @@ def printpdf(
     make_foldable_booklet(input_path=output_path, output_path=output_booklet)
     
     ### พิมพ์ออกมา
-    #print_pdf_file(output_booklet, "Brother MFC-J5320DW Printer")
+    if printer_active :
+        print(f"Printing: {output_booklet}")
+        print_pdf_file(output_booklet, "Brother MFC-J5320DW Printer")
+    else:
+        print(f"*No Printing")
