@@ -1,6 +1,6 @@
 ## thai_slang_dict_main.py
 
-import speech_recognition as sr
+#import speech_recognition as sr
 from gtts import gTTS
 import playsound
 import os
