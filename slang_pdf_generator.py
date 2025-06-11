@@ -390,8 +390,8 @@ def draw_latest_word_page(c, word, info):
         y -= line_space*latest_fontsize_factor
         y, _ = draw_mixed_text_wrapped_centered(
             c, f" {author[:40]}", width / 2, y, # Translated label
-            "Kinnari", content_font_size * 2.5*latest_fontsize_factor,
-            "EmojiFont", content_font_size * 2.5*latest_fontsize_factor,
+            "Kinnari", content_font_size * 2*latest_fontsize_factor,
+            "EmojiFont", content_font_size * 2*latest_fontsize_factor,
             line_space * 2*latest_fontsize_factor)
 
 

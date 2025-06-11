@@ -6,7 +6,7 @@ import playsound
 import os
 import random
 import json
-import whisper
+#import whisper
 import sounddevice as sd
 import numpy as np
 import scipy.io.wavfile as wavfile
