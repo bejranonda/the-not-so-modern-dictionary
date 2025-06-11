@@ -12,7 +12,40 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase.pdfmetrics import stringWidth
 import locale
-locale.setlocale(locale.LC_COLLATE, 'th_TH.UTF-8')
+#locale.setlocale(locale.LC_COLLATE, 'th_TH.UTF-8')
+import sys # <--- ADD THIS LINE HERE
+
+# ... (rest of your imports, e.g., from reportlab) ...
+
+# ... (other constants and function definitions) ...
+
+# พยายามตั้งค่า locale เพื่อการเรียงลำดับตัวอักษรไทย
+try:
+    # พยายามตั้งค่าเป็น th_TH.UTF-8 ก่อน (เผื่อระบบคุณมีบางอย่างที่ต่างออกไปในอนาคต หรือมีการอัปเดต)
+    # แต่ถ้า locale -a ไม่เจอ ก็มีโอกาสสูงว่าจะ error
+    locale.setlocale(locale.LC_COLLATE, 'th_TH.UTF-8')
+    print("Locale for collation set to 'th_TH.UTF-8'.")
+except locale.Error:
+    print("Warning: 'th_TH.UTF-8' locale for LC_COLLATE is not supported. Attempting fallback to 'en_US.UTF-8'.", file=sys.stderr)
+    try:
+        # Fallback ที่ปลอดภัยที่สุดบน macOS คือ 'en_US.UTF-8' หรือ 'C.UTF-8'
+        # 'en_US.UTF-8' มักจะทำงานได้ดีกว่าสำหรับภาษาที่มีอักขระพิเศษ
+        locale.setlocale(locale.LC_COLLATE, 'en_US.UTF-8')
+        print("Locale for collation set to 'en_US.UTF-8' as fallback.")
+    except locale.Error:
+        print("Error: Could not set 'en_US.UTF-8' for LC_COLLATE. Attempting fallback to 'C'.", file=sys.stderr)
+        try:
+            # Fallback สุดท้าย: 'C' คือ locale ดั้งเดิม, เรียงตาม byte value
+            # อาจไม่เหมาะกับภาษาไทยเลย แต่ทำให้โปรแกรมไม่ crash
+            locale.setlocale(locale.LC_COLLATE, 'C')
+            print("Locale for collation set to 'C' as final fallback.")
+        except locale.Error:
+            print("CRITICAL ERROR: Could not set any locale for LC_COLLATE. Sorting will be based on default Python behavior.", file=sys.stderr)
+            pass # ปล่อยผ่านไปเลยถ้าไม่ได้จริงๆ
+
+# ... (rest of your slang_pdf_generator.py code) ...
+            
+            
 import random
 from PyPDF2 import PdfReader, PdfWriter
 import re
@@ -112,7 +145,7 @@ def draw_intro_page(c, total_words, total_meanings, total_reach, latest_word, ho
         y -= line_space*intro_fontsize_factor*0.7
 
     # List of hottest word
-    y += line_space*0.5*intro_fontsize_factor
+    y += line_space*0.2*intro_fontsize_factor
     for line in hottest_word:
         y, _ = draw_mixed_text_wrapped(
             c, f"    • {line}", margin_left, y,
@@ -858,13 +891,15 @@ def printpdf(
 
         print(f"Left word: {word}")
         
-        ## Check left column margin
+        ## Check left column margin, enough or not
         if y_left_col > margin_bottom + 60 :
+            print(f"Left word Margin OK: {y_left_col}")
             new_y_left, finished_in_col, meaning_idx_left, example_idx_left = \
                 draw_entry(c, word, info, column1_x, y_left_col, line_space, max_reach, column_width,
                            current_meaning_idx=current_meaning_idx, current_example_idx=current_example_idx,
                            draw_header=draw_header_for_current_word)
         else:
+            print(f"Left word Margin Too Less: {y_left_col}")
             new_y_left, finished_in_col, meaning_idx_left, example_idx_left = \
                 draw_entry(c, word, info, column1_x, y_left_col - 60 - margin_bottom, line_space, max_reach, column_width,
                            current_meaning_idx=current_meaning_idx, current_example_idx=current_example_idx,

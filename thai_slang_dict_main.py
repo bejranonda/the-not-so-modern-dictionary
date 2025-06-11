@@ -117,7 +117,7 @@ def main_loop():
             thai_font_path="fonts/Kinnari.ttf",
             emoji_font_path="fonts/NotoEmoji-Regular.ttf"
         )
-        exit()
+        #exit()
         while True:
             print("🚀 Starting AI")
             play_flipping()
