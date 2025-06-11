@@ -183,17 +183,17 @@ def draw_fortune_page(c, fortune_data):
     y -= line_space*6*fortune_fontsize_factor
 
     # Display Thai fortune text   
-    y, _ = draw_mixed_text_wrapped(
-        c, fortune["th"], margin_left + indent, y,
+    y, _ = draw_mixed_text_wrapped_centered(
+        c, fortune["th"], width / 2 + indent, y,
         "Kinnari", content_font_size*2*fortune_fontsize_factor,
         "EmojiFont", content_font_size*2*fortune_fontsize_factor,
         round(line_space*2.5*fortune_fontsize_factor)
     )
-    y -= line_space*1*fortune_fontsize_factor
+    y -= line_space*1.5*fortune_fontsize_factor
 
     # Display English fortune text
-    y, _ = draw_mixed_text_wrapped(
-        c, fortune["en"], margin_left + indent, y,
+    y, _ = draw_mixed_text_wrapped_centered(
+        c, fortune["en"], width / 2 + indent, y,
         "Kinnari", content_font_size*2*fortune_fontsize_factor,
         "EmojiFont", content_font_size*2*fortune_fontsize_factor,
         round(line_space*2.5*fortune_fontsize_factor)
@@ -334,20 +334,20 @@ def draw_latest_word_page(c, word, info):
         meanings = [meanings]
     meanings = meanings[-4:]  # แสดง 4 ชุดล่าสุด
     
-    y, _ = draw_mixed_text_wrapped(
-    c, f"📝 ความหมาย | Meaning", margin_left, y, # Translated label
-    "Kinnari", content_font_size * 2*latest_fontsize_factor,
-    "EmojiFont", content_font_size * 2*latest_fontsize_factor,
-    line_space*2*latest_fontsize_factor)
-    y -= line_space
+    y, _ = draw_mixed_text_wrapped_centered(
+        c, f"📝 ความหมาย | Meaning", width / 2, y, # Translated label
+        "Kinnari", content_font_size * 2*latest_fontsize_factor,
+        "EmojiFont", content_font_size * 2*latest_fontsize_factor,
+        line_space*2*latest_fontsize_factor)
+    y -= line_space*latest_fontsize_factor
 
     for m in meanings:
-        y, _ = draw_mixed_text_wrapped(
-            c, f" 🔹 {m[:50]}", margin_left, y,
+        y, _ = draw_mixed_text_wrapped_centered(
+            c, f"🔹 {m[:50]}", width / 2, y,
             "Kinnari", content_font_size * 2*latest_fontsize_factor,
             "EmojiFont", content_font_size * 2*latest_fontsize_factor,
-            line_space*2*latest_fontsize_factor)
-        y -= line_space*2*latest_fontsize_factor
+            line_space*2*latest_fontsize_factor*0.9)
+        y -= line_space*2*latest_fontsize_factor*0.5
     y -= line_space
     
     # Samples
@@ -356,20 +356,20 @@ def draw_latest_word_page(c, word, info):
         examples = [examples]
     examples = examples[-4:]  # แสดง 4 ชุดล่าสุด
     
-    y, _ = draw_mixed_text_wrapped(
-    c, f"💬 ตัวอย่าง | Examples", margin_left, y, # Translated label
+    y, _ = draw_mixed_text_wrapped_centered(
+    c, f"💬 ตัวอย่าง | Examples", width / 2, y, # Translated label
     "Kinnari", content_font_size * 2*latest_fontsize_factor,
     "EmojiFont", content_font_size * 2*latest_fontsize_factor,
-    line_space*2*latest_fontsize_factor)
-    y -= line_space
+    line_space*latest_fontsize_factor*0.9)
+    y -= line_space*2*latest_fontsize_factor
     
     for ex in examples:
-        y, _ = draw_mixed_text_wrapped(
-            c, f" 🔹 {ex[:50]}", margin_left, y,
+        y, _ = draw_mixed_text_wrapped_centered(
+            c, f"🔹 {ex[:50]}", width / 2, y,
             "Kinnari", content_font_size * 2*latest_fontsize_factor,
             "EmojiFont", content_font_size * 2*latest_fontsize_factor,
-            line_space *2*latest_fontsize_factor)
-        y -= line_space*2*latest_fontsize_factor
+            line_space *2*latest_fontsize_factor*0.9)
+        y -= line_space*2*latest_fontsize_factor*0.5
 
     # Add latest author if available
     author_list = info.get("author")
@@ -382,16 +382,16 @@ def draw_latest_word_page(c, word, info):
 
     if author:
         y -= line_space * 2
-        y, _ = draw_mixed_text_wrapped(
-            c, f"📝 ผู้แต่งล่าสุด | Latest Author", margin_left, y, # Translated label
+        y, _ = draw_mixed_text_wrapped_centered(
+            c, f"📝 ผู้แต่งล่าสุด | Latest Author", width / 2, y, # Translated label
             "Kinnari", content_font_size * 2*latest_fontsize_factor,
             "EmojiFont", content_font_size * 2*latest_fontsize_factor,
-            line_space * 2*latest_fontsize_factor)
-        y -= line_space*2*latest_fontsize_factor
-        y, _ = draw_mixed_text_wrapped(
-            c, f" 🔹 {author[:40]}", margin_left, y, # Translated label
-            "Kinnari", content_font_size * 2*latest_fontsize_factor,
-            "EmojiFont", content_font_size * 2*latest_fontsize_factor,
+            line_space * 2.5*latest_fontsize_factor)
+        y -= line_space*latest_fontsize_factor
+        y, _ = draw_mixed_text_wrapped_centered(
+            c, f" {author[:40]}", width / 2, y, # Translated label
+            "Kinnari", content_font_size * 2.5*latest_fontsize_factor,
+            "EmojiFont", content_font_size * 2.5*latest_fontsize_factor,
             line_space * 2*latest_fontsize_factor)
 
 
@@ -454,6 +454,66 @@ def draw_mixed_text_wrapped(c, text, x, y, font1, size1, font2, size2, line_heig
     else:
         return y, lines_count
 
+def draw_mixed_text_wrapped_centered(c, text, center_x, y, font1, size1, font2, size2, line_height, max_text_width=None, dry_run=False):
+    """
+    Draws mixed text, wrapping it to fit within a specified maximum width,
+    and centering each line horizontally around a given center_x.
+    If dry_run is True, it calculates height without drawing.
+    """
+    if max_text_width is None:
+        # If max_text_width is not provided, calculate it based on the distance from center_x
+        # This assumes center_x is the true center of the available drawing area.
+        # If center_x is page_width / 2, then max_text_width should be usable_width.
+        max_text_width = usable_width 
+
+    lines_data = [] # Store {'text': current_line, 'width': current_width} for each line
+    current_line = ''
+    current_width = 0
+
+    # First pass: Determine line breaks and actual width of each line
+    for ch in text:
+        # Your existing emoji detection logic
+        font = font2 if (ord(ch) > 0x1F000 and ord(ch) < 0x1F9FF) or ord(ch) == 0x2B50 else font1
+        size = size2 if (ord(ch) > 0x1F000 and ord(ch) < 0x1F9FF) or ord(ch) == 0x2B50 else size1
+        ch_width = stringWidth(ch, font, size)
+
+        if current_width + ch_width > max_text_width:
+            lines_data.append({'text': current_line, 'width': current_width})
+            current_line = ch
+            current_width = ch_width
+        else:
+            current_line += ch
+            current_width += ch_width
+    if current_line:
+        lines_data.append({'text': current_line, 'width': current_width})
+
+    # Second pass: Draw the lines, centering each one
+    start_y_for_dry_run = y
+    lines_count = len(lines_data)
+
+    if not dry_run:
+        for line_info in lines_data:
+            line_text = line_info['text']
+            line_actual_width = line_info['width']
+            
+            # Calculate the x position for centering
+            # The left edge of the text should be at center_x - (line_actual_width / 2)
+            centered_x = center_x - (line_actual_width / 2.0)
+            
+            # Ensure the centered_x doesn't go too far left (e.g., beyond margin_left)
+            # This is a safeguard, though if max_text_width is correctly set for the column,
+            # this might not be strictly necessary, but it's good for robustness.
+            # centered_x = max(centered_x, margin_left) # Example safeguard
+
+            draw_mixed_text(c, line_text, centered_x, y, font1, size1, font2, size2)
+            y -= line_height
+    else:
+        # In dry_run, we just calculate the final Y position
+        y = start_y_for_dry_run - (lines_count * line_height)
+
+    return y, lines_count
+    
+    
 # ➕ ฟังก์ชันใหม่: ใส่เลขหน้า
 def draw_page_number(c):
     """Draw the current page number at the bottom center of the page."""
@@ -886,28 +946,28 @@ def printpdf(
         info = data[word]
         
         
-        # Try to draw the entry (or its continuation) in the left column
-        print(f"Start y_left_col: {y_left_col}")
+        ## Try to draw the entry (or its continuation) in the left column
+        #print(f"Start y_left_col: {y_left_col}")
 
-        print(f"Left word: {word}")
+        #print(f"Left word: {word}")
         
         ## Check left column margin, enough or not
         if y_left_col > margin_bottom + 60 :
-            print(f"Left word Margin OK: {y_left_col}")
+            #print(f"Left word Margin OK: {y_left_col}")
             new_y_left, finished_in_col, meaning_idx_left, example_idx_left = \
                 draw_entry(c, word, info, column1_x, y_left_col, line_space, max_reach, column_width,
                            current_meaning_idx=current_meaning_idx, current_example_idx=current_example_idx,
                            draw_header=draw_header_for_current_word)
         else:
-            print(f"Left word Margin Too Less: {y_left_col}")
+            #print(f"Left word Margin Too Less: {y_left_col}")
             new_y_left, finished_in_col, meaning_idx_left, example_idx_left = \
                 draw_entry(c, word, info, column1_x, y_left_col - 60 - margin_bottom, line_space, max_reach, column_width,
                            current_meaning_idx=current_meaning_idx, current_example_idx=current_example_idx,
                            draw_header=draw_header_for_current_word)
 
             
-        print(f"finished_in_col: {finished_in_col}")
-        print(f"new_y_left: {new_y_left}")
+        #print(f"finished_in_col: {finished_in_col}")
+        #print(f"new_y_left: {new_y_left}")
         
         if finished_in_col: # Entire word entry fit in the left column
             y_left_col = new_y_left
@@ -915,8 +975,8 @@ def printpdf(
             current_meaning_idx = 0 # Reset indices for the next word
             current_example_idx = 0
             
-            print(f"finished_in_col y_left_col: {y_left_col}")
-            print(f"finished_in_col y_right_col: {y_right_col}")
+            #print(f"finished_in_col y_left_col: {y_left_col}")
+            #print(f"finished_in_col y_right_col: {y_right_col}")
             
             draw_header_for_current_word = True # Next word will need its header drawn
         else: # Word entry did NOT completely fit in the left column
@@ -926,20 +986,20 @@ def printpdf(
             current_example_idx = example_idx_left
             #draw_header_for_current_word = False # Don't draw header if continuing this word
             
-            print(f"not finished_in_col y_left_col: {y_left_col}")
-            print(f"not finished_in_col y_right_col: {y_right_col}")
+            #print(f"not finished_in_col y_left_col: {y_left_col}")
+            #print(f"not finished_in_col y_right_col: {y_right_col}")
 
-            # Now, try to draw the remaining part of the current word in the right column
-            print(f"Right word: {word}")
-            print(f"draw_header_for_current_word: {draw_header_for_current_word}")
+            ## Now, try to draw the remaining part of the current word in the right column
+            #print(f"Right word: {word}")
+            #print(f"draw_header_for_current_word: {draw_header_for_current_word}")
 
             new_y_right, finished_in_col, meaning_idx_right, example_idx_right = \
                 draw_entry(c, word, info, column2_x, y_right_col, line_space, max_reach, column_width,
                            current_meaning_idx=current_meaning_idx, current_example_idx=current_example_idx,
                            draw_header=draw_header_for_current_word) # Definitely no header if continuing in second column
             
-            print(f"After 2.Draw finished_in_col: {finished_in_col}")
-            print(f"After 2.Draw new_y_left: {new_y_left}")
+            #print(f"After 2.Draw finished_in_col: {finished_in_col}")
+            #print(f"After 2.Draw new_y_left: {new_y_left}")
             if finished_in_col: # Remainder fit in the right column
                 y_right_col = new_y_right
                 current_word_idx += 1 # Move to the next word
@@ -957,8 +1017,8 @@ def printpdf(
                 y_left_col = y_left_col_start_of_page # Reset Y for new page
                 y_right_col = y_right_col_start_of_page
                 
-                print(f"2.finished_in_col y_left_col: {y_left_col}")
-                print(f"2.finished_in_col y_right_col: {y_right_col}")
+                #print(f"2.finished_in_col y_left_col: {y_left_col}")
+                #print(f"2.finished_in_col y_right_col: {y_right_col}")
         
                 # Draw new page title (still for the current word being processed)
                 first_char_on_page = get_main_thai_consonant(word)
