@@ -4,6 +4,7 @@ import json
 import os
 import platform
 import subprocess
+import shutil
 import fitz # PyMuPDF
 from datetime import datetime
 from reportlab.pdfgen import canvas
@@ -57,7 +58,7 @@ template_pdf_path3 = "template/pp3.pdf"
 template_pdf_path4 = "template/pp4.pdf"
 
 ## Printer enable
-printer_active = False
+printer_active = True
 
 # 📐 Global constants
 width, height = A4
@@ -783,30 +784,37 @@ def print_pdf_file(pdf_path, printer_name=None):
                 print("   หากปัญหายังคงอยู่: โปรดติดตั้งโปรแกรมดู PDF เช่น Adobe Reader หรือ SumatraPDF และตั้งค่าให้เป็นโปรแกรมเริ่มต้นสำหรับไฟล์ PDF")
                 print("   หากปัญหายังคงอยู่: อาจจำเป็นต้องแก้ไขการเชื่อมโยงชนิดไฟล์ด้วยตนเองใน Windows หรือเรียกใช้สคริปต์ในฐานะผู้ดูแลระบบ")
 
-    elif system == "Darwin" or system == "Linux": # Darwin คือ macOS
+    elif system in ("Darwin", "Linux"):  # Darwin = macOS
         try:
-            # ใช้คำสั่ง lpr บน Linux/macOS (ระบบ CUPS)
-            cmd = ["lpr"]
-            if printer_name:
-                cmd.extend(["-P", printer_name])
-            cmd.append(abs_pdf_path) # lpr handles paths with spaces well
-            
-            print(f"คำสั่ง Linux/macOS (lpr): {' '.join(cmd)}")
+            if shutil.which("lp"):  # ใช้ `lp` หากมี (เพราะ lp รองรับ option ได้ดีกว่า lpr)
+                cmd = ["lp"]
+                if printer_name:
+                    cmd.extend(["-d", printer_name])
+                # เพิ่ม orientation สำหรับแนวตั้ง
+                cmd.extend(["-o", "orientation-requested=3"])
+                cmd.append(abs_pdf_path)
+                print(f"คำสั่ง {system} (lp): {' '.join(cmd)}")
+            else:
+                cmd = ["lpr"]
+                if printer_name:
+                    cmd.extend(["-P", printer_name])
+                cmd.append(abs_pdf_path)
+                print(f"คำสั่ง {system} (lpr): {' '.join(cmd)}")
+
             subprocess.run(cmd, check=True)
             print(f"✅ สั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' ไปยังเครื่องพิมพ์ '{printer_name if printer_name else 'default'}' บน {system} เรียบร้อยแล้ว")
             print("หากไม่เห็นงานพิมพ์ โปรดตรวจสอบคิวงานพิมพ์ของเครื่องพิมพ์")
+
         except subprocess.CalledProcessError as e:
-            print(f"❌ ข้อผิดพลาดในการสั่งพิมพ์บน {system}: การเรียกใช้ 'lpr' ล้มเหลว. รหัสข้อผิดผิดพลาด: {e.returncode}")
+            print(f"❌ ข้อผิดพลาดในการสั่งพิมพ์บน {system}: การเรียกใช้คำสั่งล้มเหลว. รหัสข้อผิดพลาด: {e.returncode}")
             print(f"   รายละเอียด: {e.stderr.decode('utf-8') if e.stderr else 'ไม่มี'}")
-            print("   โปรดตรวจสอบว่าเครื่องพิมพ์ถูกติดตั้งและกำหนดค่าอย่างถูกต้องบน CUPS")
         except FileNotFoundError:
-            print(f"❌ ข้อผิดพลาด: ไม่พบคำสั่ง 'lpr'.")
+            print(f"❌ ข้อผิดพลาด: ไม่พบคำสั่ง 'lp' หรือ 'lpr'")
             print(f"   โปรดตรวจสอบว่า CUPS ถูกติดตั้งและตั้งค่าอย่างถูกต้องบน {system} ของคุณ")
         except Exception as e:
             print(f"❌ ข้อผิดพลาดที่ไม่คาดคิดในการสั่งพิมพ์บน {system}: {e}")
             print("   โปรดตรวจสอบการตั้งค่าเครื่องพิมพ์และสิทธิ์การเข้าถึง")
-    else:
-        print(f"❌ ระบบปฏิบัติการ {system} ไม่รองรับคำสั่งพิมพ์อัตโนมัติในสคริปต์นี้")
+
         
 
 def printpdf(
@@ -1088,6 +1096,6 @@ def printpdf(
     ### พิมพ์ออกมา
     if printer_active :
         print(f"Printing: {output_booklet}")
-        print_pdf_file(output_booklet, "Brother MFC-J5320DW Printer")
+        print_pdf_file(output_booklet)
     else:
         print(f"*No Printing")
