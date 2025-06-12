@@ -791,7 +791,7 @@ def print_pdf_file(pdf_path, printer_name=None):
                 if printer_name:
                     cmd.extend(["-d", printer_name])
                 # เพิ่ม orientation สำหรับแนวตั้ง
-                cmd.extend(["-o", "orientation-requested=3"])
+                cmd.extend(["-o", "orientation-requested=4"])
                 cmd.append(abs_pdf_path)
                 print(f"คำสั่ง {system} (lp): {' '.join(cmd)}")
             else:
