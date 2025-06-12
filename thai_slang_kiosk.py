@@ -223,7 +223,7 @@ class SlangKiosk(QWidget):
 
     def go_to_standby(self):
         """Resets the system to the standby screen due to inactivity."""
-        self.label.setText("⌛️ ไม่ได้ใช้งานนาน กำลังกลับไปหน้าเริ่มต้น...\nInactive for a while. Returning to the start screen")
+        self.label.setText("⌛️<br>ไม่ได้ใช้งานนาน กำลังกลับไปหน้าเริ่มต้น...<br>Inactive for a while. Returning to the start screen")
         playsound(end_sound) # Corrected call
         QTimer.singleShot(2000, self.show_standby)
 
@@ -243,7 +243,7 @@ class SlangKiosk(QWidget):
             self.go_to_standby()
         elif self.step >= 1: # If in input/summary steps and idle
             if not self.warning_shown:
-                self.label.setText("⚠️ หากไม่มีการกรอกข้อมูล จะกลับไปยังหน้าเริ่มต้นใน 30 วินาที หรือกด Esc เพื่อเริ่มต้นใหม่\nIf no input is entered, the system will return to the start screen in 30 seconds, or press Esc to start over")
+                self.label.setText("<span style='font-size:32px;'>⚠<br>หากไม่กรอกข้อมูล จะกลับไปยังหน้าเริ่มต้นใน 30 วินาที หรือกด Esc เพื่อเริ่มต้นใหม่<br>If no input is entered, the system will return to the start screen in 30 sec, or press Esc to start over.</span>")
                 speak_thai("หากไม่มีการกรอกข้อมูล จะกลับไปยังหน้าเริ่มต้นใน 30 วินาที")
                 self.warning_shown = True
                 self.warning_timer.start() # Start the second timer for final reset
@@ -430,7 +430,7 @@ class SlangKiosk(QWidget):
         self.reset_idle_timer()
         if event.key() == Qt.Key_Escape:
             if self.step in [1, 2, 3, 4, 5]: # If in any active input/summary/print step
-                self.label.setText("❌ ยกเลิก กำลังกลับเริ่มโปรแกรมใหม่...\nCancelling. Returning to start screen.")
+                self.label.setText("❌ ยกเลิก กำลังกลับเริ่มโปรแกรมใหม่...<br>Cancelling. Returning to start screen.")
                 playsound(end_sound) # Corrected call
                 QTimer.singleShot(1000, self.show_standby)
             elif self.step == -1: # If in standby mode (Esc also acts as "any key")
