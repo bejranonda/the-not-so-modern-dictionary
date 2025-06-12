@@ -3,6 +3,7 @@
 import sys
 import json
 import os
+import time
 import random
 from PyQt5.QtWidgets import (
     QApplication, QLabel, QLineEdit, QVBoxLayout,
@@ -36,11 +37,6 @@ class CustomLineEdit(QLineEdit):
 
     def keyPressEvent(self, event):
         self.kiosk.reset_idle_timer()
-        # The keyPressEvent logic for CustomLineEdit should mostly defer to SlangKiosk's
-        # keyPressEvent to centralize step-based behavior, especially for Esc.
-        # This CustomLineEdit specific logic is only for step-specific behavior not covered
-        # by the main keyPressEvent in SlangKiosk (e.g., direct transitions or specific input handling).
-        
         # If in standby, any key press should trigger go_to_greeting via the main keyPressEvent
         # So, only handle Esc for active steps here if not handled by parent.
         if event.key() == Qt.Key_Escape and self.kiosk.step in [1, 2, 3, 4, 5]:
@@ -65,7 +61,6 @@ class SlangKiosk(QWidget):
         self.logo_path = logo_path # Path to the logo image
         
         # Initialize standby_image_label and standby_instruction_label to None or empty QLabel
-        # before calling init_ui to prevent AttributeError if show_standby is triggered prematurely.
         self.standby_image_label = QLabel() # Initialized here
         self.standby_instruction_label = QLabel() # Initialized here
 
@@ -275,7 +270,13 @@ class SlangKiosk(QWidget):
         self.description.show()
         self.frame.show()
         
-        self.input.setReadOnly(False) # Enable input for user interaction
+        # Hide input field since we won't use it here
+        #self.input.hide()
+        self.input.setReadOnly(True) # Ensure input is read-only during greeting
+        self.input.setText("กด Enter เพื่อดำเนินการ ... Press Enter to proceed")
+        self.input.setAlignment(Qt.AlignCenter)
+
+        #self.input.setReadOnly(False) # Enable input for user interaction
         self.input.setFocus() # Ensure input field has focus
 
         greeting = random.choice(greeting_word)
@@ -283,18 +284,22 @@ class SlangKiosk(QWidget):
         self.label.setText(
             f"<div style='font-size:40px;'>👋 {greeting}</div><br><br>"
             "<span style='font-size:32px;'>ใส่คำสแลงของคุณ ความหมาย ตัวอย่าง เข้าไปในพจนานุกรมได้เลย<br>Add your slang word, meaning, and example to the dictionary</span><br><br><br>"
-            "<span style='font-size:40px; color: #FFFF00;'>กด Enter เพื่อดำเนินการ<br>Press Enter to proceed</span>"
+            "<span style='font-size:40px; color: #FFFF00;'>และรับปทานุกรมของคุณ เป็นที่ระลึกตอนท้าย<br>get your dictionary as souvenir at the end</span>"
         )
         print(f"- greeting: {greeting}")
-        self.input.clear()
+        #self.input.clear()
         QTimer.singleShot(100, lambda: speak_both(greeting))
         self.reset_idle_timer()
 
     def go_to_word_input(self):
         """Transitions to the word input step."""
         self.step = 1
-        self.input.clear()
         playsound(correct_sound) # Corrected call
+        
+        self.input.setReadOnly(False) # Enable input for user interaction
+        self.input.setFocus() # Ensure input field has focus
+        self.input.clear()
+
         self.label.setText(
             "<div style='font-size:40px;'>🖊️ พิมพ์คำสแลง แล้วกด Enter<br>Type a slang word and press Enter<br><br>"
             "<span style='font-size:32px;'>ตัวอย่างเช่น ‘แจ่มแมว’ หรือ ‘เกียม’</span><br><br>"
@@ -339,10 +344,15 @@ class SlangKiosk(QWidget):
         example_display = (example_full[:40] + '...') if len(example_full) > 40 else example_full
 
         # Added text-align: center; to the outer div style
-        summary = f"<div style='font-size:38px; text-align: center;'><b>คำศัพท์ | Word:</b> {word_display}<br><b>📖 ความหมาย | Meaning:</b> {meaning_display}<br><b>💬 ตัวอย่าง | Example:</b> {example_display}<br><br><span style='font-size:32px;'>กด Enter เพื่อยืนยัน หรือ Esc เพื่อเริ่มใหม่<br>Press Enter to confirm or Escape to abort</span></div>"
+        summary = f"<div style='font-size:38px; text-align: center;'><b>คำศัพท์ | Word:</b> {word_display}<br><b>📖 ความหมาย | Meaning:</b> {meaning_display}<br><b>💬 ตัวอย่าง | Example:</b> {example_display}<br><br><span style='font-size:40px; color: #FFFF00;'>รอการยืนยันจากคุณ<br>waiting for your confirmation</span></div>"
+
         print(f"- summary: {summary}")
         self.label.setText(summary)
-        
+
+        self.input.setReadOnly(True) # Ensure input is read-only during greeting
+        self.input.setText("Enter เพื่อยืนยัน หรือ Esc เพื่อยกเลิก  ...  Press Enter to confirm or Escape to abort")
+        self.input.setAlignment(Qt.AlignCenter)    
+
         # Use full text for speech, or truncated for brevity if desired
         QTimer.singleShot(300, lambda: speak_thai(f"{word_full} หมายถึง {meaning_full} เช่น {example_full}"))
         self.reset_idle_timer()
@@ -350,6 +360,7 @@ class SlangKiosk(QWidget):
     def go_to_print_option(self):
         """Transitions to the print option step, allowing user to enter name for printing."""
         self.step = 5
+        self.input.setReadOnly(False) # Enable input for user interaction
         self.input.clear()
         self.label.setText(
             "<div style='font-size:38px;'>🖨️ ต้องการพิมพ์ออกมาไหม?<br>Print your own dict?<br>"
@@ -365,6 +376,7 @@ class SlangKiosk(QWidget):
         print(f"- Step: {self.step}")
         if self.step == 0: # From greeting to word input
             self.go_to_word_input()
+            self.input.clear() # Clear input after each step
         elif self.step == 1: # From word input to meaning input
             if not text: 
                 self.label.setText("<div style='font-size:40px; color: red;'>⚠️ กรุณาพิมพ์คำสแลง<br>Please type a slang word.</div>")
@@ -373,6 +385,7 @@ class SlangKiosk(QWidget):
                 return
             self.data["word"] = text
             self.go_to_meaning_input()
+            self.input.clear() # Clear input after each step
         elif self.step == 2: # From meaning input to example input
             if not text: 
                 self.label.setText("<div style='font-size:40px; color: red;'>⚠️ กรุณาพิมพ์ความหมาย<br>Please type the meaning.</div>")
@@ -381,6 +394,7 @@ class SlangKiosk(QWidget):
                 return
             self.data["meaning"] = text
             self.go_to_example_input()
+            self.input.clear() # Clear input after each step
         elif self.step == 3: # From example input to summary
             if not text: 
                 self.label.setText("<div style='font-size:40px; color: red;'>⚠️ กรุณาพิมพ์ตัวอย่างประโยค<br>Please type an example sentence.</div>")
@@ -405,8 +419,10 @@ class SlangKiosk(QWidget):
                 self.label.setText("ขอบคุณที่ใช้บริการ! กลับสู่หน้าเริ่มต้น")
                 playsound(end_sound) # Corrected call
                 QTimer.singleShot(1000, self.show_standby) # Just go to standby if no author name
+                
+            self.input.clear() # Clear input after each step
 
-        self.input.clear() # Clear input after each step
+        #self.input.clear() # Clear input after each step
         self.reset_idle_timer() # Reset timer after interaction
 
     def keyPressEvent(self, event):
