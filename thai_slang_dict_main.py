@@ -13,6 +13,10 @@ import scipy.io.wavfile as wavfile
 from scipy.io.wavfile import write
 import tempfile
 import subprocess
+import signal
+import sys
+import platform
+
 
 
 # user library
@@ -56,6 +60,39 @@ playsound.playsound(systemstart_sound)
 
 # โหลดโมเดล Whisper
 # whisper_model = whisper.load_model("small")
+
+def kill_previous_instance():
+    current_pid = os.getpid()
+    script_name = os.path.basename(__file__)
+    system_platform = platform.system()
+    print(f"Seeking double running: {system_platform}")
+    try:
+        if system_platform == "Windows":
+            result = subprocess.run(["wmic", "process", "get", "ProcessId,CommandLine"], capture_output=True, text=True)
+            for line in result.stdout.splitlines():
+                if "python" in line and script_name in line and str(current_pid) not in line:
+                    parts = line.strip().split()
+                    if parts and parts[-1].isdigit():
+                        pid = parts[-1]
+                        print(f"🛑 Killing PID (Windows): {pid}")
+                        subprocess.run(["taskkill", "/F", "/PID", pid])
+            print("✅ No previous running (Windows)")
+        else:
+            result = subprocess.run(["ps", "aux"], capture_output=True, text=True)
+            found = False
+            for line in result.stdout.splitlines():
+                if "python" in line and script_path in line and str(current_pid) not in line:
+                    try:
+                        pid = int(line.split()[1])
+                        print(f"🛑 Killing PID (Unix): {pid}")
+                        os.kill(pid, signal.SIGKILL)
+                        found = True
+                    except Exception:
+                        continue
+            if not found:
+                print("✅ No previous running (Unix)")
+    except Exception as e:
+        print(f"❌ Error while trying to kill previous instance: {e}")
 
 # โหลดฐานข้อมูลผู้ใช้
 if os.path.exists("user_added_slang.json"):
@@ -111,16 +148,12 @@ def recognize_thai_whisper():
 
 def main_loop():
     try:
-        printpdf(
-            json_path="output/user_added_slang.json",
-            output_path="output/slang_dictionary.pdf",
-            thai_font_path="fonts/Kinnari.ttf",
-            emoji_font_path="fonts/NotoEmoji-Regular.ttf"
-        )
+        printpdf(json_path="output/user_added_slang.json",output_path="output/slang_dictionary.pdf",thai_font_path="fonts/Kinnari.ttf",emoji_font_path="fonts/NotoEmoji-Regular.ttf")
         #exit()
         while True:
             print("🚀 Starting AI")
             play_flipping()
+            kill_previous_instance()
             playsound.playsound(correct_sound)
 
             mode = "kiosk"
