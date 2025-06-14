@@ -223,7 +223,7 @@ class SlangKiosk(QWidget):
 
     def go_to_standby(self):
         """Resets the system to the standby screen due to inactivity."""
-        self.label.setText("⌛️<br>ไม่ได้ใช้งานนาน กำลังกลับไปหน้าเริ่มต้น...<br>Inactive for a while. Returning to the start screen")
+        self.label.setText("!!<br>ไม่ได้ใช้งานนาน กำลังกลับไปหน้าเริ่มต้น...<br>Inactive for a while. Returning to the start screen")
         playsound(end_sound) # Corrected call
         QTimer.singleShot(2000, self.show_standby)
 
