@@ -1,5 +1,4 @@
 ## slang_pdf_generator.py
-
 import json
 import os
 import platform
@@ -656,6 +655,39 @@ def make_foldable_booklet(input_path, output_path, random_page = None):
     output_doc.save(output_path)
     doc.close()
     output_doc.close()
+    
+def make_foldable_lucky(input_path, output_path):
+    """Create a single-sheet 8-section PDF from randomly selected 8 pages (starting from page 5 onward)."""
+    doc = fitz.open(input_path)
+    total_pages = len(doc)
+    w, h = 842, 595  # A4 landscape
+
+    if total_pages <= 5:
+        raise ValueError("PDF must have more than 5 pages to allow random selection from page 5 onward.")
+    
+    # Select 8 unique pages from index 5 to end
+    available_pages = list(range(5, total_pages-1))
+    if len(available_pages) < 8:
+        raise ValueError(f"Not enough pages (found {len(available_pages)}) after page 4 to select 8 unique pages.")
+    
+    selected_pages = sorted(random.sample(available_pages, 8))  # Ascending order
+
+    output_doc = fitz.open()
+    new_page = output_doc.new_page(width=w, height=h)
+
+    section_w, section_h = w / 4, h / 2  # 4 cols × 2 rows
+
+    for i, idx in enumerate(selected_pages):
+        src_page = doc.load_page(idx)
+        col, row = i % 4, 0 if i < 4 else 1
+        x0, y0 = col * section_w, row * section_h
+        target_rect = fitz.Rect(x0, y0, x0 + section_w, y0 + section_h)
+        rotation = 180 if i < 4 else 0
+        new_page.show_pdf_page(target_rect, doc, idx, rotate=rotation)
+
+    output_doc.save(output_path)
+    doc.close()
+    output_doc.close()
 
 
 def merge_pdfs(append_pdf_path, base_pdf_path, output_pdf_path):
@@ -815,7 +847,63 @@ def print_pdf_file(pdf_path, printer_name=None):
             print(f"❌ ข้อผิดพลาดที่ไม่คาดคิดในการสั่งพิมพ์บน {system}: {e}")
             print("   โปรดตรวจสอบการตั้งค่าเครื่องพิมพ์และสิทธิ์การเข้าถึง")
 
-        
+import importlib.util
+import traceback
+from datetime import datetime
+
+def log_request_message(message):
+    with open("request_log.txt", "a", encoding="utf-8") as log_file:
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log_file.write(f"[{timestamp}] {message}\n")
+
+def run_special_request_if_exists():
+    request_path = "request.py"
+    print(f"🔧 Checking {request_path}")
+    log_request_message(f"Checking for {request_path}")
+    
+    if os.path.exists(request_path):
+        print(f" 🔧 {request_path} found, running special_request()...")
+        log_request_message(f"ℹ️ {request_path} found. Attempting to run special_request()")
+
+        spec = importlib.util.spec_from_file_location("request", request_path)
+        request_module = importlib.util.module_from_spec(spec)
+
+        try:
+            spec.loader.exec_module(request_module)
+            if hasattr(request_module, 'special_request'):
+                try:
+                    request_module.special_request()
+                    log_request_message("ℹ️ special_request() executed successfully.")
+                except Exception as inner_e:
+                    error_msg = f"❌ Error inside special_request(): {inner_e}"
+                    print(error_msg)
+                    log_request_message(error_msg)
+                    log_request_message(traceback.format_exc())
+            else:
+                warning = "⚠️  special_request() not found in request.py"
+                print(warning)
+                log_request_message(warning)
+        except Exception as e:
+            error_msg = f"❌ Error loading request.py: {e}"
+            print(error_msg)
+            log_request_message(error_msg)
+            log_request_message(traceback.format_exc())
+        finally:
+            try:
+                os.remove(request_path)
+                print("ℹ️ request.py has been deleted after execution.")
+                log_request_message("request.py has been deleted after execution.")
+            except Exception as e:
+                delete_error = f"⚠️  Failed to delete request.py: {e}"
+                print(delete_error)
+                log_request_message(delete_error)
+    else:
+        msg = f"ℹ️  {request_path} not found, skipping special_request."
+        print(msg)
+        log_request_message(msg)
+
+
+
 
 def printpdf(
     json_path="output/user_added_slang.json",
@@ -1092,10 +1180,30 @@ def printpdf(
     output_booklet = output_path.replace(".pdf", "_booklet.pdf")
     print(f"Input PDF: {output_path}")
     make_foldable_booklet(input_path=output_path, output_path=output_booklet, random_page=random_page)
+
     
     ### พิมพ์ออกมา
     if printer_active :
         print(f"Printing: {output_booklet}")
-        print_pdf_file(output_booklet)
+        print_pdf_file(output_booklet)       
     else:
-        print(f"*No Printing")
+        print(f"*No Booklet Printing")
+
+
+    # สร้าง lucky booklet ด้วยโอกาส 1 ใน 10
+    lucky_draw = random.randint(1, 100)
+    print(f"🍀 lucky_draw: {lucky_draw}")
+    if lucky_draw > 80:
+        output_jackpot = output_path.replace(".pdf", "_jackpot.pdf")
+        make_foldable_lucky(input_path=output_path, output_path=output_jackpot)
+        print(f"🍀 You are lucky_draw: {output_jackpot}")
+        if printer_active :
+            print(f"Printing: {output_jackpot}")
+            print_pdf_file(output_jackpot)
+            greeting_lucky = "output/GreetingJackpot.pdf"
+            print_pdf_file(greeting_lucky)
+            print(f"Printing: {greeting_lucky}")
+        else:
+            print(f"*No Lucky Printing")
+    else:
+        run_special_request_if_exists()

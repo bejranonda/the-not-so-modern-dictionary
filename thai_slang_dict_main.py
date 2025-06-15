@@ -61,11 +61,17 @@ playsound.playsound(systemstart_sound)
 # โหลดโมเดล Whisper
 # whisper_model = whisper.load_model("small")
 
+import shlex
+
 def kill_previous_instance():
     current_pid = os.getpid()
     script_name = os.path.basename(__file__)
+    script_path = os.path.abspath(__file__)  # ✅ เพิ่มบรรทัดนี้เพื่อใช้เปรียบเทียบ path
     system_platform = platform.system()
     print(f"Seeking double running: {system_platform}")
+    print(f"current_pid: {current_pid}")
+    print(f"script_name: {script_name}")
+    print(f"script_name: {script_path}")
     try:
         if system_platform == "Windows":
             result = subprocess.run(["wmic", "process", "get", "ProcessId,CommandLine"], capture_output=True, text=True)
@@ -78,19 +84,21 @@ def kill_previous_instance():
                         subprocess.run(["taskkill", "/F", "/PID", pid])
             print("✅ No previous running (Windows)")
         else:
-            result = subprocess.run(["ps", "aux"], capture_output=True, text=True)
+            # ✅ macOS: ใช้ lsof หา process ที่เปิดไฟล์ .py นี้
+            result = subprocess.run(["lsof", "+D", os.path.dirname(script_path)], capture_output=True, text=True)
             found = False
-            for line in result.stdout.splitlines():
-                if "python" in line and script_path in line and str(current_pid) not in line:
+            for line in result.stdout.strip().split("\n"):
+                if script_path in line and f"{current_pid}" not in line:
                     try:
-                        pid = int(line.split()[1])
-                        print(f"🛑 Killing PID (Unix): {pid}")
+                        parts = line.split()
+                        pid = int(parts[1])
+                        print(f"🛑 Killing PID (Unix/macOS): {pid} → {line}")
                         os.kill(pid, signal.SIGKILL)
                         found = True
-                    except Exception:
-                        continue
+                    except Exception as e:
+                        print(f"⚠️ Failed to parse or kill: {e}")
             if not found:
-                print("✅ No previous running (Unix)")
+                print("✅ No previous running (Unix/macOS)")
     except Exception as e:
         print(f"❌ Error while trying to kill previous instance: {e}")
 
@@ -148,7 +156,7 @@ def recognize_thai_whisper():
 
 def main_loop():
     try:
-        printpdf(json_path="output/user_added_slang.json",output_path="output/slang_dictionary.pdf",thai_font_path="fonts/Kinnari.ttf",emoji_font_path="fonts/NotoEmoji-Regular.ttf")
+        printpdf(json_path="output/user_added_slang.json", output_path="output/slang_dictionary.pdf", thai_font_path="fonts/Kinnari.ttf", emoji_font_path="fonts/NotoEmoji-Regular.ttf")
         #exit()
         while True:
             print("🚀 Starting AI")
