@@ -364,8 +364,8 @@ class SlangKiosk(QWidget):
         self.input.clear()
         self.label.setText(
             "<div style='font-size:38px;'>🖨️ ต้องการพิมพ์ออกมาไหม?<br>Print your own dict?<br>"
-            "<div style='font-size:42px;'>👉 พิมพ์ชื่อของคุณเพื่อลงในหน้าผู้แต่งล่าสุด<br>Would you like to print it out? Type your name to appear as the latest author<br><br>"
-            "<span style='font-size:32px;'>หากไม่ต้องการใส่ชื่อหรือพิมพ์ออกมา กด Escape เพื่อข้าม<br>Press Escape to skip</span></div>"
+            "<div style='font-size:42px; color: #FFFF00;'>👉 พิมพ์ชื่อของคุณเพื่อลงในหน้าผู้แต่งล่าสุด<br>Would you like to print it out? Type your name to appear as the latest author<br><br></div>"
+            "<span style='font-size:32px;'>หากไม่ต้องการใส่ชื่อหรือพิมพ์ออกมา กด Escape เพื่อข้าม<br>Press Escape to skip</span>"
         )
         QTimer.singleShot(300, lambda: speak_thai("พิมพ์ชื่อของคุณเพื่อลงในหน้าผู้แต่งล่าสุด"))
         self.reset_idle_timer()
