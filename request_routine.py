@@ -22,7 +22,11 @@ def routine_request():
         # สร้าง lucky request ด้วยโอกาส 1 ใน 10
         request_draw = random.randint(1, 100)
         print(f"🍀 request_draw: {request_draw}")
-        if request_draw > 5:
+        log(f"🍀 request_draw: {request_draw}")
+        if request_draw > 80:
+            print(f"🍀 request_draw meets criteria")
+            log(f"🍀 request_draw meets criteria")
+            
             cmd1 = ['lp', '-d', 'Canon_LBP121_122', '-o', 'orientation-requested=4', '/Users/user/Documents/DictApp/EverWonderContent.pdf']
             print(f"⚙️ Request1a: {' '.join(cmd1)}")
             log(f"⚙️ cmd1a: {' '.join(cmd1)}")
@@ -52,6 +56,9 @@ def routine_request():
             except Exception as e:
                 print(f"❌ Unexpected error in Request1b: {e}")
                 log(f"❌ Unexpected error in Request1b: {e}")
+        else:
+            print(f"🍀 request_draw not enough")
+            log(f"🍀 request_draw not enough")
 
 
     ############################

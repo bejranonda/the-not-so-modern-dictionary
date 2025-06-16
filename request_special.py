@@ -93,8 +93,8 @@ def special_request():
 
         try:
             output = subprocess.run(cmd3, check=True, capture_output=True, text=True)
-            print("✅ Request1 success")
-            log(f"✅ Request1 success\nstdout:\n{output.stdout}\nstderr:\n{output.stderr}")
+            print("✅ Request3 success")
+            log(f"✅ Request3 success\nstdout:\n{output.stdout}\nstderr:\n{output.stderr}")
         except subprocess.CalledProcessError as e:
             print(f"❌ Request3 error: {e}")
             log(f"❌ Request3 error: {e}\nstdout:\n{e.stdout}\nstderr:\n{e.stderr}")
