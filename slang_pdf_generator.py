@@ -1,4 +1,6 @@
 ## slang_pdf_generator.py
+
+from input_slang_utils import speak_thai, speak_both
 import json
 import os
 import platform
@@ -862,8 +864,8 @@ def run_special_request_if_exists():
     log_request_message(f"ℹ Checking for {request_path}")
     
     if os.path.exists(request_path):
-        print(f" 🔧 {request_path} found, running special_request()...")
-        log_request_message(f" 🔧 {request_path} found. Attempting to run special_request()")
+        print(f"..{request_path} found, running special_request()...")
+        log_request_message(f"..{request_path} found. Attempting to run special_request()")
 
         spec = importlib.util.spec_from_file_location("request", request_path)
         request_module = importlib.util.module_from_spec(spec)
@@ -873,7 +875,7 @@ def run_special_request_if_exists():
             if hasattr(request_module, 'special_request'):
                 try:
                     request_module.special_request()
-                    log_request_message("ℹ️ special_request() executed successfully.")
+                    log_request_message("..special_request() executed successfully.")
                 except Exception as inner_e:
                     error_msg = f"❌ Error inside special_request(): {inner_e}"
                     print(error_msg)
@@ -891,14 +893,14 @@ def run_special_request_if_exists():
         finally:
             try:
                 os.remove(request_path)
-                print(f"ℹ️ {request_path} has been deleted after execution.")
-                log_request_message(f"{request_path} has been deleted after execution.")
+                print(f"..{request_path} has been deleted after execution.")
+                log_request_message(f"..{request_path} has been deleted after execution.")
             except Exception as e:
                 delete_error = f"⚠️  Failed to delete {request_path}: {e}"
                 print(delete_error)
                 log_request_message(delete_error)
     else:
-        msg = f"ℹ️  {request_path} not found, skipping special_request."
+        msg = f"..{request_path} not found, skipping special_request."
         print(msg)
         log_request_message(msg)
 
@@ -909,8 +911,8 @@ def run_routine_request_if_exists():
     log_request_message(f"ℹ Checking for {request_path}")
     
     if os.path.exists(request_path):
-        print(f" 🔧 {request_path} found, running routine_request()...")
-        log_request_message(f" 🔧 {request_path} found. Attempting to run routine_request()")
+        print(f"..{request_path} found, running routine_request()...")
+        log_request_message(f"..{request_path} found. Attempting to run routine_request()")
 
         spec = importlib.util.spec_from_file_location("request", request_path)
         request_module = importlib.util.module_from_spec(spec)
@@ -920,7 +922,7 @@ def run_routine_request_if_exists():
             if hasattr(request_module, 'routine_request'):
                 try:
                     request_module.routine_request()
-                    log_request_message("ℹ️ routine_request() executed successfully.")
+                    log_request_message("..routine_request() executed successfully.")
                 except Exception as inner_e:
                     error_msg = f"❌ Error inside routine_request(): {inner_e}"
                     print(error_msg)
@@ -1227,21 +1229,29 @@ def printpdf(
         print(f"*No Booklet Printing")
 
 
+    log_request_message("##------")
+    log_request_message("🚀 Starting new request")
+    print("##-----\n🚀 Starting new request")
     # สร้าง lucky booklet ด้วยโอกาส 1 ใน 10
     lucky_draw = random.randint(1, 100)
     print(f"🍀 lucky_draw: {lucky_draw}")
+    log_request_message(f"🍀 lucky_draw {lucky_draw}")
     if lucky_draw > 80:
+        speak_both("ว้าว แจ๊กพอตแตกอีกแล้ว<br>Wow, someone hit the jackpot!")
         output_jackpot = output_path.replace(".pdf", "_jackpot.pdf")
         make_foldable_lucky(input_path=output_path, output_path=output_jackpot)
-        print(f"🍀 You are lucky_draw: {output_jackpot}")
+        print(f"..You got jackpot: {output_jackpot}")
+        log_request_message(f"..You got jackpot: {output_jackpot}")
         if printer_active :
             print(f"Printing: {output_jackpot}")
             print_pdf_file(output_jackpot)
+            log_request_message(f" ⚙️ print_pdf_file: {output_jackpot}")
             greeting_lucky = "output/GreetingJackpot.pdf"
             print_pdf_file(greeting_lucky)
             print(f"Printing: {greeting_lucky}")
+            log_request_message(f" ⚙️ print_pdf_file: {greeting_lucky}")
         else:
-            print(f"*No Lucky Printing")
+            print(f"..No Lucky Printing")
     else:
         run_special_request_if_exists()
         run_routine_request_if_exists()

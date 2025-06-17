@@ -1,5 +1,6 @@
-### request.py
+### request_routine.py
 
+from input_slang_utils import speak_thai, speak_both
 import subprocess
 from datetime import datetime
 import fitz  # PyMuPDF
@@ -24,12 +25,13 @@ def routine_request():
         print(f"🍀 request_draw: {request_draw}")
         log(f"🍀 request_draw: {request_draw}")
         if request_draw > 80:
-            print(f"🍀 request_draw meets criteria")
-            log(f"🍀 request_draw meets criteria")
+            speak_both("โอ้ มีบางสิ่งอยู่ในยามค่ำคืนที่นี่<br>Oh, when no one is here at all")
+            print(f"..request_draw meets criteria")
+            log(f"..request_draw meets criteria")
             
             cmd1 = ['lp', '-d', 'Canon_LBP121_122', '-o', 'orientation-requested=4', '/Users/user/Documents/DictApp/EverWonderContent.pdf']
             print(f"⚙️ Request1a: {' '.join(cmd1)}")
-            log(f"⚙️ cmd1a: {' '.join(cmd1)}")
+            log(f"⚙️ Request1a: {' '.join(cmd1)}")
 
             try:
                 output = subprocess.run(cmd1, check=True, capture_output=True, text=True)
@@ -44,7 +46,7 @@ def routine_request():
 
             cmd1 = ['lp', '-d', 'Canon_LBP121_122', '-o', 'orientation-requested=4', '/Users/user/Documents/DictApp/EverWonderP1.pdf']
             print(f"⚙️ Request1b: {' '.join(cmd1)}")
-            log(f"⚙️ cmd1b: {' '.join(cmd1)}")
+            log(f"⚙️ Request1b: {' '.join(cmd1)}")
 
             try:
                 output = subprocess.run(cmd1, check=True, capture_output=True, text=True)
@@ -57,8 +59,8 @@ def routine_request():
                 print(f"❌ Unexpected error in Request1b: {e}")
                 log(f"❌ Unexpected error in Request1b: {e}")
         else:
-            print(f"🍀 request_draw not enough")
-            log(f"🍀 request_draw not enough")
+            print(f"..request_draw not enough")
+            log(f"..request_draw not enough")
 
 
     ############################

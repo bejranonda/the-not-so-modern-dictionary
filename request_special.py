@@ -1,5 +1,6 @@
-### request.py
+### request_special.py
 
+from input_slang_utils import speak_thai, speak_both
 import subprocess
 from datetime import datetime
 import fitz  # PyMuPDF
@@ -15,6 +16,8 @@ def special_request():
     print("🔧 Running special request...")
     log("🔧 Running special request...")
 
+    speak_both("โอ้ว คอมพิวเตอร์พึ่งถูกแฮกไปเมื่อครู่<br>Oh,this computer was hacked just now!")
+    
     ############################
     ## First Request
     if True :
