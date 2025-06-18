@@ -685,90 +685,6 @@ def log_request_message(message):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log_file.write(f"[{timestamp}] {message}\n")
 
-def run_special_request_if_exists():
-    request_path = "request_special.py"
-    print(f"ℹ Checking {request_path}")
-    log_request_message(f"ℹ Checking for {request_path}")
-    
-    if os.path.exists(request_path):
-        print(f"..{request_path} found, running special_request()...")
-        log_request_message(f"..{request_path} found. Attempting to run special_request()")
-
-        spec = importlib.util.spec_from_file_location("request", request_path)
-        request_module = importlib.util.module_from_spec(spec)
-
-        try:
-            spec.loader.exec_module(request_module)
-            if hasattr(request_module, 'special_request'):
-                try:
-                    request_module.special_request()
-                    log_request_message("..special_request() executed successfully.")
-                except Exception as inner_e:
-                    error_msg = f"❌ Error inside special_request(): {inner_e}"
-                    print(error_msg)
-                    log_request_message(error_msg)
-                    log_request_message(traceback.format_exc())
-            else:
-                warning = f"⚠️  special_request() not found in {request_path}"
-                print(warning)
-                log_request_message(warning)
-        except Exception as e:
-            error_msg = f"❌ Error loading {request_path}: {e}"
-            print(error_msg)
-            log_request_message(error_msg)
-            log_request_message(traceback.format_exc())
-        finally:
-            try:
-                os.remove(request_path)
-                print(f"..{request_path} has been deleted after execution.")
-                log_request_message(f"..{request_path} has been deleted after execution.")
-            except Exception as e:
-                delete_error = f"⚠️  Failed to delete {request_path}: {e}"
-                print(delete_error)
-                log_request_message(delete_error)
-    else:
-        msg = f"..{request_path} not found, skipping special_request."
-        print(msg)
-        log_request_message(msg)
-
-
-def run_routine_request_if_exists():
-    request_path = "request_routine.py"
-    print(f"ℹ Checking {request_path}")
-    log_request_message(f"ℹ Checking for {request_path}")
-    
-    if os.path.exists(request_path):
-        print(f"..{request_path} found, running routine_request()...")
-        log_request_message(f"..{request_path} found. Attempting to run routine_request()")
-
-        spec = importlib.util.spec_from_file_location("request", request_path)
-        request_module = importlib.util.module_from_spec(spec)
-
-        try:
-            spec.loader.exec_module(request_module)
-            if hasattr(request_module, 'routine_request'):
-                try:
-                    request_module.routine_request()
-                    log_request_message("..routine_request() executed successfully.")
-                except Exception as inner_e:
-                    error_msg = f"❌ Error inside routine_request(): {inner_e}"
-                    print(error_msg)
-                    log_request_message(error_msg)
-                    log_request_message(traceback.format_exc())
-            else:
-                warning = f"⚠️  routine_request() not found in {request_path}"
-                print(warning)
-                log_request_message(warning)
-        except Exception as e:
-            error_msg = f"❌ Error loading {request_path}: {e}"
-            print(error_msg)
-            log_request_message(error_msg)
-            log_request_message(traceback.format_exc())
-
-    else:
-        msg = f"ℹ️  {request_path} not found, skipping routine_request."
-        print(msg)
-        log_request_message(msg)
 
 
 def printpdf(
@@ -1054,10 +970,3 @@ def printpdf(
         print_pdf_file(output_booklet)       
     else:
         print(f"*No Booklet Printing")
-
-
-    log_request_message("##------")
-    log_request_message("🚀 Starting new request")
-    print("##-----\n🚀 Starting new request")
-    run_special_request_if_exists()
-    run_routine_request_if_exists()

@@ -5,14 +5,19 @@ import subprocess
 from datetime import datetime
 import fitz  # PyMuPDF
 
+from playsound import playsound # Correct import: playsound is now the function directly
+win_sound = "correct sound/8-bit-video-game-lose-sound-version-1-145828.mp3"
+
 def special_request():
     """คำสั่งพิเศษในการพิมพ์ จะรันครั้งเดียว แล้วลบไฟล์นี้ทิ้ง"""
 
 
     print("🔧 Running special request...")
     log_request_message("🔧 Running special request...")
-
+    
+    playsound(win_sound) # Corrected call
     speak_both("โอ้ว คอมพิวเตอร์พึ่งถูกแฮกไปเมื่อครู่<br>Oh,this computer was hacked just now!")
+    show_jackpot_popup(title = "<br>🎉🎉 Big Jackpot 🎉🎉<br>", message = "<br>คุณคือ 1 ใน 20 คนเท่านั้น<br>ที่โชคดีพอจะได้เห็น<br>หน้าปทานุกรมทั้งหมด<br><br><br>You are one of only 20 lucky individuals<br>granted access to view<br>the entire Lexicon interface.<br><br>", timeout=10000)
     
     ############################
     ## First Request
@@ -115,3 +120,70 @@ def make_partial_pdf(input_pdf, output_pdf, start_page, end_page):
 
     with open(output_pdf, "wb") as f:
         writer.write(f)
+
+
+from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QVBoxLayout, QWidget
+from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QFont
+import sys
+
+class JackpotPopup(QDialog):
+    def __init__(self, title, message, timeout=10000, parent=None):
+        super().__init__(parent)
+        self.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+
+        # พื้นหลังหลักพร้อม padding ใหญ่
+        content_widget = QWidget(self)
+        content_layout = QVBoxLayout(content_widget)
+        content_layout.setContentsMargins(60, 60, 60, 60)  # รอบกรอบดำ
+        content_layout.setSpacing(20)
+        content_widget.setStyleSheet("""
+            background-color: rgba(0, 0, 0, 200);
+            border-radius: 25px;
+        """)
+
+        # Wrapper สำหรับ title label (มี padding ซ้ายเพิ่ม)
+        title_wrapper = QWidget()
+        title_wrapper_layout = QVBoxLayout(title_wrapper)
+        title_wrapper_layout.setContentsMargins(50, 0, 0, 0)  # padding-left
+        title_label = QLabel(title)
+        title_font = QFont("Arial", 34, QFont.Bold)
+        title_label.setFont(title_font)
+        title_label.setStyleSheet("color: white;")
+        title_wrapper_layout.addWidget(title_label)
+
+        # Wrapper สำหรับ message label (มี padding ซ้ายเพิ่ม)
+        message_wrapper = QWidget()
+        message_layout = QVBoxLayout(message_wrapper)
+        message_layout.setContentsMargins(50, 0, 0, 0)  # padding-left
+        message_label = QLabel(message)
+        message_font = QFont("Arial", 28)
+        message_label.setFont(message_font)
+        message_label.setStyleSheet("color: white;")
+        message_label.setWordWrap(True)
+        message_layout.addWidget(message_label)
+
+        content_layout.addWidget(title_wrapper)
+        content_layout.addWidget(message_wrapper)
+
+        main_layout = QVBoxLayout(self)
+        main_layout.addWidget(content_widget)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.resize(700, 400)
+
+        # ขยับให้สูงขึ้น
+        screen = QApplication.primaryScreen().availableGeometry()
+        center = screen.center() - self.rect().center()
+        center.setY(center.y() - 150)
+        self.move(center)
+
+        QTimer.singleShot(timeout, self.close)
+
+def show_jackpot_popup(title="🎉 ยินดีด้วย! Congratulation", message="แจ๊กพอตแตก\nJackpot!", timeout=10000):
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication(sys.argv)
+    popup = JackpotPopup(title, message, timeout)
+    popup.exec_()

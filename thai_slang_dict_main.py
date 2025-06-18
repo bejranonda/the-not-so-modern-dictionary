@@ -22,7 +22,7 @@ import platform
 # user library
 from slang_pdf_generator import printpdf
 # from thai_slang_gui import start_gui_and_get_entry
-from input_slang_utils import speak_thai, log_request_message
+from input_slang_utils import speak_thai, log_request_message, run_special_request_if_exists, run_routine_request_if_exists
 from thai_slang_kiosk import SlangKiosk
 
 
@@ -182,4 +182,8 @@ def main_loop():
 log_request_message("🛫")
 log_request_message("🛫🛫 Starting App... 🛫🛫")
 log_request_message("🛫")
+
+run_special_request_if_exists()
+got_jacpot = run_routine_request_if_exists()
+
 main_loop()

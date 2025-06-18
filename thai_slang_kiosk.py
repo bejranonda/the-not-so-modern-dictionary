@@ -16,7 +16,7 @@ from playsound import playsound # Correct import: playsound is now the function 
 import speech_recognition as sr
 from datetime import datetime
 
-from input_slang_utils import speak_thai, speak_both, detect_motion, log_request_message
+from input_slang_utils import speak_thai, speak_both, detect_motion, log_request_message, run_special_request_if_exists, run_routine_request_if_exists
 from slang_pdf_generator import printpdf
 
 from greetings import greeting_word
@@ -414,9 +414,20 @@ class SlangKiosk(QWidget):
                 self.data["author"] = text  
                 self.save_author_to_latest_entry(self.data["word"], text) # Update author specifically for the word just added
                 printpdf(author=text) # Pass author name to printpdf
-                self.label.setText(f"🖨️ กำลังพิมพ์... ขอบคุณ {text} มากนะ<br>Printing your dict, thanks {text}")
+                self.label.setText(f"🖨️ กำลังพิมพ์... ขอบคุณ {text} มากนะ<br>Printing your dictionary, thanks {text}")
                 playsound(correct_sound) # Corrected call
-                QTimer.singleShot(3000, self.show_standby) # Return to standby after printing
+                
+                log_request_message("##------")
+                log_request_message("🚀 Starting new request")
+                print("##-----\n🚀 Starting new request")
+                got_jacpot = run_routine_request_if_exists()
+                
+                if got_jacpot: 
+                    run_special_request_if_exists()
+                    QTimer.singleShot(10000, self.show_standby) # Return to standby after printing
+                else:
+                    QTimer.singleShot(3000, self.show_standby) # Return to standby after printing
+                    
             else: # User skipped entering author name
                 self.label.setText("ขอบคุณที่ใช้บริการ! กลับสู่หน้าเริ่มต้น")
                 playsound(end_sound) # Corrected call
@@ -425,7 +436,8 @@ class SlangKiosk(QWidget):
             self.input.clear() # Clear input after each step
 
         #self.input.clear() # Clear input after each step
-        self.reset_idle_timer() # Reset timer after interaction
+
+        self.reset_idle_timer() # Reset timer after interaction      
 
     def keyPressEvent(self, event):
         """Global key press event handler for the Kiosk widget."""
