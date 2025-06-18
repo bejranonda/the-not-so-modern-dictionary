@@ -16,7 +16,7 @@ from playsound import playsound # Correct import: playsound is now the function 
 import speech_recognition as sr
 from datetime import datetime
 
-from input_slang_utils import speak_thai, speak_both, detect_motion
+from input_slang_utils import speak_thai, speak_both, detect_motion, log_request_message
 from slang_pdf_generator import printpdf
 
 from greetings import greeting_word
@@ -295,6 +295,7 @@ class SlangKiosk(QWidget):
         """Transitions to the word input step."""
         self.step = 1
         playsound(correct_sound) # Corrected call
+        log_request_message("🚀 Starting word input page") 
         
         self.input.setReadOnly(False) # Enable input for user interaction
         self.input.setFocus() # Ensure input field has focus
@@ -360,6 +361,7 @@ class SlangKiosk(QWidget):
     def go_to_print_option(self):
         """Transitions to the print option step, allowing user to enter name for printing."""
         self.step = 5
+        log_request_message("🚀 Starting print option") 
         self.input.setReadOnly(False) # Enable input for user interaction
         self.input.clear()
         self.label.setText(
@@ -412,7 +414,7 @@ class SlangKiosk(QWidget):
                 self.data["author"] = text  
                 self.save_author_to_latest_entry(self.data["word"], text) # Update author specifically for the word just added
                 printpdf(author=text) # Pass author name to printpdf
-                self.label.setText(f"🖨️ กำลังพิมพ์... ขอบคุณ {text} มากนะ")
+                self.label.setText(f"🖨️ กำลังพิมพ์... ขอบคุณ {text} มากนะ<br>Printing your dict, thanks {text}")
                 playsound(correct_sound) # Corrected call
                 QTimer.singleShot(3000, self.show_standby) # Return to standby after printing
             else: # User skipped entering author name

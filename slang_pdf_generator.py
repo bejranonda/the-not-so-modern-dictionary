@@ -1,6 +1,6 @@
 ## slang_pdf_generator.py
 
-from input_slang_utils import speak_thai, speak_both
+from input_slang_utils import speak_thai, speak_both, print_pdf_file
 import json
 import os
 import platform
@@ -658,40 +658,6 @@ def make_foldable_booklet(input_path, output_path, random_page = None):
     doc.close()
     output_doc.close()
     
-def make_foldable_lucky(input_path, output_path):
-    """Create a single-sheet 8-section PDF from randomly selected 8 pages (starting from page 5 onward)."""
-    doc = fitz.open(input_path)
-    total_pages = len(doc)
-    w, h = 842, 595  # A4 landscape
-
-    if total_pages <= 5:
-        raise ValueError("PDF must have more than 5 pages to allow random selection from page 5 onward.")
-    
-    # Select 8 unique pages from index 5 to end
-    available_pages = list(range(5, total_pages-1))
-    if len(available_pages) < 8:
-        raise ValueError(f"Not enough pages (found {len(available_pages)}) after page 4 to select 8 unique pages.")
-    
-    selected_pages = sorted(random.sample(available_pages, 8))  # Ascending order
-
-    output_doc = fitz.open()
-    new_page = output_doc.new_page(width=w, height=h)
-
-    section_w, section_h = w / 4, h / 2  # 4 cols × 2 rows
-
-    for i, idx in enumerate(selected_pages):
-        src_page = doc.load_page(idx)
-        col, row = i % 4, 0 if i < 4 else 1
-        x0, y0 = col * section_w, row * section_h
-        target_rect = fitz.Rect(x0, y0, x0 + section_w, y0 + section_h)
-        rotation = 180 if i < 4 else 0
-        new_page.show_pdf_page(target_rect, doc, idx, rotate=rotation)
-
-    output_doc.save(output_path)
-    doc.close()
-    output_doc.close()
-
-
 def merge_pdfs(append_pdf_path, base_pdf_path, output_pdf_path):
     """Merge two PDF files, appending one to the beginning of another."""
     writer = PdfWriter()
@@ -709,145 +675,6 @@ def merge_pdfs(append_pdf_path, base_pdf_path, output_pdf_path):
     with open(output_pdf_path, 'wb') as out_f:
         writer.write(out_f)
 
-
-def print_pdf_file(pdf_path, printer_name=None):
-    """
-    Prints a PDF file to the specified printer on Windows or Linux/macOS.
-    For Windows, it attempts to use PowerShell for silent printing,
-    then falls back to specific PDF viewers (Adobe Reader, SumatraPDF) if needed.
-    For Windows without a named printer, it opens the print dialog.
-    For Linux/macOS, it uses the `lpr` command.
-    """
-    # Convert to absolute path
-    # Ensure the path uses forward slashes for consistency in PowerShell arguments
-    # and to avoid issues with backslashes needing escaping.
-    abs_pdf_path = os.path.abspath(pdf_path).replace("\\", "/")
-
-    print(f"กำลังสั่งพิมพ์ไฟล์: {abs_pdf_path}")
-    if not os.path.exists(abs_pdf_path):
-        print(f"❌ ข้อผิดพลาด: ไม่พบไฟล์ PDF ที่ {abs_pdf_path} ไม่สามารถสั่งพิมพ์ได้")
-        return
-    
-    system = platform.system()
-    print(f"ระบบปฏิบัติการที่ตรวจพบ: {system}")
-
-    if system == "Windows":
-        printed_successfully = False
-        
-        # --- Attempt 1: Using PowerShell with PrintTo verb (relies on default app association) ---
-        if printer_name:
-            # Use 'Start-Process' with double quotes around file path for spaces and to handle forward slashes
-            # Using os.path.normpath to ensure correct path formatting for Windows native commands
-            # and then replacing backslashes with forward slashes for PowerShell compatibility.
-            quoted_abs_pdf_path = f'"{os.path.normpath(abs_pdf_path)}"'
-            cmd = f'PowerShell.exe -Command "Start-Process -FilePath {quoted_abs_pdf_path} -Verb PrintTo -ArgumentList \'{printer_name}\'"'
-            print(f"คำสั่ง Windows (PowerShell - PrintTo): {cmd}")
-            try:
-                subprocess.run(cmd, shell=True, check=True, creationflags=subprocess.CREATE_NO_WINDOW) # Use CREATE_NO_WINDOW for silent process
-                print(f"✅ สั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' ไปยังเครื่องพิมพ์ '{printer_name}' บน Windows เรียบร้อยแล้ว (ผ่าน PowerShell PrintTo)")
-                print("หากไม่เห็นงานพิมพ์ โปรดตรวจสอบคิวงานพิมพ์ของเครื่องพิมพ์และโปรแกรมดู PDF เริ่มต้น")
-                printed_successfully = True
-            except subprocess.CalledProcessError as e:
-                print(f"❌ ข้อผิดพลาดในการสั่งพิมพ์ (PowerShell PrintTo): {e.stderr.decode('utf-8') if e.stderr else 'ไม่มีรายละเอียด'}")
-                print("   สาเหตุอาจเกิดจาก: ไม่มีแอปพลิเคชันเชื่อมโยงกับไฟล์ PDF หรือการเชื่อมโยงเสียหาย")
-                print("   กำลังลองวิธีอื่น...")
-            except FileNotFoundError:
-                print(f"❌ ข้อผิดพลาด: ไม่พบ PowerShell หรือ Start-Process. กำลังลองวิธีอื่น...")
-            except Exception as e:
-                print(f"❌ ข้อผิดพลาดที่ไม่คาดคิดในการสั่งพิมพ์ (PowerShell PrintTo): {e}. กำลังลองวิธีอื่น...")
-        
-        # --- Attempt 2: Using known PDF viewers directly (if Attempt 1 fails or no printer_name) ---
-        if not printed_successfully and printer_name:
-            # Common paths for Adobe Reader and SumatraPDF
-            program_files_x86 = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
-            program_files = os.environ.get("ProgramFiles", r"C:\Program Files")
-
-            adobe_reader_paths = [
-                os.path.join(program_files_x86, r"Adobe\Acrobat Reader DC\Reader\AcroRd32.exe"),
-                os.path.join(program_files, r"Adobe\Acrobat Reader DC\Reader\AcroRd32.exe"),
-                os.path.join(program_files_x86, r"Adobe\Reader 11.0\Reader\AcroRd32.exe"), # Older version
-                os.path.join(program_files, r"Adobe\Reader 11.0\Reader\AcroRd32.exe")    # Older version
-            ]
-            sumatra_paths = [
-                os.path.join(program_files, r"SumatraPDF\SumatraPDF.exe"),
-                os.path.join(program_files_x86, r"SumatraPDF\SumatraPDF.exe")
-            ]
-
-            # Try Adobe Reader
-            for adobe_path in adobe_reader_paths:
-                if os.path.exists(adobe_path):
-                    # Quote paths for command line using os.path.normpath for consistency
-                    cmd = [f'"{os.path.normpath(adobe_path)}"', "/N", "/T", f'"{os.path.normpath(abs_pdf_path)}"', printer_name]
-                    print(f"คำสั่ง Windows (Adobe Reader): {' '.join(cmd)}")
-                    try:
-                        subprocess.run(" ".join(cmd), shell=True, check=True, creationflags=subprocess.CREATE_NO_WINDOW)
-                        print(f"✅ สั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' ไปยังเครื่องพิมพ์ '{printer_name}' บน Windows เรียบร้อยแล้ว (ผ่าน Adobe Reader)")
-                        printed_successfully = True
-                        break
-                    except Exception as e:
-                        print(f"❌ ข้อผิดพลาดในการสั่งพิมพ์ (Adobe Reader): {e}")
-                        continue
-            
-            if not printed_successfully:
-                # Try SumatraPDF
-                for sumatra_path in sumatra_paths:
-                    if os.path.exists(sumatra_path):
-                        # Quote paths for command line using os.path.normpath for consistency
-                        cmd = [f'"{os.path.normpath(sumatra_path)}"', "-print-to", printer_name, f'"{os.path.normpath(abs_pdf_path)}"', "-silent"] # Added -silent
-                        print(f"คำสั่ง Windows (SumatraPDF): {' '.join(cmd)}")
-                        try:
-                            subprocess.run(" ".join(cmd), shell=True, check=True, creationflags=subprocess.CREATE_NO_WINDOW)
-                            print(f"✅ สั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' ไปยังเครื่องพิมพ์ '{printer_name}' บน Windows เรียบร้อยแล้ว (ผ่าน SumatraPDF)")
-                            printed_successfully = True
-                            break
-                        except Exception as e:
-                            print(f"❌ ข้อผิดพลาดในการสั่งพิมพ์ (SumatraPDF): {e}")
-                            continue
-
-        # --- Final Fallback for Windows if all silent methods fail or no printer_name ---
-        if not printed_successfully:
-            print(f"⚠️ ไม่สามารถสั่งพิมพ์แบบเงียบได้ หรือไม่มีชื่อเครื่องพิมพ์ที่ระบุ")
-            print(f"   กำลังสั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' โดยเปิดกล่องโต้ตอบการพิมพ์ (โปรดกดพิมพ์ด้วยตนเอง)")
-            try:
-                # Ensure the path is quoted for os.startfile as well
-                os.startfile(os.path.normpath(abs_pdf_path), "print") # os.startfile generally handles paths correctly without manual quoting, but normpath helps.
-                print("✅ คำสั่งเปิดกล่องโต้ตอบการพิมพ์ถูกส่งแล้ว")
-            except Exception as e:
-                print(f"❌ ข้อผิดพลาดในการเปิดกล่องโต้ตอบการพิมพ์: {e}")
-                print("   โปรดตรวจสอบการตั้งค่าโปรแกรมดู PDF เริ่มต้นและสิทธิ์การเข้าถึง")
-                print("   หากปัญหายังคงอยู่: โปรดติดตั้งโปรแกรมดู PDF เช่น Adobe Reader หรือ SumatraPDF และตั้งค่าให้เป็นโปรแกรมเริ่มต้นสำหรับไฟล์ PDF")
-                print("   หากปัญหายังคงอยู่: อาจจำเป็นต้องแก้ไขการเชื่อมโยงชนิดไฟล์ด้วยตนเองใน Windows หรือเรียกใช้สคริปต์ในฐานะผู้ดูแลระบบ")
-
-    elif system in ("Darwin", "Linux"):  # Darwin = macOS
-        try:
-            if shutil.which("lp"):  # ใช้ `lp` หากมี (เพราะ lp รองรับ option ได้ดีกว่า lpr)
-                cmd = ["lp"]
-                if printer_name:
-                    cmd.extend(["-d", printer_name])
-                # เพิ่ม orientation สำหรับแนวตั้ง
-                cmd.extend(["-o", "orientation-requested=4"])
-                cmd.append(abs_pdf_path)
-                print(f"คำสั่ง {system} (lp): {' '.join(cmd)}")
-            else:
-                cmd = ["lpr"]
-                if printer_name:
-                    cmd.extend(["-P", printer_name])
-                cmd.append(abs_pdf_path)
-                print(f"คำสั่ง {system} (lpr): {' '.join(cmd)}")
-
-            subprocess.run(cmd, check=True)
-            print(f"✅ สั่งพิมพ์ไฟล์ '{os.path.basename(abs_pdf_path)}' ไปยังเครื่องพิมพ์ '{printer_name if printer_name else 'default'}' บน {system} เรียบร้อยแล้ว")
-            print("หากไม่เห็นงานพิมพ์ โปรดตรวจสอบคิวงานพิมพ์ของเครื่องพิมพ์")
-
-        except subprocess.CalledProcessError as e:
-            print(f"❌ ข้อผิดพลาดในการสั่งพิมพ์บน {system}: การเรียกใช้คำสั่งล้มเหลว. รหัสข้อผิดพลาด: {e.returncode}")
-            print(f"   รายละเอียด: {e.stderr.decode('utf-8') if e.stderr else 'ไม่มี'}")
-        except FileNotFoundError:
-            print(f"❌ ข้อผิดพลาด: ไม่พบคำสั่ง 'lp' หรือ 'lpr'")
-            print(f"   โปรดตรวจสอบว่า CUPS ถูกติดตั้งและตั้งค่าอย่างถูกต้องบน {system} ของคุณ")
-        except Exception as e:
-            print(f"❌ ข้อผิดพลาดที่ไม่คาดคิดในการสั่งพิมพ์บน {system}: {e}")
-            print("   โปรดตรวจสอบการตั้งค่าเครื่องพิมพ์และสิทธิ์การเข้าถึง")
 
 import importlib.util
 import traceback
@@ -1232,26 +1059,5 @@ def printpdf(
     log_request_message("##------")
     log_request_message("🚀 Starting new request")
     print("##-----\n🚀 Starting new request")
-    # สร้าง lucky booklet ด้วยโอกาส 1 ใน 10
-    lucky_draw = random.randint(1, 100)
-    print(f"🍀 lucky_draw: {lucky_draw}")
-    log_request_message(f"🍀 lucky_draw {lucky_draw}")
-    if lucky_draw > 80:
-        speak_both("ว้าว แจ๊กพอตแตกอีกแล้ว<br>Wow, someone hit the jackpot!")
-        output_jackpot = output_path.replace(".pdf", "_jackpot.pdf")
-        make_foldable_lucky(input_path=output_path, output_path=output_jackpot)
-        print(f"..You got jackpot: {output_jackpot}")
-        log_request_message(f"..You got jackpot: {output_jackpot}")
-        if printer_active :
-            print(f"Printing: {output_jackpot}")
-            print_pdf_file(output_jackpot)
-            log_request_message(f" ⚙️ print_pdf_file: {output_jackpot}")
-            greeting_lucky = "output/GreetingJackpot.pdf"
-            print_pdf_file(greeting_lucky)
-            print(f"Printing: {greeting_lucky}")
-            log_request_message(f" ⚙️ print_pdf_file: {greeting_lucky}")
-        else:
-            print(f"..No Lucky Printing")
-    else:
-        run_special_request_if_exists()
-        run_routine_request_if_exists()
+    run_special_request_if_exists()
+    run_routine_request_if_exists()
