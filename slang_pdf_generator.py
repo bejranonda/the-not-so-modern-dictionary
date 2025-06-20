@@ -92,12 +92,13 @@ def get_main_thai_consonant(word):
         return match.group(0)
     return word[0] if word else ''
     
-def register_fonts(thai_font_path, thai_bold_font_path, thai_italic_font_path, emoji_font_path):
+def register_fonts(thai_font_path, thai_bold_font_path, thai_italic_font_path, emoji_font_path,ln_font_path):
     """Register custom fonts with ReportLab."""
     pdfmetrics.registerFont(TTFont("Kinnari", thai_font_path))
     pdfmetrics.registerFont(TTFont("Kinnari-Bold", thai_bold_font_path))
     pdfmetrics.registerFont(TTFont("Kinnari-Italic", thai_italic_font_path))
     pdfmetrics.registerFont(TTFont("EmojiFont", emoji_font_path))
+    pdfmetrics.registerFont(TTFont("LN", ln_font_path))
 
 def draw_title(c, text, y):
     """Draw a centered title with mixed text (Thai and Emoji)."""
@@ -201,6 +202,16 @@ def draw_fortune_page(c, fortune_data):
         round(line_space*2.5*fortune_fontsize_factor)
     )
     y -= line_space*2*fortune_fontsize_factor
+
+    # ✅ Display additional 'ln' text if available
+    if "ln" in fortune:
+        y, _ = draw_mixed_text_wrapped_centered(
+            c, fortune["ln"], width / 2 + indent, y,
+            "LN", content_font_size*2*fortune_fontsize_factor,
+            "EmojiFont", content_font_size*2*fortune_fontsize_factor,
+            round(line_space*2.5*fortune_fontsize_factor)
+        )
+        y -= line_space*1.5*fortune_fontsize_factor
     
     draw_page_number(c)
 
@@ -694,9 +705,10 @@ def printpdf(
     thai_bold_font_path="fonts/Kinnari-Bold.ttf",
     thai_italic_font_path="fonts/Kinnari-Italic.ttf",
     emoji_font_path="fonts/NotoEmoji-Regular.ttf",
+    ln_font_path="NotoSansKhmer-Regular.ttf",
     cover_append_file="template/PP1-4.pdf",  # ไฟล์ PDF ที่จะเพิ่มหน้า
     author=None,
-    fortune_json_path="template/th-en_slang_predictions_99.json"
+    fortune_json_path="template/th-en-ln_slang_predictions_99.json"
 ):
     # ในฟังก์ชันถ้า author มีค่า ให้ใช้ค่า author แทน `
     lastauthor = author if author else "ไม่ระบุ"
@@ -709,7 +721,7 @@ def printpdf(
         data = json.load(f)
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    register_fonts(thai_font_path, thai_bold_font_path, thai_italic_font_path, emoji_font_path)
+    register_fonts(thai_font_path, thai_bold_font_path, thai_italic_font_path, emoji_font_path,ln_font_path)
 
     temp_output = output_path.replace(".pdf", "_temp.pdf")
     intermediate_path = output_path.replace(".pdf", "_plain.pdf")

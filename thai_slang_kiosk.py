@@ -16,7 +16,7 @@ from playsound import playsound # Correct import: playsound is now the function 
 import speech_recognition as sr
 from datetime import datetime
 
-from input_slang_utils import speak_thai, speak_both, detect_motion, log_request_message, run_special_request_if_exists, run_routine_request_if_exists
+from input_slang_utils import speak_thai, speak_both, detect_motion, log_request_message, run_special_request_if_exists, run_routine_request_if_exists, speak_both_special
 from slang_pdf_generator import printpdf
 
 from greetings import greeting_word
@@ -288,7 +288,7 @@ class SlangKiosk(QWidget):
         )
         print(f"- greeting: {greeting}")
         #self.input.clear()
-        QTimer.singleShot(100, lambda: speak_both(greeting))
+        QTimer.singleShot(100, lambda: speak_both_special(greeting))
         self.reset_idle_timer()
 
     def go_to_word_input(self):
@@ -306,7 +306,7 @@ class SlangKiosk(QWidget):
             "<span style='font-size:32px;'>ตัวอย่างเช่น ‘แจ่มแมว’ หรือ ‘เกียม’</span><br><br>"
             "<span style='font-size:28px;'>กด Escape เพื่อเริ่มต้นใหม่<br>Press Escape to start over</span></div>"
         )
-        QTimer.singleShot(300, lambda: speak_thai("พิมพ์คำสแลง"))
+        QTimer.singleShot(300, lambda: speak_both("พิมพ์คำสแลง<br>Drop your slang!"))
         self.reset_idle_timer()
 
     def go_to_meaning_input(self):
@@ -317,7 +317,8 @@ class SlangKiosk(QWidget):
             "<div style='font-size:40px;'>📖 พิมพ์ความหมาย แล้วกด Enter<br>Type the meaning and press Enter<br><br>"
             "<span style='font-size:28px;'>กด Escape เพื่อเริ่มต้นใหม่<br>Press Escape to start over</span></div>"
         )
-        QTimer.singleShot(300, lambda: speak_thai("พิมพ์ความหมาย"))
+        QTimer.singleShot(300, lambda: speak_both("พิมพ์ความหมาย<br>Meaning?"))
+        log_request_message("..meaning_input")
         self.reset_idle_timer()
 
     def go_to_example_input(self):
@@ -328,7 +329,8 @@ class SlangKiosk(QWidget):
             "<div style='font-size:40px;'>💬 พิมพ์ตัวอย่างประโยค แล้วกด Enter<br>Type an example sentence and press Enter<br><br>"
             "<span style='font-size:28px;'>กด Escape เพื่อเริ่มต้นใหม่<br>Press Escape to start over</span></div>"
         )
-        QTimer.singleShot(300, lambda: speak_thai("พิมพ์ตัวอย่างประโยค"))
+        QTimer.singleShot(300, lambda: speak_both("พิมพ์ตัวอย่างประโยค<br>Example sentence?"))
+        log_request_message("..example_input")
         self.reset_idle_timer()
 
     def go_to_summary(self):
@@ -361,7 +363,6 @@ class SlangKiosk(QWidget):
     def go_to_print_option(self):
         """Transitions to the print option step, allowing user to enter name for printing."""
         self.step = 5
-        log_request_message("🚀 Starting print option") 
         self.input.setReadOnly(False) # Enable input for user interaction
         self.input.clear()
         self.label.setText(
@@ -369,7 +370,8 @@ class SlangKiosk(QWidget):
             "<div style='font-size:42px; color: #FFFF00;'>👉 พิมพ์ชื่อของคุณเพื่อลงในหน้าผู้แต่งล่าสุด<br>Would you like to print it out? Type your name to appear as the latest author<br><br></div>"
             "<span style='font-size:32px;'>หากไม่ต้องการใส่ชื่อหรือพิมพ์ออกมา กด Escape เพื่อข้าม<br>Press Escape to skip</span>"
         )
-        QTimer.singleShot(300, lambda: speak_thai("พิมพ์ชื่อของคุณเพื่อลงในหน้าผู้แต่งล่าสุด"))
+        QTimer.singleShot(300, lambda: speak_both("พิมพ์ชื่อของคุณเพื่อลงในหน้าผู้แต่งล่าสุด<br>Your name for author?"))
+        log_request_message("..Starting print option") 
         self.reset_idle_timer()
     
     def next_step(self):
@@ -416,17 +418,36 @@ class SlangKiosk(QWidget):
                 printpdf(author=text) # Pass author name to printpdf
                 self.label.setText(f"🖨️ กำลังพิมพ์... ขอบคุณ {text} มากนะ<br>Printing your dictionary, thanks {text}")
                 playsound(correct_sound) # Corrected call
+                self.reset_idle_timer() # Reset timer after interaction      
                 
-                log_request_message("##------")
-                log_request_message("🚀 Starting new request")
-                print("##-----\n🚀 Starting new request")
-                got_jacpot = run_routine_request_if_exists()
+                # log_request_message("##------")
+                # log_request_message("🚀 Starting new request")
+                # print("##-----\n🚀 Starting new request")
+                # got_jacpot = run_routine_request_if_exists()
                 
-                if got_jacpot: 
-                    run_special_request_if_exists()
-                    QTimer.singleShot(10000, self.show_standby) # Return to standby after printing
-                else:
-                    QTimer.singleShot(3000, self.show_standby) # Return to standby after printing
+                # if got_jacpot: 
+                    # run_special_request_if_exists()
+                    # QTimer.singleShot(10000, self.show_standby) # Return to standby after printing
+                # else:
+                    # QTimer.singleShot(3000, self.show_standby) # Return to standby after printing
+
+                # Delay heavy logic to let label update first
+                def delayed_actions():
+                    printpdf(author=text)
+                    log_request_message("##------")
+                    log_request_message("🚀 Starting new request")
+                    print("##-----\n🚀 Starting new request")
+                    self.reset_idle_timer() # Reset timer after interaction      
+                    got_jacpot = run_routine_request_if_exists()
+                    if got_jacpot:
+                        self.reset_idle_timer() # Reset timer after interaction      
+                        run_special_request_if_exists()
+                        QTimer.singleShot(10000, self.show_standby)
+                    else:
+                        QTimer.singleShot(3000, self.show_standby)
+
+                QTimer.singleShot(100, delayed_actions)  # Run after 100ms
+
                     
             else: # User skipped entering author name
                 self.label.setText("ขอบคุณที่ใช้บริการ! กลับสู่หน้าเริ่มต้น")

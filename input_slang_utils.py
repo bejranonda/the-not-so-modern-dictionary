@@ -20,6 +20,8 @@ import fitz # PyMuPDF
 
 import random
 
+greeting_km = ["ពួក​ថៃ​គេ​ចាប់​ផ្ដើម​ស្អប់​ខ្មែរ​យើង​បណ្ដើរ​ៗ​ហើយ​","លឺ​តែ​សង្គ្រាម​កាល​គេ​បាញ់​ខ្មែរ​ស្លាប់","​​គេ​មិន​សូវ​ពេញ​ចិត្ត​យើង​គេ​យើង​ជា​ជនជាតិ​ខ្មែរ​អីចឹង​"]
+
 def log_request_message(message):
     with open("request_log.txt", "a", encoding="utf-8") as log_file:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -70,7 +72,52 @@ def speak_both(text):
 
     threading.Thread(target=play, daemon=True).start()
 
+def speak_both_special(text):
+    def play():
+        try:
+            if '<br>' in text:
+                thai_part, eng_part = text.split('<br>', 1)
+            else:
+                thai_part, eng_part = text, ''
 
+            files = []
+
+            if thai_part.strip():
+                filename_th = f"temp_{uuid.uuid4().hex}_th.mp3"
+                tts_th = gTTS(text=thai_part.strip(), lang='th')
+                tts_th.save(filename_th)
+                files.append(filename_th)
+
+            if eng_part.strip():
+                filename_en = f"temp_{uuid.uuid4().hex}_en.mp3"
+                tts_en = gTTS(text=eng_part.strip(), lang='en')
+                tts_en.save(filename_en)
+                files.append(filename_en)
+                
+            km_draw = random.randint(1, 100)
+            log_request_message(f"- km_draw: {km_draw}")
+            print(f"- km_draw {km_draw}")
+            if km_draw > 86:
+                km_part = random.choice(greeting_km)
+                log_request_message(f"- speaking km: {km_part}")
+                print(f"Speak KM {km_part}")
+                filename_km = f"temp_{uuid.uuid4().hex}_km.mp3"
+                tts_km = gTTS(text=km_part.strip(), lang='km')
+                tts_km.save(filename_km)
+                files.append(filename_km)
+
+            for file in files:
+                playsound.playsound(file)
+
+        finally:
+            for file in files:
+                if os.path.exists(file):
+                    os.remove(file)
+
+    threading.Thread(target=play, daemon=True).start()
+
+
+    
 def detect_motion(threshold=1000000, timeout=5):
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
