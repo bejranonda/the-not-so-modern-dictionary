@@ -26,7 +26,8 @@ def routine_request():
     log_request_message(f"🍀 jackpot_draw {jackpot_draw}")
     if jackpot_draw > 90:
         playsound(win_sound) # Corrected call
-        speak_both("ว้าว ว้าว แจ๊กพอตแตกอีกแล้ว<br>Wow Wow, someone hit the jackpot!")
+        show_jackpot_popup(speak="ว้าว ว้าว แจ๊กพอตแตกอีกแล้ว<br>Wow Wow, someone hit the jackpot!", title = "<br>🎉🎉 Congratulation 🎉🎉<br>", message = "<br>คุณคือ 1 ในทุกๆ 10 คน ที่มีโชควันนี้<br>ที่จะได้เห็นปทานุกรมมากกว่า 1 หน้า<br>..ใช้โชคนี้ให้ดี!<br><br><br>You are 1 in every 10 people lucky<br>unlocked to more than just one page of our Lexicon.<br>.. use this print-out wisely<br><br>", timeout=10000)
+
         output_jackpot = output_path.replace(".pdf", "_jackpot.pdf")
         make_foldable_jackpot(input_path=output_path, output_path=output_jackpot)
         print(f"..You got jackpot: {output_jackpot}")
@@ -40,8 +41,6 @@ def routine_request():
         #print(f"Printing: {greeting_lucky}")
         #log_request_message(f" ⚙️ print_pdf_file: {greeting_lucky}")
         
-        show_jackpot_popup(title = "<br>🎉🎉 Congratulation 🎉🎉<br>", message = "<br>คุณคือ 1 ในทุกๆ 10 คน ที่มีโชคในวันนี้<br>ที่จะเห็นปทานุกรมมากกว่า 1 หน้า<br>.. ขอให้ใช้โชคนี้ให้คุ้มค่า!<br><br><br>You are 1 in every 10 people lucky today<br>and unlocked access to more than just one page of our Lexicon.<br>.. use this chance wisely<br><br>", timeout=10000)
-
     else:
         print(f"..No Lucky Printing")
         log_request_message("..No Jackpot Printing")
@@ -54,24 +53,21 @@ def routine_request():
         request_draw = random.randint(1, 100)
         print(f"🍀 request_draw: {request_draw}")
         log_request_message(f"🍀 request_draw: {request_draw}")
-        if request_draw > 85:
+        if request_draw > 80:
             playsound(win_sound) # Corrected call
             speak_both("คุณคือผู้โชคดี<br>You're lucky here")
-
-            print(f"..request_draw meets criteria")
-            log_request_message(f"..request_draw meets criteria")
-            
             examples = get_random_latest_examples("output/user_added_slang.json", count=5)
             examples_text = " , .. , ".join(examples)
             examples_len = len(examples_text)
+            print(f"..request_draw meets criteria")
+            log_request_message(f"..request_draw meets criteria")
+            show_jackpot_popup(speak=examples_text,delay=3, title = "<br>🎉 Bonus for you 🎉<br>", message = "<br>🌀 คุณคือหนึ่งในไม่กี่คน<br>ที่จะได้ยินศัพท์ล่าสุด<br>จากพจนานุกรมนี้<br>...ก่อนใคร<br><br><br>🌀 You are one of<br>the chosen few.<br>Today, you’ll hear words<br>.. we’ve never released before.<br><br>", timeout=examples_len*120+1500)
+            #speak_thai(examples_text)          
             print(f"📝 ตัวอย่างจากคำล่าสุด: {examples_text}")
             print(f"📝 ความยาว: {examples_len}")
             log_request_message(f"📝 ตัวอย่างจากคำล่าสุด: {examples_text}")
             log_request_message(f"📝 ความยาว: {examples_len}")
-            time.sleep(3)
-            speak_thai(examples_text)      
-            show_jackpot_popup(title = "<br>🎉 Bonus for you only 🎉<br>", message = "<br>🌀 คุณคือหนึ่งในไม่กี่คน<br>ที่ถูกเลือกให้ได้ยินคำศัพท์ล่าสุดจากเรา<br>...ที่ยังไม่เคยปรากฏต่อสาธารณะ<br><br><br>🌀 You are one of the chosen few.<br>Today, you’ll hear a word we’ve never released before.<br><br>", timeout=examples_len*100+1500)
-      
+     
             
             # cmd1 = ['lp', '-d', 'Canon_LBP121_122', '-o', 'orientation-requested=4', '/Users/user/Documents/DictApp/EverWonderBooklet.pdf']
             # print(f"⚙️ Request1a: {' '.join(cmd1)}")
@@ -213,12 +209,21 @@ class JackpotPopup(QDialog):
 
         QTimer.singleShot(timeout, self.close)
 
-def show_jackpot_popup(title="🎉 ยินดีด้วย! Congratulation", message="แจ๊กพอตแตก\nJackpot!", timeout=10000):
+def show_jackpot_popup(speak="", delay=0, title="🎉 ยินดีด้วย! Congratulation", message="แจ๊กพอตแตก\nJackpot!", timeout=10000):
     app = QApplication.instance()
     if app is None:
         app = QApplication(sys.argv)
+    if delay > 0:
+        print("..show_jackpot_popup delay")
+        popup = JackpotPopup(title, message, delay*1000+1000)
+        popup.exec_()
+        #time.sleep(delay)
+    speak_both(speak)       
+    print("..show_jackpot_popup")       
     popup = JackpotPopup(title, message, timeout)
     popup.exec_()
+
+
 
 
 import random
@@ -226,16 +231,21 @@ from typing import List
 import os
 import json
 
+import os
+import json
+import random
+from typing import List
+
 def get_random_latest_examples(json_path: str, count: int = 5) -> List[str]:
     """
-    ดึงตัวอย่าง (example) แบบสุ่มจาก 10 คำล่าสุด
+    ดึงตัวอย่าง (example) แบบสุ่มจาก 10 คำล่าสุด พร้อมแสดงคำด้วย
 
     Args:
         json_path (str): path ไปยังไฟล์ JSON ที่เก็บข้อมูลคำศัพท์
         count (int): จำนวนตัวอย่างที่ต้องการ (default = 5)
 
     Returns:
-        List[str]: รายการประโยคตัวอย่างที่สุ่มแล้ว
+        List[str]: รายการ "คำ : ตัวอย่าง" ที่สุ่มแล้ว
     """
     if not os.path.exists(json_path):
         print(f"❌ ไม่พบไฟล์ JSON: {json_path}")
@@ -244,22 +254,22 @@ def get_random_latest_examples(json_path: str, count: int = 5) -> List[str]:
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    # เรียงคำตาม update ล่าสุด แล้วเลือก 10 คำ
+    # เรียงคำตามเวลาที่อัปเดตล่าสุด และเลือก 10 คำ
     latest_entries = sorted(
         data.items(),
         key=lambda x: x[1].get("update", ""),
         reverse=True
     )[:10]
 
-    # รวมตัวอย่างทั้งหมดจาก 10 คำนี้
+    # สร้างรายการคู่ "คำ : ตัวอย่าง"
     all_examples = []
-    for _, info in latest_entries:
+    for word, info in latest_entries:
         example_field = info.get("example", [])
         if isinstance(example_field, str):
-            all_examples.append(example_field)
+            all_examples.append(f"{word} : {example_field}")
         elif isinstance(example_field, list):
-            all_examples.extend(example_field)
+            all_examples.extend([f"{word} : {ex}" for ex in example_field])
 
-    # สุ่มตัวอย่างจากทั้งหมด
+    # สุ่มจำนวนที่ต้องการ
     return random.sample(all_examples, min(count, len(all_examples)))
 
