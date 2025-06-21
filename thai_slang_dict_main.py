@@ -184,6 +184,6 @@ log_request_message("🛫🛫 Starting App... 🛫🛫")
 log_request_message("🛫")
 
 run_special_request_if_exists()
-got_jacpot = run_routine_request_if_exists()
+got_jackpot = run_routine_request_if_exists()
 
 main_loop()

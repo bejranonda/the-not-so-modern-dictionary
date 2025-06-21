@@ -331,39 +331,47 @@ def run_special_request_if_exists():
     if os.path.exists(request_path):
         print(f"..{request_path} found, running special_request()...")
         log_request_message(f"..{request_path} found. Attempting to run special_request()")
+        
+        run_special_draw = random.randint(1, 100)
+        print(f"..run_special_draw : {run_special_draw}")
+        log_request_message(f"..run_special_draw : {run_special_draw}")
+        
+        if run_special_draw > 85:
+            print(f"..run special_request")
+            log_request_message(f"..run special_request")
+            
+            spec = importlib.util.spec_from_file_location("request", request_path)
+            request_module = importlib.util.module_from_spec(spec)
 
-        spec = importlib.util.spec_from_file_location("request", request_path)
-        request_module = importlib.util.module_from_spec(spec)
-
-        try:
-            spec.loader.exec_module(request_module)
-            if hasattr(request_module, 'special_request'):
-                try:
-                    request_module.special_request()
-                    log_request_message("..special_request() executed successfully.")
-                except Exception as inner_e:
-                    error_msg = f"❌ Error inside special_request(): {inner_e}"
-                    print(error_msg)
-                    log_request_message(error_msg)
-                    log_request_message(traceback.format_exc())
-            else:
-                warning = f"⚠️  special_request() not found in {request_path}"
-                print(warning)
-                log_request_message(warning)
-        except Exception as e:
-            error_msg = f"❌ Error loading {request_path}: {e}"
-            print(error_msg)
-            log_request_message(error_msg)
-            log_request_message(traceback.format_exc())
-        finally:
             try:
-                os.remove(request_path)
-                print(f"..{request_path} has been deleted after execution.")
-                log_request_message(f"..{request_path} has been deleted after execution.")
+                spec.loader.exec_module(request_module)
+                if hasattr(request_module, 'special_request'):
+                    try:
+                        request_module.special_request()
+                        log_request_message("..special_request() executed successfully.")
+                    except Exception as inner_e:
+                        error_msg = f"❌ Error inside special_request(): {inner_e}"
+                        print(error_msg)
+                        log_request_message(error_msg)
+                        log_request_message(traceback.format_exc())
+                else:
+                    warning = f"⚠️  special_request() not found in {request_path}"
+                    print(warning)
+                    log_request_message(warning)
             except Exception as e:
-                delete_error = f"⚠️  Failed to delete {request_path}: {e}"
-                print(delete_error)
-                log_request_message(delete_error)
+                error_msg = f"❌ Error loading {request_path}: {e}"
+                print(error_msg)
+                log_request_message(error_msg)
+                log_request_message(traceback.format_exc())
+            finally:
+                try:
+                    os.remove(request_path)
+                    print(f"..{request_path} has been deleted after execution.")
+                    log_request_message(f"..{request_path} has been deleted after execution.")
+                except Exception as e:
+                    delete_error = f"⚠️  Failed to delete {request_path}: {e}"
+                    print(delete_error)
+                    log_request_message(delete_error)
     else:
         msg = f"..{request_path} not found, skipping special_request."
         print(msg)

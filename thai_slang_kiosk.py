@@ -287,8 +287,9 @@ class SlangKiosk(QWidget):
             "<span style='font-size:40px; color: #FFFF00;'>และรับปทานุกรมของคุณ เป็นที่ระลึกตอนท้าย<br>get your dictionary as souvenir at the end</span>"
         )
         print(f"- greeting: {greeting}")
+        log_request_message(f"- greeting: {greeting}") 
         #self.input.clear()
-        QTimer.singleShot(100, lambda: speak_both_special(greeting))
+        QTimer.singleShot(100, lambda: speak_both(greeting))
         self.reset_idle_timer()
 
     def go_to_word_input(self):
@@ -423,9 +424,9 @@ class SlangKiosk(QWidget):
                 # log_request_message("##------")
                 # log_request_message("🚀 Starting new request")
                 # print("##-----\n🚀 Starting new request")
-                # got_jacpot = run_routine_request_if_exists()
+                # got_jackpot = run_routine_request_if_exists()
                 
-                # if got_jacpot: 
+                # if got_jackpot: 
                     # run_special_request_if_exists()
                     # QTimer.singleShot(10000, self.show_standby) # Return to standby after printing
                 # else:
@@ -438,8 +439,8 @@ class SlangKiosk(QWidget):
                     log_request_message("🚀 Starting new request")
                     print("##-----\n🚀 Starting new request")
                     self.reset_idle_timer() # Reset timer after interaction      
-                    got_jacpot = run_routine_request_if_exists()
-                    if got_jacpot:
+                    got_jackpot = run_routine_request_if_exists()
+                    if got_jackpot:
                         self.reset_idle_timer() # Reset timer after interaction      
                         run_special_request_if_exists()
                         QTimer.singleShot(10000, self.show_standby)

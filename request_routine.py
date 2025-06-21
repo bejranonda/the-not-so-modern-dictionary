@@ -24,9 +24,9 @@ def routine_request():
     jackpot_draw = random.randint(1, 100)
     print(f"🍀 jackpot_draw: {jackpot_draw}")
     log_request_message(f"🍀 jackpot_draw {jackpot_draw}")
-    if jackpot_draw > 90:
+    if jackpot_draw > 86:
         playsound(win_sound) # Corrected call
-        show_jackpot_popup(speak="ว้าว ว้าว แจ๊กพอตแตกอีกแล้ว<br>Wow Wow, someone hit the jackpot!", title = "<br>🎉🎉 Congratulation 🎉🎉<br>", message = "<br>คุณคือ 1 ในทุกๆ 10 คน ที่มีโชควันนี้<br>ที่จะได้เห็นปทานุกรมมากกว่า 1 หน้า<br>..ใช้โชคนี้ให้ดี!<br><br><br>You are 1 in every 10 people lucky<br>unlocked to more than just one page of our Lexicon.<br>.. use this print-out wisely<br><br>", timeout=10000)
+        show_jackpot_popup(speak="ว๊าว ว้าว แจ๊กพอตแตกอีกแล้ว<br>Wow Wow, someone hit the jackpot!", title = "<br>🎉🎉 Congratulation 🎉🎉<br>", message = "<br>👉 คุณคือหนึ่งใน 13.3% ที่มีโชควันนี้<br>ได้พจนานุกรมกลับไปมากกว่า 1 หน้า<br>..<br>..13.3% ของแรงงานต่างด้าวในไทย เป็นชาวกัมพูชา<br><br><br>👉 You're among 13.3% lucky ones<br>to get more than one dictionary page today!<br>..<br>..13.3% of foreign workers in Thailand are Cambodian.<br><br>", timeout=12000)
 
         output_jackpot = output_path.replace(".pdf", "_jackpot.pdf")
         make_foldable_jackpot(input_path=output_path, output_path=output_jackpot)
@@ -53,7 +53,7 @@ def routine_request():
         request_draw = random.randint(1, 100)
         print(f"🍀 request_draw: {request_draw}")
         log_request_message(f"🍀 request_draw: {request_draw}")
-        if request_draw > 80:
+        if request_draw > 65:
             playsound(win_sound) # Corrected call
             speak_both("คุณคือผู้โชคดี<br>You're lucky here")
             examples = get_random_latest_examples("output/user_added_slang.json", count=5)
@@ -61,7 +61,7 @@ def routine_request():
             examples_len = len(examples_text)
             print(f"..request_draw meets criteria")
             log_request_message(f"..request_draw meets criteria")
-            show_jackpot_popup(speak=examples_text,delay=3, title = "<br>🎉 Bonus for you 🎉<br>", message = "<br>🌀 คุณคือหนึ่งในไม่กี่คน<br>ที่จะได้ยินศัพท์ล่าสุด<br>จากพจนานุกรมนี้<br>...ก่อนใคร<br><br><br>🌀 You are one of<br>the chosen few.<br>Today, you’ll hear words<br>.. we’ve never released before.<br><br>", timeout=examples_len*120+1500)
+            show_jackpot_popup(speak=examples_text,delay=3, title = "<br>🎉 Bonus for you 🎉<br>", message = "<br>🌀 คุณคือ 30% ของผู้แต่งที่มีโชค<br>กำลังจะได้ยิน 3 ศัพท์ล่าสุด<br>จากเรา ก่อนใคร!<br>..<br>.. ไทย-เขมรมีศัพท์ใช้ร่วมกัน 30%<br><br>🌀 You're lucky, only 30% of the authors<br>about to hear the 3 latest terms<br>from dictionary first before anyone!<br>..<br>.. Thai and Khmer share 30% of their vocabulary<br><br>", timeout=examples_len*120+1500)
             #speak_thai(examples_text)          
             print(f"📝 ตัวอย่างจากคำล่าสุด: {examples_text}")
             print(f"📝 ความยาว: {examples_len}")
@@ -199,7 +199,7 @@ class JackpotPopup(QDialog):
         main_layout.addWidget(content_widget)
         main_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.resize(700, 400)
+        self.resize(1000, 400)
 
         # ขยับให้สูงขึ้น
         screen = QApplication.primaryScreen().availableGeometry()
@@ -236,7 +236,7 @@ import json
 import random
 from typing import List
 
-def get_random_latest_examples(json_path: str, count: int = 5) -> List[str]:
+def get_random_latest_examples(json_path: str, count: int = 3) -> List[str]:
     """
     ดึงตัวอย่าง (example) แบบสุ่มจาก 10 คำล่าสุด พร้อมแสดงคำด้วย
 

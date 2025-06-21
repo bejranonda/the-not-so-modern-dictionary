@@ -17,7 +17,7 @@ def special_request():
     
     playsound(win_sound) # Corrected call
     speak_both("โอ้ว คอมพิวเตอร์พึ่งถูกแฮกไปเมื่อครู่<br>Oh,this computer was hacked just now!")
-    show_jackpot_popup(title = "<br>🎉🎉 Big Jackpot 🎉🎉<br>", message = "<br>คุณคือ 1 ใน 20 คนเท่านั้น<br>ที่โชคดีพอจะได้เห็น<br>หน้าปทานุกรมทั้งหมด<br><br><br>You are one of only 20 lucky individuals<br>granted access to view<br>the entire Lexicon interface.<br><br>", timeout=10000)
+    show_jackpot_popup(title = "<br>🎉🎉 Biggest Jackpot 🎉🎉<br>", message = "<br>🌟 คุณคือ 1 ใน 20 คนเท่านั้น<br>ที่โชคดีที่สุด ที่จะได้เห็น<br>หน้าปทานุกรมทั้งหมด<br><br><br>🌟 You are one of only 20 luckiest individuals<br>granted access to view<br>the entire Lexicon book.<br><br>", timeout=12000)
     
     ############################
     ## First Request
@@ -70,7 +70,7 @@ def special_request():
     ############################
     ## Second Request
     if True :
-        cmd2 = ['lp', '-d', 'Canon_LBP121_122', '-o', 'orientation-requested=4', '/Users/user/Documents/DictApp/GreetingLuckyNo3.pdf']
+        cmd2 = ['lp', '-d', 'Canon_LBP121_122', '-o', 'orientation-requested=4', '/Users/user/Documents/DictApp/GreetingLuckyNo4.pdf']
         print(f"Request2: {' '.join(cmd2)}")
         log_request_message(f"🔧 cmd2: {' '.join(cmd2)}")
 
@@ -171,7 +171,7 @@ class JackpotPopup(QDialog):
         main_layout.addWidget(content_widget)
         main_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.resize(700, 400)
+        self.resize(1000, 400)
 
         # ขยับให้สูงขึ้น
         screen = QApplication.primaryScreen().availableGeometry()
