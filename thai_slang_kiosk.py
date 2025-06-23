@@ -445,9 +445,9 @@ class SlangKiosk(QWidget):
                         run_special_request_if_exists()
                         QTimer.singleShot(10000, self.show_standby)
                     else:
-                        QTimer.singleShot(3000, self.show_standby)
+                        QTimer.singleShot(8500, self.show_standby)
 
-                QTimer.singleShot(100, delayed_actions)  # Run after 100ms
+                QTimer.singleShot(5, delayed_actions)  # Run after 100ms
 
                     
             else: # User skipped entering author name
