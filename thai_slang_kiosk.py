@@ -234,6 +234,9 @@ class SlangKiosk(QWidget):
             self.standby_instruction_label.setText("🏇 พบการเคลื่อนไหว กำลังเริ่มปฎิบัติการ<br><br>🚨 I found your move ... activating")
             playsound(start_sound) # Corrected call # Play a sound immediately on motion detection
             print("motion found")
+            self.showFullScreen()
+            self.raise_()
+            self.activateWindow()
             # Schedule the greeting transition. The guard in go_to_greeting will prevent double execution.
             QTimer.singleShot(3000, self.go_to_greeting) 
 
