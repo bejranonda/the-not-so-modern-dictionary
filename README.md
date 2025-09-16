@@ -3,6 +3,9 @@
 
 Interactive installation software for collective dictionary creation
 
+![The Not-SO-modern dictionary](https://github.com/user-attachments/assets/e99736a3-1984-4f89-8f80-16ca84b7d280)
+Photo by Suphitchaya Khunchamni
+
 ### About
 
 This interactive installation invites visitors to become contributors to a collective, ever-evolving dictionary. Using a custom word-generation program, each visitor creates unique entries—be it slang terms, misused words, or moments of language in flux. The result is printed into a mini-dictionary that visitors can take home, alongside entries from past participants.
@@ -21,6 +24,9 @@ Exhibition at [Bangkok Kunsthalle](https://www.khaoyaiart.com/bangkok-kunsthalle
 
 The program was co-developed by Yoonglai Collective and Werapol Bejranonda.
 A playful nod to So Sethaputra's New-Modern Dictionary, this version resists fixed definitions. It reflects how meaning is constantly negotiated—from street language to screen, from grassroots to algorithm.
+
+![DictionaryBooklet](https://github.com/user-attachments/assets/84312ad4-1ce3-4ec5-b464-3ec6595a4b0b)
+Photo by Sineenuch Malaisri
 
 ## Getting Started
 
@@ -97,6 +103,9 @@ python thai_slang_dict_main_lastweek.py
 3. Ensure audio files are present in respective sound directories
 4. Place Thai fonts in the `fonts/` directory
 5. Run the main script to start the application
+
+![332821_0](https://github.com/user-attachments/assets/165949d4-04e1-401c-8e76-724502dcea29)
+Photo by Phenphan Anantacharoen
 
 ## Software Components Summary
 
