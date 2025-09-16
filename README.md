@@ -11,7 +11,7 @@ Photo by Suphitchaya Khunchamni
 This interactive installation invites visitors to become contributors to a collective, ever-evolving dictionary. Using a custom word-generation program, each visitor creates unique entries—be it slang terms, misused words, or moments of language in flux. The result is printed into a mini-dictionary that visitors can take home, alongside entries from past participants.
 
 **Part of "This page is intentionally left _____."**
-**Yoonglai Collective**
+**by Yoonglai Collective**
 **13 June - 17 August 2025**
 Exhibition at [Bangkok Kunsthalle](https://www.khaoyaiart.com/bangkok-kunsthalle/exhibitions/this-page-is-intentionally-left-_____.)
 
@@ -32,21 +32,39 @@ Photo by Sineenuch Malaisri
 
 ### Prerequisites
 
-- Python 3.x
-- PyQt5
-- Required Python packages (see `requirements.txt` if available)
+- Python 3.8 or higher
 - Audio files in the respective sound directories
 - Thai fonts (Kinnari.ttf) for PDF generation
 
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Ensure audio files are present in respective sound directories
+4. Place Thai fonts in the `fonts/` directory
+
 ### Running the Application
 
-#### Standard Version
+#### Refactored Version (Recommended)
 ```bash
-python thai_slang_dict_main.py
+# Main application (kiosk mode)
+python main.py
+
+# Different modes
+python -c "from main import run_normal_edition; run_normal_edition()"
+python -c "from main import run_lastweek_edition; run_lastweek_edition()"
+python -c "from main import run_debug_mode; run_debug_mode()"
 ```
 
-#### Last Week Edition (Exhibition Final Week)
+#### Legacy Version (Original)
 ```bash
+# Standard version
+python thai_slang_dict_main.py
+
+# Last week edition
 python thai_slang_dict_main_lastweek.py
 ```
 
@@ -79,33 +97,164 @@ python thai_slang_dict_main_lastweek.py
 - User interaction audio cues
 
 #### Project Structure
+
+**Refactored Architecture (v3.0+)**
 ```
-├── thai_slang_dict_main.py          # Main application
-├── thai_slang_dict_main_lastweek.py # Exhibition final week version
-├── thai_slang_kiosk.py              # Kiosk interface
-├── slang_pdf_generator.py           # PDF generation
-├── input_slang_utils.py             # Core utilities
-├── greetings.py                     # Greeting messages
+├── main.py                          # Main entry point
+├── requirements.txt                 # Python dependencies
+├── REFACTORING.md                   # Refactoring documentation
+├── src/                             # Refactored source code
+│   ├── app.py                       # Main application class
+│   ├── config/                      # Configuration management
+│   │   └── settings.py              # Centralized settings
+│   ├── core/                        # Core business logic
+│   │   ├── database.py              # Database management
+│   │   └── easter_eggs.py           # Easter egg functionality
+│   ├── audio/                       # Audio processing
+│   │   ├── speech.py                # TTS and speech recognition
+│   │   └── sound_effects.py         # Sound effects management
+│   └── utils/                       # Utility modules
+│       └── logger.py                # Logging system
 ├── fonts/                           # Thai and emoji fonts
 ├── template/                        # PDF templates
 ├── *sound/                          # Audio assets directories
 └── output/                          # Generated content
-
 ```
 
-## Installation & Setup
-
-1. Clone the repository
-2. Install Python dependencies:
-   ```bash
-   pip install PyQt5 gtts playsound opencv-python numpy scipy reportlab fitz
-   ```
-3. Ensure audio files are present in respective sound directories
-4. Place Thai fonts in the `fonts/` directory
-5. Run the main script to start the application
+**Legacy Structure (preserved for compatibility)**
+```
+├── thai_slang_dict_main.py          # Original main application
+├── thai_slang_dict_main_lastweek.py # Original lastweek version
+├── thai_slang_kiosk.py              # Original kiosk interface
+├── slang_pdf_generator.py           # Original PDF generation
+├── input_slang_utils.py             # Original utilities
+└── greetings.py                     # Original greeting messages
+```
 
 ![332821_0](https://github.com/user-attachments/assets/165949d4-04e1-401c-8e76-724502dcea29)
 Photo by Phenphan Anantacharoen
+
+## User Workflow & Experience
+
+### Interactive Kiosk Workflow
+
+The application follows a carefully designed 7-step user journey:
+
+#### **🔄 Step -1: Standby Mode**
+- **Trigger**: Camera-based motion detection
+- **Visual**: Yoonglai Collective logo with "Touch any key to start"
+- **Audio**: Ambient standby mode
+- **Interaction**: Any key press or detected motion triggers greeting
+
+#### **👋 Step 0: Greeting & Welcome**
+- **Content**: Random Thai greeting from curated collection
+- **Audio**: Text-to-speech welcome message
+- **Visual**: Full-screen welcome interface
+- **Transition**: Automatic progression after greeting completes
+
+#### **📝 Step 1: Word Input**
+- **Prompt**: "กรุณาใส่คำสแลงที่ต้องการเพิ่ม" (Please enter the slang word to add)
+- **Input**: Text field for slang word entry
+- **Validation**: Checks for existing words in database
+- **Audio**: Instructional prompts and confirmation sounds
+
+#### **💭 Step 2: Meaning Definition**
+- **Prompt**: "กรุณาใส่ความหมายของคำนี้" (Please enter the meaning of this word)
+- **Input**: Text area for definition entry
+- **Context**: Word from Step 1 displayed for reference
+- **Audio**: Contextual guidance and feedback
+
+#### **📚 Step 3: Example Usage**
+- **Prompt**: "กรุณาใส่ตัวอย่างการใช้คำนี้" (Please provide usage example)
+- **Input**: Text area for example sentence
+- **Optional**: Users can skip this step
+- **Audio**: Encouraging prompts and completion sounds
+
+#### **📋 Step 4: Summary & Confirmation**
+- **Display**: Complete entry review (word, meaning, example)
+- **Validation**: Final chance to review and edit
+- **Audio**: Entry read-back using text-to-speech
+- **Interaction**: Confirmation to proceed to printing
+
+#### **🖨️ Step 5: Attribution & Printing**
+- **Prompt**: "กรุณาใส่ชื่อของคุณ (หรือกด Enter เพื่อไม่ระบุชื่อ)" (Enter your name or press Enter for anonymous)
+- **Process**: PDF generation with user's entry
+- **Easter Eggs**: Random chance for bonus content
+- **Output**: Physical mini-dictionary printed and dispensed
+
+### **🎰 Easter Egg System**
+
+#### **Jackpot Feature (10% probability)**
+- **Trigger**: Random selection during PDF generation
+- **Effect**: User receives 8-page dictionary instead of standard 1-page
+- **Message**: "🎰 แจ็คพอต! คุณได้รับหน้าพิเศษ 8 หน้า!" (JACKPOT! You get 8 special pages!)
+
+#### **System Hacked Alert (5% probability)**
+- **Trigger**: Random selection during session
+- **Effect**: User sees full database content
+- **Message**: "🔥 ระบบถูกแฮก! คุณได้เห็นพจนานุกรมทั้งหมด!" (System hacked! You see the full dictionary!)
+
+#### **AI Fortune Messages (15% probability)**
+- **Content**: Generated predictions using the user's submitted word
+- **Examples**: "คำว่า 'xyz' จะนำโชคดีมาให้คุณในวันนี้" (The word 'xyz' will bring you luck today)
+
+### **🔄 Idle State Management**
+
+#### **Warning System**
+- **30 seconds idle**: Audio warning announcement
+- **60 seconds idle**: Automatic return to standby mode
+- **User interaction**: Timer reset on any keyboard activity
+
+#### **Motion Detection Integration**
+- **Camera monitoring**: Continuous motion detection in standby
+- **Wake-up trigger**: Movement automatically starts greeting sequence
+- **Audio feedback**: Immediate sound confirmation on motion detection
+
+### **📊 Database Integration Workflow**
+
+#### **Real-time Processing**
+1. **Input validation**: Check for duplicate entries
+2. **Data merging**: Combine similar entries if word exists
+3. **Statistical updates**: Increment usage counters
+4. **Content formatting**: Prepare for PDF generation
+
+#### **Content Personalization**
+- **Latest entry featured**: User's word highlighted in generated PDF
+- **Random selection**: Additional entries chosen from database
+- **Statistical summary**: Live counts and contributors displayed
+
+### **🎵 Audio Experience Design**
+
+#### **Sound Design Elements**
+- **System startup**: Game-style welcome sound
+- **Page turning**: Realistic book flipping effects
+- **Success feedback**: Pleasant confirmation chimes
+- **Error handling**: Gentle correction sounds
+- **Motion detection**: Immediate response beeps
+
+#### **Text-to-Speech Integration**
+- **Language support**: Thai primary, English secondary
+- **Contextual prompts**: Step-specific instructions
+- **Accessibility**: Audio readback of all user inputs
+- **Bilingual content**: Automatic language detection and appropriate voice
+
+### **🔧 Technical Workflow**
+
+#### **Session Lifecycle**
+1. **Initialization**: Load database, validate audio files, setup UI
+2. **Motion monitoring**: Continuous camera feed analysis
+3. **User session**: 7-step guided interaction
+4. **PDF generation**: Real-time document creation
+5. **Printing process**: Automatic document output
+6. **Session cleanup**: Return to standby, log interaction
+
+#### **Error Recovery**
+- **Automatic restart**: System self-recovery on failures
+- **Process isolation**: Duplicate instance prevention
+- **Resource cleanup**: Temporary file management
+- **Fallback modes**: Graceful degradation for missing components
+
+This workflow creates an seamless, engaging experience that transforms language documentation from passive observation to active participation, making each visitor a contributor to the evolving dictionary.
 
 ## Software Components Summary
 
@@ -180,6 +329,29 @@ This software demonstrates sophisticated integration of user interface design, d
 ## Exhibition Context
 
 The Not-So-Modern Dictionary is designed as an art installation piece that challenges traditional notions of language documentation. It creates a space where language becomes fluid, collaborative, and constantly evolving—reflecting how meaning is negotiated in our digital age.
+
+## Version History
+
+### v3.0.0 (Current)
+- **Major Feature**: Added comprehensive User Workflow & Experience documentation
+- **Documentation**: Detailed 7-step interactive kiosk workflow
+- **Easter Eggs**: Documented gamification system (Jackpot, System Hacked, AI Fortune)
+- **Audio Experience**: Complete sound design and TTS integration details
+- **Technical Workflow**: Session lifecycle and error recovery documentation
+- **User Experience**: Motion detection, idle management, and accessibility features
+
+### v2.0.0
+- **Refactoring**: Complete codebase restructure with modular architecture
+- **Configuration**: Centralized settings and constants management
+- **Audio System**: Dedicated speech and sound effects modules
+- **Database**: Object-oriented database management with error handling
+- **Logging**: Structured logging system with multiple levels
+- **Dependencies**: Added comprehensive requirements.txt
+
+### v1.0.0 (Legacy)
+- **Initial Release**: Original monolithic codebase
+- **Core Features**: Basic kiosk interface, PDF generation, Thai TTS
+- **Exhibition**: Deployed for Bangkok Kunsthalle exhibition
 
 ## License
 
