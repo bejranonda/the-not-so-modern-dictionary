@@ -1,4 +1,4 @@
-## thai_slang_dict_main_lastweek.py
+## thai_slang_dict_main.py
 
 #import speech_recognition as sr
 from gtts import gTTS
@@ -20,10 +20,10 @@ import platform
 
 
 # user library
-from slang_pdf_generator_lastweek import printpdf
+from slang_pdf_generator import printpdf
 # from thai_slang_gui import start_gui_and_get_entry
 from input_slang_utils import speak_thai, log_request_message, run_special_request_if_exists, run_routine_request_if_exists
-from thai_slang_kiosk_lastweek import SlangKiosk
+from thai_slang_kiosk import SlangKiosk
 
 
 # เรียก GUI kiosk
