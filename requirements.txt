@@ -1,0 +1,32 @@
+# The Not-So-Modern Dictionary - Python Dependencies
+
+# GUI Framework
+PyQt5>=5.15.0
+
+# Audio Processing
+gtts>=2.3.0
+playsound>=1.3.0
+sounddevice>=0.4.0
+scipy>=1.9.0
+numpy>=1.21.0
+
+# Speech Recognition
+SpeechRecognition>=3.10.0
+# whisper>=1.0.0  # Uncomment if using Whisper
+
+# PDF Generation
+reportlab>=3.6.0
+PyMuPDF>=1.23.0
+
+# Computer Vision (for motion detection)
+opencv-python>=4.7.0
+
+# Development Tools
+rich>=13.0.0  # For console output formatting
+
+# System Integration
+pyaudio>=0.2.11  # For microphone access (may require system dependencies)
+
+# Optional: For advanced text processing
+# langdetect>=1.0.9
+# textblob>=0.17.1
