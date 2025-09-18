@@ -17,6 +17,7 @@ Exhibition at [Bangkok Kunsthalle](https://www.khaoyaiart.com/bangkok-kunsthalle
 
 ### Art Installation
 **Mixed Media:** Software interface, desktop station, printed booklet
+
 **Interactive Installation by Collaboration:**
 - **Werapol Bejranonda** (Engineer)
 - **Yoonglai Collective** (Artists)
