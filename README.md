@@ -15,12 +15,11 @@ This interactive installation invites visitors to become contributors to a colle
 **13 June - 17 August 2025**
 Exhibition at [Bangkok Kunsthalle](https://www.khaoyaiart.com/bangkok-kunsthalle/exhibitions/this-page-is-intentionally-left-_____.)
 
-### Credits
-
+### Art Installation
+**Mixed Media:** Software interface, desktop station, printed booklet
 **Interactive Installation by Collaboration:**
 - **Werapol Bejranonda** (Engineer)
 - **Yoonglai Collective** (Artists)
-- **Mixed Media:** Software interface, desktop station, printed booklet
 
 The program was co-developed by Yoonglai Collective and Werapol Bejranonda.
 A playful nod to So Sethaputra's New-Modern Dictionary, this version resists fixed definitions. It reflects how meaning is constantly negotiated—from street language to screen, from grassroots to algorithm.
