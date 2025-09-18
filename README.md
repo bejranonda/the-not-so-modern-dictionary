@@ -330,9 +330,42 @@ This software demonstrates sophisticated integration of user interface design, d
 
 The Not-So-Modern Dictionary is designed as an art installation piece that challenges traditional notions of language documentation. It creates a space where language becomes fluid, collaborative, and constantly evolving—reflecting how meaning is negotiated in our digital age.
 
-## Version History
+## Exhibition Final Results
 
-### v3.0.0 (Current)
+The "Legend Edition" deployment at Bangkok Kunsthalle (13 June - 17 August 2025) achieved remarkable community engagement:
+
+### 📊 Overall Impact
+- **462 Authors**: Total participants who contributed to the dictionary
+- **534 Unique Words**: Distinct slang terms collected during the exhibition
+- **748 Data Sets**: Complete submissions including words, meanings, and examples
+- **544 Booklets**: Physical dictionaries printed and distributed to visitors
+
+### 🔥 Most Popular Slang (Hottest Words)
+The five most frequently submitted terms:
+
+1. **จาบ (Jaab)** - 7 submissions
+2. **อาจจะยัง (Aat Ja Yang)** - 6 submissions
+3. **โซะ (So)** - 5 submissions
+4. **เกียม (Giam)** - 5 submissions
+5. **เริ่ดเลอ (Roet Loe)** - 5 submissions
+
+### 📅 Final Activity (as of 11/09/2025)
+- **Latest Word**: บายบาย (Bye Bye)
+- **Latest Author**: ดอปจชท (Dopjochot)
+
+This collaborative language documentation project demonstrates how interactive art installations can create meaningful community engagement and preserve evolving linguistic expressions.
+
+## Version History & Releases
+
+For detailed changelog, see [CHANGELOG.md](CHANGELOG.md).
+
+### [v3.0.1](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/v3.0.1) - Latest Release
+- **Exhibition Results**: Added final exhibition statistics and impact data
+- **Community Metrics**: 462 authors, 534 unique words, 748 data sets, 544 booklets printed
+- **Popular Terms**: Documented most frequently submitted slang words
+- **Documentation**: Enhanced with real-world deployment results
+
+### [v3.0.0](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/v3.0.0)
 - **Major Feature**: Added comprehensive User Workflow & Experience documentation
 - **Documentation**: Detailed 7-step interactive kiosk workflow
 - **Easter Eggs**: Documented gamification system (Jackpot, System Hacked, AI Fortune)
@@ -340,7 +373,7 @@ The Not-So-Modern Dictionary is designed as an art installation piece that chall
 - **Technical Workflow**: Session lifecycle and error recovery documentation
 - **User Experience**: Motion detection, idle management, and accessibility features
 
-### v2.0.0
+### [2.0](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/2.0)
 - **Refactoring**: Complete codebase restructure with modular architecture
 - **Configuration**: Centralized settings and constants management
 - **Audio System**: Dedicated speech and sound effects modules
@@ -348,10 +381,42 @@ The Not-So-Modern Dictionary is designed as an art installation piece that chall
 - **Logging**: Structured logging system with multiple levels
 - **Dependencies**: Added comprehensive requirements.txt
 
-### v1.0.0 (Legacy)
-- **Initial Release**: Original monolithic codebase
-- **Core Features**: Basic kiosk interface, PDF generation, Thai TTS
+### [1.4](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.4)
+- **Voice Features**: Added voice to request functionality
+- **Request System**: Routine and special request features
+- **Code Quality**: Clean up and request function improvements
+
+### [1.3special](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.3special)
+- **Special Edition**: Special request function and enhanced menu
+- **Bug Fixes**: Fixed double running script and menu display issues
+- **Platform**: Updated menu for MAC compatibility
+
+### [1.3](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.3)
+- **Platform Support**: MAC printing and menu improvements
+- **Code Cleanup**: Removed unnecessary libraries and components
+- **UI Updates**: Menu text updates and display fixes
+
+### [1.2](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.2)
+- **Internationalization**: Local support for multiple languages
+- **Templates**: Template functionality and external greeting list
+- **UI Improvements**: Centered text and column debugging
+
+### [1.1](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.1)
+- **GUI Enhancements**: Added logo and 2-column layout
+- **Printing**: Print to printer functionality
+- **Motion Detection**: Increased motion sensitivity
+
+### [1.0](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.0) - Original Exhibition Version
+- **Core Features**: Template system, Intro and Fortune pages
+- **Language Support**: English fortune and Thai content
+- **Statistics**: Enhanced statistics and user collaboration features
 - **Exhibition**: Deployed for Bangkok Kunsthalle exhibition
+
+### Early Development Versions
+- [0.4](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/0.4) - Enhanced data collection
+- [0.3](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/0.3) - Basic statistics
+- [0.2](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/0.2) - Core dictionary features
+- [0.1](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/0.1) - Initial release
 
 ## License
 
