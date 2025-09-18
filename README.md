@@ -28,6 +28,39 @@ A playful nod to So Sethaputra's New-Modern Dictionary, this version resists fix
 ![DictionaryBooklet](https://github.com/user-attachments/assets/84312ad4-1ce3-4ec5-b464-3ec6595a4b0b)
 Photo by Sineenuch Malaisri
 
+
+## Exhibition Context
+
+The Not-So-Modern Dictionary is designed as an art installation piece that challenges traditional notions of language documentation. It creates a space where language becomes fluid, collaborative, and constantly evolving—reflecting how meaning is negotiated in our digital age.
+
+## Exhibition Final Results
+
+The "Legend Edition" deployment at Bangkok Kunsthalle (13 June - 17 August 2025) achieved remarkable community engagement:
+
+### 📊 Overall Impact
+- **462 Authors**: Total participants who contributed to the dictionary
+- **534 Unique Words**: Distinct slang terms collected during the exhibition
+- **748 Data Sets**: Complete submissions including words, meanings, and examples
+- **544 Booklets**: Physical dictionaries printed and distributed to visitors
+
+### 🔥 Most Popular Slang (Hottest Words)
+The five most frequently submitted terms:
+
+1. **จาบ (Jaab)** - 7 submissions
+2. **อาจจะยัง (Aat Ja Yang)** - 6 submissions
+3. **โซะ (So)** - 5 submissions
+4. **เกียม (Giam)** - 5 submissions
+5. **เริ่ดเลอ (Roet Loe)** - 5 submissions
+
+### 📅 Final Activity (as of 11/09/2025)
+- **Latest Word**: บายบาย (Bye Bye)
+- **Latest Author**: ดอปจชท (Dopjochot)
+
+This collaborative language documentation project demonstrates how interactive art installations can create meaningful community engagement and preserve evolving linguistic expressions.
+
+<img width="550" height="450" alt="image" src="https://github.com/user-attachments/assets/0681612b-a431-43f1-9166-4bc283318bf9" />
+
+
 ## Getting Started
 
 ### Prerequisites
@@ -325,35 +358,6 @@ This workflow creates an seamless, engaging experience that transforms language 
 - **Remote monitoring and logging** for real-time system evaluation and debugging
 
 This software demonstrates sophisticated integration of user interface design, database management, hardware interaction, and AI systems to create an engaging, interactive art installation.
-
-## Exhibition Context
-
-The Not-So-Modern Dictionary is designed as an art installation piece that challenges traditional notions of language documentation. It creates a space where language becomes fluid, collaborative, and constantly evolving—reflecting how meaning is negotiated in our digital age.
-
-## Exhibition Final Results
-
-The "Legend Edition" deployment at Bangkok Kunsthalle (13 June - 17 August 2025) achieved remarkable community engagement:
-
-### 📊 Overall Impact
-- **462 Authors**: Total participants who contributed to the dictionary
-- **534 Unique Words**: Distinct slang terms collected during the exhibition
-- **748 Data Sets**: Complete submissions including words, meanings, and examples
-- **544 Booklets**: Physical dictionaries printed and distributed to visitors
-
-### 🔥 Most Popular Slang (Hottest Words)
-The five most frequently submitted terms:
-
-1. **จาบ (Jaab)** - 7 submissions
-2. **อาจจะยัง (Aat Ja Yang)** - 6 submissions
-3. **โซะ (So)** - 5 submissions
-4. **เกียม (Giam)** - 5 submissions
-5. **เริ่ดเลอ (Roet Loe)** - 5 submissions
-
-### 📅 Final Activity (as of 11/09/2025)
-- **Latest Word**: บายบาย (Bye Bye)
-- **Latest Author**: ดอปจชท (Dopjochot)
-
-This collaborative language documentation project demonstrates how interactive art installations can create meaningful community engagement and preserve evolving linguistic expressions.
 
 ## Version History & Releases
 
