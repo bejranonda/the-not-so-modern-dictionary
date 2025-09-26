@@ -343,11 +343,12 @@ This workflow creates an seamless, engaging experience that transforms language 
 - Remote script injection for dynamic content updates
 
 ### 7. Development Methodology
-**Lean Engineering Approach:**
-- Rapid development cycle (2-3 weeks for 3-month level project)
-- Iterative development process
-- Real-time monitoring and debugging capabilities
-- Remote access for live system management
+**AI-Assisted Development Approach:**
+- **Initial Development**: Scripts conceptualized and initially composed using suggestions from Gemini and ChatGPT
+- **Refactoring Phase**: Claude was used for comprehensive code refactoring and architecture improvements
+- **Rapid Prototyping**: 2-3 weeks development cycle for a typically 3-month level project
+- **Iterative Development**: Real-time monitoring and debugging capabilities
+- **Remote Management**: Live system access for deployment and maintenance
 
 ## Technical Highlights
 
@@ -358,6 +359,32 @@ This workflow creates an seamless, engaging experience that transforms language 
 - **Remote monitoring and logging** for real-time system evaluation and debugging
 
 This software demonstrates sophisticated integration of user interface design, database management, hardware interaction, and AI systems to create an engaging, interactive art installation.
+
+## Development History & AI Attribution
+
+### Development Timeline
+This project represents a collaborative effort between human creativity and AI assistance across multiple phases:
+
+**Phase 1: Initial Conceptualization & Development**
+- **AI Tools Used**: Gemini and ChatGPT for initial script suggestions and code generation
+- **Purpose**: Rapid prototyping and core functionality implementation
+- **Outcome**: Working baseline system with essential features
+
+**Phase 2: Refactoring & Architecture Enhancement**
+- **AI Tool Used**: Claude for comprehensive code refactoring
+- **Purpose**: Code quality improvement, modular architecture, and maintainability
+- **Outcome**: Professional-grade codebase with proper separation of concerns
+
+**Phase 3: Documentation & Deployment**
+- **Collaborative Process**: Human-AI partnership for exhibition deployment
+- **Result**: Successful art installation at Bangkok Kunsthalle
+
+### AI Attribution
+The development process leveraged multiple AI assistants:
+- **Gemini & ChatGPT**: Initial code suggestions, feature brainstorming, and prototype development
+- **Claude**: Code refactoring, architecture improvement, documentation enhancement, and quality assurance
+
+This multi-AI approach demonstrates how different AI tools can complement each other in the software development lifecycle, from initial ideation through final deployment.
 
 ## Version History & Releases
 
