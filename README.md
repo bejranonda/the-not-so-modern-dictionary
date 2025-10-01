@@ -449,6 +449,45 @@ For detailed changelog, see [CHANGELOG.md](CHANGELOG.md).
 - [0.2](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/0.2) - Core dictionary features
 - [0.1](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/0.1) - Initial release
 
+## Credits and Attribution
+
+### Project Development
+This software was created as an art installation through collaboration between:
+- **Werapol Bejranonda** - Software Engineer and Developer
+- **Yoonglai Collective** - Artists and Conceptual Design
+
+### AI-Assisted Development
+The development process leveraged AI assistants as collaborative tools:
+- **Gemini & ChatGPT** - Initial code generation, feature brainstorming, and rapid prototyping
+- **Claude** - Code refactoring, architecture improvement, documentation, and quality assurance
+
+This project demonstrates effective human-AI collaboration in software development, combining human creativity and artistic vision with AI-powered code generation and optimization.
+
+### Technology Stack
+Built with open-source technologies:
+- **PyQt5** - GUI framework (GPL/Commercial dual license)
+- **ReportLab** - PDF generation (BSD-style license)
+- **gTTS** - Google Text-to-Speech (MIT license)
+- **OpenCV** - Computer vision and motion detection (Apache 2.0 license)
+- **SpeechRecognition** - Speech input processing (BSD license)
+
+### Special Thanks
+- **Bangkok Kunsthalle** - Exhibition venue and support
+- **Exhibition visitors** - 462 contributors who added 534 unique words to create a living dictionary
+
 ## License
 
-Art installation software - Please contact creators for usage permissions.
+**Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**
+
+This art installation software is licensed under CC BY-NC-SA 4.0, which allows you to:
+- ✅ **Share** - Copy and redistribute the material
+- ✅ **Adapt** - Remix, transform, and build upon the material
+
+Under the following terms:
+- **Attribution** - You must give appropriate credit to Werapol Bejranonda and Yoonglai Collective
+- **NonCommercial** - You may not use the material for commercial purposes
+- **ShareAlike** - If you remix or transform the material, you must distribute under the same license
+
+For commercial use or other licensing arrangements, please contact the creators.
+
+**Copyright © 2024-2025 Werapol Bejranonda and Yoonglai Collective**
