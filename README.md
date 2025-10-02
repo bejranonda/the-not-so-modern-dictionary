@@ -1,493 +1,377 @@
 # The Not-So-Modern Dictionary
-## ปทานุกรมแบบสับ
+*A collaborative art installation where language becomes living, evolving, and collectively owned*
 
-Interactive installation software for collective dictionary creation
-
-![The Not-SO-modern dictionary](https://github.com/user-attachments/assets/e99736a3-1984-4f89-8f80-16ca84b7d280)
-Photo by Suphitchaya Khunchamni
-
-### About
-
-This interactive installation invites visitors to become contributors to a collective, ever-evolving dictionary. Using a custom word-generation program, each visitor creates unique entries—be it slang terms, misused words, or moments of language in flux. The result is printed into a mini-dictionary that visitors can take home, alongside entries from past participants.
-
-**Part of "This page is intentionally left _____."**
-**by Yoonglai Collective**
-**13 June - 17 August 2025**
-Exhibition at [Bangkok Kunsthalle](https://www.khaoyaiart.com/bangkok-kunsthalle/exhibitions/this-page-is-intentionally-left-_____.)
-
-### Art Installation
-**Mixed Media:** Software interface, desktop station, printed booklet
-
-**Interactive Installation by Collaboration:**
-- **Werapol Bejranonda** (Engineer)
-- **Yoonglai Collective** (Artists)
-
-The program was co-developed by Yoonglai Collective and Werapol Bejranonda.
-A playful nod to So Sethaputra's New-Modern Dictionary, this version resists fixed definitions. It reflects how meaning is constantly negotiated—from street language to screen, from grassroots to algorithm.
-
-![DictionaryBooklet](https://github.com/user-attachments/assets/84312ad4-1ce3-4ec5-b464-3ec6595a4b0b)
-Photo by Sineenuch Malaisri
+![The Not-So-Modern Dictionary installation at Bangkok Kunsthalle](https://github.com/user-attachments/assets/e99736a3-1984-4f89-8f80-16ca84b7d280)
+*Visitors interact with the dictionary kiosk at Bangkok Kunsthalle. Photo by Suphitchaya Khunchamni*
 
 
-## Exhibition Context
+## 📍 Exhibition Context
 
-The Not-So-Modern Dictionary is designed as an art installation piece that challenges traditional notions of language documentation. It creates a space where language becomes fluid, collaborative, and constantly evolving—reflecting how meaning is negotiated in our digital age.
+**Project Name:** The Not-So-Modern Dictionary (ปทานุกรมแบบสับ)
+**Medium:** Interactive installation (software interface, kiosk station, printed booklets)
+**Exhibition:** "This page is intentionally left _____" by Yoonglai Collective
+**Dates:** 13 June - 17 August 2025
+**Venue:** [Bangkok Kunsthalle](https://www.khaoyaiart.com/bangkok-kunsthalle/exhibitions/this-page-is-intentionally-left-_____.), Bangkok, Thailand
+**Type:** Participatory installation
 
-## Exhibition Final Results
+**Exhibition Impact:** During this three-month run, **462 visitors** contributed **534 unique slang terms**, creating **748 complete dictionary entries** and taking home **544 personalized booklets**. The most popular word, "จาบ" (Jaab), was submitted seven times with different definitions—proof that language truly belongs to everyone.
 
-The "Legend Edition" deployment at Bangkok Kunsthalle (13 June - 17 August 2025) achieved remarkable community engagement:
-
-### 📊 Overall Impact
-- **462 Authors**: Total participants who contributed to the dictionary
-- **534 Unique Words**: Distinct slang terms collected during the exhibition
-- **748 Data Sets**: Complete submissions including words, meanings, and examples
-- **544 Booklets**: Physical dictionaries printed and distributed to visitors
-
-### 🔥 Most Popular Slang (Hottest Words)
-The five most frequently submitted terms:
-
-1. **จาบ (Jaab)** - 7 submissions
-2. **อาจจะยัง (Aat Ja Yang)** - 6 submissions
-3. **โซะ (So)** - 5 submissions
-4. **เกียม (Giam)** - 5 submissions
-5. **เริ่ดเลอ (Roet Loe)** - 5 submissions
-
-### 📅 Final Activity (as of 11/09/2025)
-- **Latest Word**: บายบาย (Bye Bye)
-- **Latest Author**: ดอปจชท (Dopjochot)
-
-This collaborative language documentation project demonstrates how interactive art installations can create meaningful community engagement and preserve evolving linguistic expressions.
-
-<img width="550" height="450" alt="image" src="https://github.com/user-attachments/assets/0681612b-a431-43f1-9166-4bc283318bf9" />
+A playful critique of So Sethaputra's authoritative *New Model English-Thai Dictionary*, this installation invites visitors to become lexicographers of their own evolving language.
 
 
-## Getting Started
+## 🎭 The Experience: Your Word, Your Dictionary
 
-### Prerequisites
+**Imagine this:** You approach a glowing computer station. Before you even touch it, a camera senses your presence and greets you in Thai. The screen invites you to share a word—maybe slang from your friend group, a term born on social media, or a word you've always used "wrong" but prefer anyway.
 
-- Python 3.8 or higher
-- Audio files in the respective sound directories
-- Thai fonts (Kinnari.ttf) for PDF generation
+**You type it in.** The system asks what it means *to you*—no dictionaries to consult, no correct answers to find. Just your understanding. You add an example sentence showing how you'd use it. The screen reads everything back to you in a synthesized voice.
 
-### Installation
+**Then comes the magic.** A printer whirs to life and outputs a personalized mini-dictionary booklet. Your word appears prominently inside, nestled among random entries from the hundreds of other visitors who came before you. No two booklets are identical. Sometimes you get lucky—a "jackpot" giving you eight pages instead of one, or the system playfully claims it's been "hacked" and shows you the entire database.
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Ensure audio files are present in respective sound directories
-4. Place Thai fonts in the `fonts/` directory
+**You leave with a dictionary you helped create.** Your word joins 534 others in a living archive that grows with each visitor, where "จาบ" has seven different definitions and every contradiction is preserved. This is language as it really works: messy, democratic, and constantly in flux.
 
-### Running the Application
+![Sample dictionary booklet showing user-contributed entries](https://github.com/user-attachments/assets/84312ad4-1ce3-4ec5-b464-3ec6595a4b0b)
+*A personalized mini-dictionary booklet ready for visitors to take home. Photo by Sineenuch Malaisri*
 
-#### Refactored Version (Recommended)
+
+## 💭 The Idea: Who Really Owns Language?
+
+📚 **The traditional answer:** Dictionaries say experts do. Authoritative tomes like So Sethaputra's *New Model English-Thai Dictionary* tell us the "correct" meanings, printed in unchanging ink. Language is something to be mastered, standardized, and preserved by those who know better.
+
+🌊 **The reality:** Language doesn't work that way—especially today. New slang emerges hourly on social media. Terms shift meaning across communities. "Correct" usage gets debated in comment sections, group chats, and TikTok videos. Meaning is negotiated collectively, messily, democratically.
+
+✨ **Our response:** Make everyone a lexicographer. This installation doesn't validate or correct your entries. It simply asks what words mean to you, then preserves your definition alongside everyone else's. When seven different people define "จาบ" seven different ways, the system celebrates all of them. The result is a dictionary that reflects how meaning is actually created: collectively, contradictorily, and in constant evolution.
+
+Language isn't owned by experts. It's co-created by all of us, every time we speak.
+
+
+## ⚙️ The Technology: Making Language Magic
+
+**The journey begins with your movement.** A camera watches in standby mode. When you approach, it detects the change and triggers a welcoming voice speaking Thai through text-to-speech. You're guided through five simple steps on a full-screen interface designed to focus your attention entirely on defining your word.
+
+**Behind the friendly interface,** the system works hard:
+
+1. 🔍 **Checks the database** – Does your word already exist? If so, your new definition gets added rather than replaced. Multiple truths can coexist.
+
+2. 💾 **Saves instantly** – Every entry goes into a JSON database file, timestamped and credited to you (or kept anonymous if you prefer).
+
+3. 🎲 **Rolls the dice** – Random probability determines if you'll get a surprise:
+   - **10% chance:** Jackpot! Eight pages instead of one
+   - **5% chance:** "System hacked" alert revealing the full database
+   - **15% chance:** An AI-generated fortune using your word
+
+4. 📄 **Generates your booklet** – A PDF engine combines your word with random selections from other entries, formats everything with Thai fonts, and adds live statistics.
+
+5. 🖨️ **Prints immediately** – Your personalized dictionary emerges warm from the printer, unique in all the world.
+
+**The participatory loop continues.** Your entry becomes part of the pool that future visitors might receive in their booklets. After 30 seconds of inactivity, the system gently asks if you're still there. After 60 seconds, it returns to standby, waiting for the next person to add their voice to this collective archive.
+
+![Visitor interacting with the kiosk](https://github.com/user-attachments/assets/165949d4-04e1-401c-8e76-724502dcea29)
+*A visitor contributes their slang word to the collective dictionary. Photo by Phenphan Anantacharoen*
+
+## ✨ Key Features
+
+- 👥 **Participatory Lexicography** – Every visitor becomes a dictionary contributor, not just a reader
+- 📚 **Living Database** – 534 unique slang terms collected from 462 contributors during the exhibition
+- 🎁 **Personalized Booklets** – Each visitor receives a unique printout featuring their word alongside random entries
+- 👁️ **Motion-Activated Interface** – Camera-based presence detection automatically greets approaching visitors
+- 🔊 **Bilingual Audio Experience** – Thai and English text-to-speech guides users through the process
+- 🎰 **Gamified Easter Eggs** – Random jackpots, "system hacked" alerts, and AI-generated fortunes (25% combined probability)
+- 🔄 **Multiple Meanings Welcome** – The system embraces contradictory definitions of the same word
+- 📊 **Real-Time Statistics** – Live tracking of total words, authors, and most popular terms
+
+## Exhibition Results: By the Numbers
+
+The Bangkok Kunsthalle deployment (13 June - 17 August 2025) achieved remarkable community engagement:
+
+**📊 Overall Impact:**
+- **462 Authors** – Total participants who contributed to the dictionary
+- **534 Unique Words** – Distinct slang terms collected during the exhibition
+- **748 Data Sets** – Complete submissions including words, meanings, and examples
+- **544 Booklets** – Physical dictionaries printed and distributed to visitors
+
+**🔥 Most Popular Slang (Hottest Words):**
+
+1. **จาบ (Jaab)** – 7 submissions
+2. **อาจจะยัง (Aat Ja Yang)** – 6 submissions
+3. **โซะ (So)** – 5 submissions
+4. **เกียม (Giam)** – 5 submissions
+5. **เริ่ดเลอ (Roet Loe)** – 5 submissions
+
+**📅 Final Entry (as of 11 September 2025):**
+- **Latest Word:** บายบาย (Bye Bye)
+- **Latest Author:** ดอปจชท (Dopjochot)
+
+<img width="550" height="450" alt="Exhibition statistics dashboard showing 534 unique words from 462 contributors" src="https://github.com/user-attachments/assets/0681612b-a431-43f1-9166-4bc283318bf9" />
+
+*Final exhibition statistics: A collaborative language documentation project demonstrating how interactive art installations create meaningful community engagement*
+
+## If you need to understand more
+
+### What It Does
+
+Imagine approaching a glowing computer station where you're invited not just to look up words, but to create them. The Not-So-Modern Dictionary transforms every visitor into a contributor to an ever-changing collective dictionary. You type in a slang word that exists only in your friend group, a term that's emerged from social media, or a word you've always used "wrong" but prefer your way. The system adds your word to a growing database of hundreds of other contributions, then instantly prints you a personalized mini-dictionary booklet to take home. Your booklet features your new word prominently, alongside random entries from previous visitors—creating a unique snapshot of this living language archive that's never quite the same twice. As you interact with the kiosk, the system speaks to you in Thai, detects your presence through a camera, and occasionally surprises you with "easter eggs": a jackpot that gives you eight pages instead of one, a playful "system hacked" alert that reveals the entire database, or an AI-generated fortune based on your word. Over the course of the exhibition, 462 people contributed 534 unique slang terms, creating 748 complete dictionary entries and printing 544 personalized booklets. The most popular word? "จาบ" (Jaab)—submitted seven times by different visitors who each defined it their own way. This is language as democracy: messy, contradictory, constantly negotiated, and beautifully alive.
+
+### Why It Exists
+
+Traditional dictionaries present language as fixed and authoritative—words have the correct meaning, determined by experts and printed in unchanging ink. But language doesn't actually work that way, especially in our digital age where new slang emerges daily, meanings shift across communities, and "correct" usage is constantly contested in comment sections and group chats. We created this installation as a gentle rebellion against linguistic authority, inspired by So Sethaputra's influential Thai-English dictionary that shaped how generations understood "proper" language. By making every visitor a lexicographer, we ask: who really owns language? The system doesn't validate or correct your entries—it simply asks what words mean to you, then preserves your definition alongside everyone else's. The result is a dictionary that reflects how meaning is actually created: collectively, messily, and in constant flux between street language and screens, grassroots communities and algorithmic culture.
+
+### How It Works
+
+The installation centers on a kiosk station running custom software that guides visitors through creating their dictionary entry. When you approach, a camera detects your movement and the system greets you with a random Thai phrase spoken through text-to-speech. You then type your slang word, its meaning, and optionally an example sentence—all displayed on a full-screen interface that focuses your attention entirely on the act of definition. Behind the scenes, the system checks if your word already exists in the database. If it does, your new definition is added as an additional entry, allowing multiple interpretations to coexist. Once you confirm your submission and add your name (or choose to stay anonymous), the software generates a PDF booklet featuring your word alongside random selections from the database's hundreds of other entries. A printer immediately outputs your personalized dictionary, warm from the machine. The system includes playful surprises to reward participation: there's a 10% chance you'll hit the "jackpot" and receive an eight-page booklet instead of one, a 5% chance the system will jokingly claim it's been "hacked" and show you the complete database, and a 15% chance you'll receive an AI-generated fortune message incorporating your word. These gamified elements transform the act of linguistic documentation into something delightful and unpredictable—much like language itself.
+
+
+## 🚀 Getting Started with the source-code
+
+### If You Want to Run It Yourself
+
+**You'll need:**
+- A computer running Windows, macOS, or Linux
+- A webcam (for motion detection)
+- Speakers (for audio feedback)
+- A printer (for booklet output)
+- Python 3.8 or newer
+
+**Quick setup:**
+
 ```bash
-# Main application (kiosk mode)
+# 1. Download the code
+git clone https://github.com/bejranonda/the-not-so-modern-dictionary.git
+cd the-not-so-modern-dictionary
+
+# 2. Install required software components
+pip install -r requirements.txt
+
+# 3. Run the kiosk interface
+python main.py
+```
+
+The system will open in full-screen kiosk mode. Press any key when you see the standby screen to begin. Your entries will be saved to `user_added_slang.json` and booklets will be generated in the `output/` folder.
+
+**Note:** You'll need to place Thai font files (`Kinnari.ttf` and `NotoEmoji-Regular.ttf`) in the `fonts/` directory and audio files in the respective sound folders for the complete experience.
+
+
+## 🔧 For Developers
+
+<!-- TECHNICAL DETAIL -->
+
+### Architecture Overview
+
+This project maintains two parallel codebases:
+1. **Refactored architecture** (v2.0+, in `src/`) – Modular, maintainable code for future development
+2. **Legacy code** (root level) – Original exhibition code preserved as deployment fallback
+
+Both share the same data files, assets, and database structure.
+
+### System Architecture
+
+```
+src/
+├── app.py                    # Main application orchestrator (DictionaryApp class)
+├── config/
+│   └── settings.py           # Centralized constants, paths, and mode configurations
+├── core/
+│   ├── database.py           # SlangDatabase - JSON-based word storage and retrieval
+│   └── easter_eggs.py        # EasterEggManager - probability-based surprise system
+├── audio/
+│   ├── speech.py             # SpeechEngine - gTTS Thai/English text-to-speech
+│   └── sound_effects.py      # SoundManager - audio asset validation and playback
+├── ui/
+│   └── kiosk.py              # SlangKiosk - PyQt5 full-screen 7-step interface
+├── pdf/
+│   └── generator.py          # PDFGenerator - personalized booklet creation
+└── utils/
+    ├── logger.py             # Structured logging system
+    └── requests.py           # Remote script injection for live updates
+```
+
+### Application Flow
+
+**7-Step User Journey:**
+
+1. **Standby (-1)** – Motion detection → Display logo → "Touch any key"
+2. **Greeting (0)** – Random Thai greeting with text-to-speech
+3. **Word Input (1)** – Enter slang word (checks for duplicates)
+4. **Meaning (2)** – Define the word's meaning
+5. **Example (3)** – Provide usage example (optional)
+6. **Review (4)** – Confirm entry with audio read-back
+7. **Attribution (5)** – Add your name → Generate PDF → Print booklet
+
+**Easter Egg System (in `src/core/easter_eggs.py`):**
+- **Jackpot** (10%) – Receive 8 pages instead of 1
+- **System Hacked** (5%) – See complete database dump
+- **AI Fortune** (15%) – Get personalized prediction message
+
+### Database Structure
+
+**File:** `user_added_slang.json` (JSON format, auto-saved after each entry)
+
+```json
+{
+  "word_lowercase": {
+    "word": "Original Case",
+    "meaning": "Definition text",
+    "example": "Usage example sentence",
+    "author": "Contributor name",
+    "timestamp": "ISO8601 timestamp",
+    "usage_count": 0
+  }
+}
+```
+
+**Key Operations:**
+- `add_entry()` – Adds new word with auto-save
+- `get_entry()` – Case-insensitive lookup
+- `search_entries()` – Partial match search
+- `get_statistics()` – Returns total words, authors, latest entry
+
+### Hardware Integration
+
+**Motion Detection** (`input_slang_utils.py`):
+- OpenCV camera monitoring in standby mode
+- Frame differencing algorithm for presence detection
+- Automatic greeting sequence trigger
+
+**Audio System:**
+- **Text-to-Speech:** gTTS for Thai/English bilingual prompts
+- **Sound Effects:** System startup, page flips, success/error feedback, beeps
+- **Threading:** Audio plays in separate threads to avoid UI blocking
+
+**Printer Integration:**
+- Platform-specific print commands (Windows/macOS/Linux)
+- Automatic PDF output after Step 5
+
+### Running Different Modes
+
+```bash
+# Full-screen kiosk mode (default for exhibitions)
 python main.py
 
-# Different modes
+# Normal edition (without kiosk features)
 python -c "from main import run_normal_edition; run_normal_edition()"
+
+# Last week special edition (with additional features)
 python -c "from main import run_lastweek_edition; run_lastweek_edition()"
+
+# Debug/console mode (no GUI, for testing)
 python -c "from main import run_debug_mode; run_debug_mode()"
 ```
 
-#### Legacy Version (Original)
-```bash
-# Standard version
-python thai_slang_dict_main.py
+### PDF Generation Process
 
-# Last week edition
-python thai_slang_dict_main_lastweek.py
+1. **Template Selection** – Load from `template/*.json` (predictions, database snapshots)
+2. **Content Assembly:**
+   - User's word featured prominently
+   - Random selection from existing database (controlled by easter egg probability)
+   - Statistics footer (total words, authors, current date)
+3. **Font Handling:**
+   - `fonts/Kinnari.ttf` for Thai script
+   - `fonts/NotoEmoji-Regular.ttf` for emoji support
+4. **Output:** `output/slang_dictionary.pdf` → Send to printer
+
+### Idle Management & Timers
+
+- **30 seconds idle** – Audio warning: "Are you still there?"
+- **60 seconds idle** – Auto-return to standby
+- **Reset trigger** – Any keyboard activity
+
+### Remote Management
+
+**Live Updates During Exhibition:**
+- Place `do_request_special_routine` file to enable
+- Execute Python code from `request_script.txt`
+- Allows debugging and feature updates without restart
+
+### Development Practices
+
+**Adding New Features:**
+
+```python
+# 1. Add configuration to src/config/settings.py
+AUDIO_PATHS["new_sound"] = str(SOUNDS_DIR / "folder" / "sound.mp3")
+
+# 2. Use via SoundManager
+from src.audio.sound_effects import SoundManager
+sound_mgr = SoundManager()
+sound_mgr.play_audio_file(AUDIO_PATHS["new_sound"])
 ```
 
-### Key Components
-
-#### Main Scripts
-- **`thai_slang_dict_main.py`** - Main application entry point
-- **`thai_slang_dict_main_lastweek.py`** - Special version for exhibition's final week
-
-#### Core Modules
-- **`thai_slang_kiosk.py`** - PyQt5-based kiosk interface
-- **`slang_pdf_generator.py`** - PDF generation for dictionary booklets
-- **`input_slang_utils.py`** - Utilities for speech, motion detection, and logging
-- **`greetings.py`** - Greeting message collections
-
-#### Features
-
-- **Kiosk Mode Interface:** Full-screen PyQt5 application for exhibition use
-- **Speech Recognition:** Thai language speech input processing
-- **Motion Detection:** Automatic user presence detection
-- **PDF Generation:** Creates personalized dictionary booklets
-- **Multi-language Support:** Thai and Khmer language capabilities
-- **Audio Feedback:** Sound effects and TTS for user interaction
-- **Logging System:** Comprehensive request and interaction logging
-
-#### Sound Assets
-- System startup sounds
-- Page flipping effects
-- Success/error feedback
-- User interaction audio cues
-
-#### Project Structure
-
-**Refactored Architecture (v3.0+)**
-```
-├── main.py                          # Main entry point
-├── requirements.txt                 # Python dependencies
-├── REFACTORING.md                   # Refactoring documentation
-├── src/                             # Refactored source code
-│   ├── app.py                       # Main application class
-│   ├── config/                      # Configuration management
-│   │   └── settings.py              # Centralized settings
-│   ├── core/                        # Core business logic
-│   │   ├── database.py              # Database management
-│   │   └── easter_eggs.py           # Easter egg functionality
-│   ├── audio/                       # Audio processing
-│   │   ├── speech.py                # TTS and speech recognition
-│   │   └── sound_effects.py         # Sound effects management
-│   └── utils/                       # Utility modules
-│       └── logger.py                # Logging system
-├── fonts/                           # Thai and emoji fonts
-├── template/                        # PDF templates
-├── *sound/                          # Audio assets directories
-└── output/                          # Generated content
-```
-
-**Legacy Structure (preserved for compatibility)**
-```
-├── thai_slang_dict_main.py          # Original main application
-├── thai_slang_dict_main_lastweek.py # Original lastweek version
-├── thai_slang_kiosk.py              # Original kiosk interface
-├── slang_pdf_generator.py           # Original PDF generation
-├── input_slang_utils.py             # Original utilities
-└── greetings.py                     # Original greeting messages
-```
-
-![332821_0](https://github.com/user-attachments/assets/165949d4-04e1-401c-8e76-724502dcea29)
-Photo by Phenphan Anantacharoen
-
-## User Workflow & Experience
-
-### Interactive Kiosk Workflow
-
-The application follows a carefully designed 7-step user journey:
-
-#### **🔄 Step -1: Standby Mode**
-- **Trigger**: Camera-based motion detection
-- **Visual**: Yoonglai Collective logo with "Touch any key to start"
-- **Audio**: Ambient standby mode
-- **Interaction**: Any key press or detected motion triggers greeting
-
-#### **👋 Step 0: Greeting & Welcome**
-- **Content**: Random Thai greeting from curated collection
-- **Audio**: Text-to-speech welcome message
-- **Visual**: Full-screen welcome interface
-- **Transition**: Automatic progression after greeting completes
-
-#### **📝 Step 1: Word Input**
-- **Prompt**: "กรุณาใส่คำสแลงที่ต้องการเพิ่ม" (Please enter the slang word to add)
-- **Input**: Text field for slang word entry
-- **Validation**: Checks for existing words in database
-- **Audio**: Instructional prompts and confirmation sounds
-
-#### **💭 Step 2: Meaning Definition**
-- **Prompt**: "กรุณาใส่ความหมายของคำนี้" (Please enter the meaning of this word)
-- **Input**: Text area for definition entry
-- **Context**: Word from Step 1 displayed for reference
-- **Audio**: Contextual guidance and feedback
-
-#### **📚 Step 3: Example Usage**
-- **Prompt**: "กรุณาใส่ตัวอย่างการใช้คำนี้" (Please provide usage example)
-- **Input**: Text area for example sentence
-- **Optional**: Users can skip this step
-- **Audio**: Encouraging prompts and completion sounds
-
-#### **📋 Step 4: Summary & Confirmation**
-- **Display**: Complete entry review (word, meaning, example)
-- **Validation**: Final chance to review and edit
-- **Audio**: Entry read-back using text-to-speech
-- **Interaction**: Confirmation to proceed to printing
-
-#### **🖨️ Step 5: Attribution & Printing**
-- **Prompt**: "กรุณาใส่ชื่อของคุณ (หรือกด Enter เพื่อไม่ระบุชื่อ)" (Enter your name or press Enter for anonymous)
-- **Process**: PDF generation with user's entry
-- **Easter Eggs**: Random chance for bonus content
-- **Output**: Physical mini-dictionary printed and dispensed
-
-### **🎰 Easter Egg System**
-
-#### **Jackpot Feature (10% probability)**
-- **Trigger**: Random selection during PDF generation
-- **Effect**: User receives 8-page dictionary instead of standard 1-page
-- **Message**: "🎰 แจ็คพอต! คุณได้รับหน้าพิเศษ 8 หน้า!" (JACKPOT! You get 8 special pages!)
-
-#### **System Hacked Alert (5% probability)**
-- **Trigger**: Random selection during session
-- **Effect**: User sees full database content
-- **Message**: "🔥 ระบบถูกแฮก! คุณได้เห็นพจนานุกรมทั้งหมด!" (System hacked! You see the full dictionary!)
-
-#### **AI Fortune Messages (15% probability)**
-- **Content**: Generated predictions using the user's submitted word
-- **Examples**: "คำว่า 'xyz' จะนำโชคดีมาให้คุณในวันนี้" (The word 'xyz' will bring you luck today)
-
-### **🔄 Idle State Management**
-
-#### **Warning System**
-- **30 seconds idle**: Audio warning announcement
-- **60 seconds idle**: Automatic return to standby mode
-- **User interaction**: Timer reset on any keyboard activity
-
-#### **Motion Detection Integration**
-- **Camera monitoring**: Continuous motion detection in standby
-- **Wake-up trigger**: Movement automatically starts greeting sequence
-- **Audio feedback**: Immediate sound confirmation on motion detection
-
-### **📊 Database Integration Workflow**
-
-#### **Real-time Processing**
-1. **Input validation**: Check for duplicate entries
-2. **Data merging**: Combine similar entries if word exists
-3. **Statistical updates**: Increment usage counters
-4. **Content formatting**: Prepare for PDF generation
-
-#### **Content Personalization**
-- **Latest entry featured**: User's word highlighted in generated PDF
-- **Random selection**: Additional entries chosen from database
-- **Statistical summary**: Live counts and contributors displayed
-
-### **🎵 Audio Experience Design**
-
-#### **Sound Design Elements**
-- **System startup**: Game-style welcome sound
-- **Page turning**: Realistic book flipping effects
-- **Success feedback**: Pleasant confirmation chimes
-- **Error handling**: Gentle correction sounds
-- **Motion detection**: Immediate response beeps
-
-#### **Text-to-Speech Integration**
-- **Language support**: Thai primary, English secondary
-- **Contextual prompts**: Step-specific instructions
-- **Accessibility**: Audio readback of all user inputs
-- **Bilingual content**: Automatic language detection and appropriate voice
-
-### **🔧 Technical Workflow**
-
-#### **Session Lifecycle**
-1. **Initialization**: Load database, validate audio files, setup UI
-2. **Motion monitoring**: Continuous camera feed analysis
-3. **User session**: 7-step guided interaction
-4. **PDF generation**: Real-time document creation
-5. **Printing process**: Automatic document output
-6. **Session cleanup**: Return to standby, log interaction
-
-#### **Error Recovery**
-- **Automatic restart**: System self-recovery on failures
-- **Process isolation**: Duplicate instance prevention
-- **Resource cleanup**: Temporary file management
-- **Fallback modes**: Graceful degradation for missing components
-
-This workflow creates an seamless, engaging experience that transforms language documentation from passive observation to active participation, making each visitor a contributor to the evolving dictionary.
-
-## Software Components Summary
-
-### Core System Architecture
-**Programming Environment:** Python-based system designed for cross-platform compatibility (Linux, Windows, macOS) due to unknown hardware specifications until 3 days before launch
-
-### 1. Interactive Kiosk System
-**Multi-screen Interface:**
-- 7-screen flow system with full-screen display for focused user experience
-- Step-by-step data entry: Word → Meaning → Example → Summary → Confirmation → Print
-- Text-to-speech integration for accessibility and engagement
-
-**Input Processing:**
-- Real-time slang word collection from visitors
-- Database integration with existing entries
-- Duplicate word detection and merging system
-- Continuous statistical updates
-
-### 2. Hardware Integration
-**Standard Computer Peripherals:**
-- **Camera:** Motion detection for user presence activation
-- **Speakers:** Bilingual audio prompts (Thai/English) with playful language
-- **Keyboard:** Text input interface
-- **Printer:** Automatic booklet generation
-
-**Smart Resource Utilization:** Maximum functionality from standard computer components without additional hardware requirements
-
-### 3. Database Management
-**Dynamic Content System:**
-- User-generated content processing
-- Real-time database updates
-- Statistical analysis and reporting
-- Content merging for duplicate entries
-
-### 4. Booklet Generation System
-**Automated Publishing:**
-- Real-time PDF generation
-- Personalized content with user's latest entry as featured content
-- Random page selection from existing database
-- Statistical summary integration
-- User credited as "latest author"
-
-### 5. AI-Powered Features
-**FortuneDict System:**
-- AI-generated greeting messages
-- Fortune cookie-style predictions using slang words
-- Systematic AI integration for user engagement
-
-### 6. Easter Egg Mechanisms
-**Gamification Elements:**
-- "System Hacked" alerts (1 in 20 users see full dictionary)
-- "Jackpot" system (1 in 10 users access 8 pages instead of 1)
-- Remote script injection for dynamic content updates
-
-### 7. Development Methodology
-**AI-Assisted Development Approach:**
-- **Initial Development**: Scripts conceptualized and initially composed using suggestions from Gemini and ChatGPT
-- **Refactoring Phase**: Claude was used for comprehensive code refactoring and architecture improvements
-- **Rapid Prototyping**: 2-3 weeks development cycle for a typically 3-month level project
-- **Iterative Development**: Real-time monitoring and debugging capabilities
-- **Remote Management**: Live system access for deployment and maintenance
-
-## Technical Highlights
-
-- **Cross-platform compatibility** for unknown deployment environment
-- **Motion detection** for automated user engagement
-- **Real-time data processing** with live statistical updates
-- **AI-powered content generation** for personalized experiences
-- **Remote monitoring and logging** for real-time system evaluation and debugging
-
-This software demonstrates sophisticated integration of user interface design, database management, hardware interaction, and AI systems to create an engaging, interactive art installation.
-
-## Development History & AI Attribution
-
-### Development Timeline
-This project represents a collaborative effort between human creativity and AI assistance across multiple phases:
-
-**Phase 1: Initial Conceptualization & Development**
-- **AI Tools Used**: Gemini and ChatGPT for initial script suggestions and code generation
-- **Purpose**: Rapid prototyping and core functionality implementation
-- **Outcome**: Working baseline system with essential features
-
-**Phase 2: Refactoring & Architecture Enhancement**
-- **AI Tool Used**: Claude for comprehensive code refactoring
-- **Purpose**: Code quality improvement, modular architecture, and maintainability
-- **Outcome**: Professional-grade codebase with proper separation of concerns
-
-**Phase 3: Documentation & Deployment**
-- **Collaborative Process**: Human-AI partnership for exhibition deployment
-- **Result**: Successful art installation at Bangkok Kunsthalle
-
-### AI Attribution
-The development process leveraged multiple AI assistants:
-- **Gemini & ChatGPT**: Initial code suggestions, feature brainstorming, and prototype development
-- **Claude**: Code refactoring, architecture improvement, documentation enhancement, and quality assurance
-
-This multi-AI approach demonstrates how different AI tools can complement each other in the software development lifecycle, from initial ideation through final deployment.
-
-## Version History & Releases
-
-For detailed changelog, see [CHANGELOG.md](CHANGELOG.md).
-
-### [v3.0.1](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/v3.0.1) - Latest Release
-- **Exhibition Results**: Added final exhibition statistics and impact data
-- **Community Metrics**: 462 authors, 534 unique words, 748 data sets, 544 booklets printed
-- **Popular Terms**: Documented most frequently submitted slang words
-- **Documentation**: Enhanced with real-world deployment results
-
-### [v3.0.0](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/v3.0.0)
-- **Major Feature**: Added comprehensive User Workflow & Experience documentation
-- **Documentation**: Detailed 7-step interactive kiosk workflow
-- **Easter Eggs**: Documented gamification system (Jackpot, System Hacked, AI Fortune)
-- **Audio Experience**: Complete sound design and TTS integration details
-- **Technical Workflow**: Session lifecycle and error recovery documentation
-- **User Experience**: Motion detection, idle management, and accessibility features
-
-### [2.0](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/2.0)
-- **Refactoring**: Complete codebase restructure with modular architecture
-- **Configuration**: Centralized settings and constants management
-- **Audio System**: Dedicated speech and sound effects modules
-- **Database**: Object-oriented database management with error handling
-- **Logging**: Structured logging system with multiple levels
-- **Dependencies**: Added comprehensive requirements.txt
-
-### [1.4](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.4)
-- **Voice Features**: Added voice to request functionality
-- **Request System**: Routine and special request features
-- **Code Quality**: Clean up and request function improvements
-
-### [1.3special](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.3special)
-- **Special Edition**: Special request function and enhanced menu
-- **Bug Fixes**: Fixed double running script and menu display issues
-- **Platform**: Updated menu for MAC compatibility
-
-### [1.3](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.3)
-- **Platform Support**: MAC printing and menu improvements
-- **Code Cleanup**: Removed unnecessary libraries and components
-- **UI Updates**: Menu text updates and display fixes
-
-### [1.2](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.2)
-- **Internationalization**: Local support for multiple languages
-- **Templates**: Template functionality and external greeting list
-- **UI Improvements**: Centered text and column debugging
-
-### [1.1](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.1)
-- **GUI Enhancements**: Added logo and 2-column layout
-- **Printing**: Print to printer functionality
-- **Motion Detection**: Increased motion sensitivity
-
-### [1.0](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.0) - Original Exhibition Version
-- **Core Features**: Template system, Intro and Fortune pages
-- **Language Support**: English fortune and Thai content
-- **Statistics**: Enhanced statistics and user collaboration features
-- **Exhibition**: Deployed for Bangkok Kunsthalle exhibition
-
-### Early Development Versions
-- [0.4](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/0.4) - Enhanced data collection
-- [0.3](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/0.3) - Basic statistics
-- [0.2](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/0.2) - Core dictionary features
-- [0.1](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/0.1) - Initial release
-
-## Credits and Attribution
-
-### Project Development
-This software was created as an art installation through collaboration between:
-- **Werapol Bejranonda** - Software Engineer and Developer
-- **Yoonglai Collective** - Artists and Conceptual Design
-
-### AI-Assisted Development
-The development process leveraged AI assistants as collaborative tools:
-- **Gemini & ChatGPT** - Initial code generation, feature brainstorming, and rapid prototyping
-- **Claude** - Code refactoring, architecture improvement, documentation, and quality assurance
-
-This project demonstrates effective human-AI collaboration in software development, combining human creativity and artistic vision with AI-powered code generation and optimization.
+**Key Technical Considerations:**
+- **PyQt5 Threading** – Never call TTS/audio directly in UI thread; use `QTimer.singleShot()`
+- **Font Paths** – PDF generation fails silently if Thai fonts missing
+- **Process Management** – Application kills previous instances on startup
+- **Cross-Platform** – Uses `pathlib.Path` for compatibility; process commands branch by OS
 
 ### Technology Stack
-Built with open-source technologies:
-- **PyQt5** - GUI framework (GPL/Commercial dual license)
-- **ReportLab** - PDF generation (BSD-style license)
-- **gTTS** - Google Text-to-Speech (MIT license)
-- **OpenCV** - Computer vision and motion detection (Apache 2.0 license)
-- **SpeechRecognition** - Speech input processing (BSD license)
 
-### Special Thanks
-- **Bangkok Kunsthalle** - Exhibition venue and support
-- **Exhibition visitors** - 462 contributors who added 534 unique words to create a living dictionary
+- **PyQt5** – GUI framework (GPL/Commercial dual license)
+- **ReportLab** – PDF generation (BSD-style license)
+- **gTTS** – Google Text-to-Speech (MIT license)
+- **OpenCV** – Motion detection (Apache 2.0 license)
+- **SpeechRecognition** – Speech input processing (BSD license)
 
-## License
+### Version History
+
+See [CHANGELOG.md](CHANGELOG.md) for complete release history.
+
+**Major Releases:**
+- **[v3.0.1](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/v3.0.1)** (Latest) – Exhibition final results and statistics
+- **[v3.0.0](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/v3.0.0)** – Complete workflow documentation and user experience details
+- **[2.0](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/2.0)** – Major refactoring with modular architecture
+- **[1.0](https://github.com/bejranonda/the-not-so-modern-dictionary/releases/tag/1.0)** – Original exhibition version
+
+### Further Reading
+
+- [REFACTORING.md](REFACTORING.md) – Detailed migration guide from v1.x to v2.0 architecture
+- [CLAUDE.md](CLAUDE.md) – Complete project documentation for AI assistance and development
+
+
+## 🤝 Project Credits
+
+### Collaboration
+
+This installation emerged from a collaboration between:
+- **[Yoonglai Collective](http://yoonglai.com/)** – Artistic concept, exhibition design, and cultural framing
+- **Werapol Bejranonda** – Software engineering, system architecture, and technical implementation
+
+### AI-Assisted Development
+
+The software development leveraged AI assistants at different stages:
+- **Gemini & ChatGPT** – Initial prototyping, code generation, and rapid feature development (2-3 weeks)
+- **Claude** – Code refactoring, architecture restructuring, documentation, and quality improvement
+
+This project demonstrates effective human-AI collaboration: what typically requires 3 months of development was accomplished in 2-3 weeks through AI-assisted rapid prototyping, then professionally refined through AI-guided refactoring.
+
+### Exhibition Support
+
+- **Bangkok Kunsthalle** – Exhibition venue, curatorial support, and technical facilities
+- **Exhibition Visitors** – 462 contributors who created 534 unique dictionary entries, transforming the installation into a true collective work
+
+
+## 📜 License & Usage
 
 **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**
 
-This art installation software is licensed under CC BY-NC-SA 4.0, which allows you to:
-- ✅ **Share** - Copy and redistribute the material
-- ✅ **Adapt** - Remix, transform, and build upon the material
+You are free to:
+- ✅ **Share** – Copy and redistribute this software
+- ✅ **Adapt** – Remix, transform, and build upon it for your own installations
 
-Under the following terms:
-- **Attribution** - You must give appropriate credit to Werapol Bejranonda and Yoonglai Collective
-- **NonCommercial** - You may not use the material for commercial purposes
-- **ShareAlike** - If you remix or transform the material, you must distribute under the same license
+Under these terms:
+- **Attribution** – Credit Werapol Bejranonda and Yoonglai Collective
+- **NonCommercial** – Not for commercial purposes without permission
+- **ShareAlike** – Distribute modifications under the same license
 
-For commercial use or other licensing arrangements, please contact the creators.
+**For Commercial Use:** Contact the creators for licensing arrangements.
 
 **Copyright © 2024-2025 Werapol Bejranonda and Yoonglai Collective**
+
+---
+
+### 💡 Suggested Additions for Future Enhancement
+
+To make this README even more effective, consider adding:
+
+1. **Demo Video** – A 60-second screencast showing the complete user journey from motion detection through booklet printing
+2. **Architecture Diagram** – Visual flowchart showing the 7-step process and system components
+3. **Sample Booklet PDF** – Downloadable example of the generated output
+4. **Cross-References** – Links to your other art-technology projects (PM2.5 Ghostbuster, Code of the Sea, Heating DJ) to show your collaborative practice
+5. **Exhibition Documentation** – Additional photos showing different user interactions and the installation context
