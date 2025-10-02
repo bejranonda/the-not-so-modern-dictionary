@@ -1,9 +1,11 @@
 # The Not-So-Modern Dictionary
+> *"Language is not fixed or authoritative"*
+
 *A collaborative art installation where language becomes living, evolving, and collectively owned*
 
-![The Not-So-Modern Dictionary installation at Bangkok Kunsthalle](https://github.com/user-attachments/assets/e99736a3-1984-4f89-8f80-16ca84b7d280)
-*Visitors interact with the dictionary kiosk at Bangkok Kunsthalle. Photo by Suphitchaya Khunchamni*
+<img width="753" height="762" alt="image" src="https://github.com/user-attachments/assets/16d74ae1-58eb-4ff7-960d-5a4cec986033" />
 
+*Visitors interact with the dictionary kiosk at Bangkok Kunsthalle.*
 
 ## 📍 Exhibition Context
 
@@ -34,6 +36,7 @@ A playful critique of So Sethaputra's authoritative *New Model English-Thai Dict
 **You leave with a dictionary you helped create.** Your word joins 534 others in a living archive that grows with each visitor, where "จาบ" has seven different definitions and every contradiction is preserved. This is language as it really works: messy, democratic, and constantly in flux.
 
 ![Sample dictionary booklet showing user-contributed entries](https://github.com/user-attachments/assets/84312ad4-1ce3-4ec5-b464-3ec6595a4b0b)
+
 *A personalized mini-dictionary booklet ready for visitors to take home. Photo by Sineenuch Malaisri*
 
 
@@ -46,6 +49,11 @@ A playful critique of So Sethaputra's authoritative *New Model English-Thai Dict
 ✨ **Our response:** Make everyone a lexicographer. This installation doesn't validate or correct your entries. It simply asks what words mean to you, then preserves your definition alongside everyone else's. When seven different people define "จาบ" seven different ways, the system celebrates all of them. The result is a dictionary that reflects how meaning is actually created: collectively, contradictorily, and in constant evolution.
 
 Language isn't owned by experts. It's co-created by all of us, every time we speak.
+
+
+![The Not-So-Modern Dictionary installation at Bangkok Kunsthalle](https://github.com/user-attachments/assets/e99736a3-1984-4f89-8f80-16ca84b7d280)
+
+*Installation of the dictionary kiosk at Bangkok Kunsthalle. Photo by Suphitchaya Khunchamni*
 
 
 ## The Technology: Making Language Magic
@@ -70,7 +78,8 @@ Language isn't owned by experts. It's co-created by all of us, every time we spe
 **The participatory loop continues.** Your entry becomes part of the pool that future visitors might receive in their booklets. After 30 seconds of inactivity, the system gently asks if you're still there. After 60 seconds, it returns to standby, waiting for the next person to add their voice to this collective archive.
 
 ![Visitor interacting with the kiosk](https://github.com/user-attachments/assets/165949d4-04e1-401c-8e76-724502dcea29)
-*A visitor contributes their slang word to the collective dictionary. Photo by Phenphan Anantacharoen*
+
+*A visitor was captured and drawn in by the kiosk. Photo by Phenphan Anantacharoen*
 
 ## ✨ Key Features
 
@@ -119,10 +128,17 @@ Imagine approaching a glowing computer station where you're invited not just to 
 
 Traditional dictionaries present language as fixed and authoritative—words have the correct meaning, determined by experts and printed in unchanging ink. But language doesn't actually work that way, especially in our digital age where new slang emerges daily, meanings shift across communities, and "correct" usage is constantly contested in comment sections and group chats. We created this installation as a gentle rebellion against linguistic authority, inspired by So Sethaputra's influential Thai-English dictionary that shaped how generations understood "proper" language. By making every visitor a lexicographer, we ask: who really owns language? The system doesn't validate or correct your entries—it simply asks what words mean to you, then preserves your definition alongside everyone else's. The result is a dictionary that reflects how meaning is actually created: collectively, messily, and in constant flux between street language and screens, grassroots communities and algorithmic culture.
 
+<img width="643" height="707" alt="image" src="https://github.com/user-attachments/assets/f5480de6-ec37-408b-9c14-9009fb5df112" />
+
+*At the last page of their dictionary booklet, each visitor discovered a personal fortune.*
+
 ### How It Works
 
 The installation centers on a kiosk station running custom software that guides visitors through creating their dictionary entry. When you approach, a camera detects your movement and the system greets you with a random Thai phrase spoken through text-to-speech. You then type your slang word, its meaning, and optionally an example sentence—all displayed on a full-screen interface that focuses your attention entirely on the act of definition. Behind the scenes, the system checks if your word already exists in the database. If it does, your new definition is added as an additional entry, allowing multiple interpretations to coexist. Once you confirm your submission and add your name (or choose to stay anonymous), the software generates a PDF booklet featuring your word alongside random selections from the database's hundreds of other entries. A printer immediately outputs your personalized dictionary, warm from the machine. The system includes playful surprises to reward participation: there's a 10% chance you'll hit the "jackpot" and receive an eight-page booklet instead of one, a 5% chance the system will jokingly claim it's been "hacked" and show you the complete database, and a 15% chance you'll receive an AI-generated fortune message incorporating your word. These gamified elements transform the act of linguistic documentation into something delightful and unpredictable—much like language itself.
 
+<img width="1919" height="1079" alt="Lastweek_03" src="https://github.com/user-attachments/assets/75c70593-a8ea-4168-b2d3-190d4266c6d8" />
+
+*Last week special edition released on the final week of the exhibition*
 
 ## 🚀 Getting Started with the source-code
 
