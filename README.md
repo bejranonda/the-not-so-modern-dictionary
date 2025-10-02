@@ -7,14 +7,18 @@
 
 ## 📍 Exhibition Context
 
-**Project Name:** The Not-So-Modern Dictionary (ปทานุกรมแบบสับ)
-**Medium:** Interactive installation (software interface, kiosk station, printed booklets)
-**Exhibition:** "This page is intentionally left _____" by Yoonglai Collective
-**Dates:** 13 June - 17 August 2025
-**Venue:** [Bangkok Kunsthalle](https://www.khaoyaiart.com/bangkok-kunsthalle/exhibitions/this-page-is-intentionally-left-_____.), Bangkok, Thailand
-**Type:** Participatory installation
+- **Project Name:** The Not-So-Modern Dictionary (ปทานุกรมแบบสับ)
+- **Medium:** Interactive installation (software interface, kiosk station, printed booklets)
+- **Exhibition:** "This page is intentionally left _____" by Yoonglai Collective
+- **Dates:** 13 June - 17 August 2025
+- **Venue:** [Bangkok Kunsthalle](https://www.khaoyaiart.com/bangkok-kunsthalle/exhibitions/this-page-is-intentionally-left-_____.), Bangkok, Thailand
+- **Type:** Participatory installation
 
-**Exhibition Impact:** During this three-month run, **462 visitors** contributed **534 unique slang terms**, creating **748 complete dictionary entries** and taking home **544 personalized booklets**. The most popular word, "จาบ" (Jaab), was submitted seven times with different definitions—proof that language truly belongs to everyone.
+**Exhibition Impact** During this three-month run:
+- **462 visitors** contributed **534 unique slang terms**
+- creating **748 complete dictionary entries**
+- and taking home **544 personalized booklets**.
+- The most popular word, **"จาบ" (Jaab)**, was submitted seven times with different definitions—proof that language truly belongs to everyone.
 
 A playful critique of So Sethaputra's authoritative *New Model English-Thai Dictionary*, this installation invites visitors to become lexicographers of their own evolving language.
 
@@ -33,7 +37,7 @@ A playful critique of So Sethaputra's authoritative *New Model English-Thai Dict
 *A personalized mini-dictionary booklet ready for visitors to take home. Photo by Sineenuch Malaisri*
 
 
-## 💭 The Idea: Who Really Owns Language?
+## The Idea: Who Really Owns Language?
 
 📚 **The traditional answer:** Dictionaries say experts do. Authoritative tomes like So Sethaputra's *New Model English-Thai Dictionary* tell us the "correct" meanings, printed in unchanging ink. Language is something to be mastered, standardized, and preserved by those who know better.
 
@@ -44,7 +48,7 @@ A playful critique of So Sethaputra's authoritative *New Model English-Thai Dict
 Language isn't owned by experts. It's co-created by all of us, every time we speak.
 
 
-## ⚙️ The Technology: Making Language Magic
+## The Technology: Making Language Magic
 
 **The journey begins with your movement.** A camera watches in standby mode. When you approach, it detects the change and triggers a welcoming voice speaking Thai through text-to-speech. You're guided through five simple steps on a full-screen interface designed to focus your attention entirely on defining your word.
 
@@ -330,8 +334,9 @@ See [CHANGELOG.md](CHANGELOG.md) for complete release history.
 ### Collaboration
 
 This installation emerged from a collaboration between:
-- **[Yoonglai Collective](http://yoonglai.com/)** – Artistic concept, exhibition design, and cultural framing
 - **Werapol Bejranonda** – Software engineering, system architecture, and technical implementation
+- **[Yoonglai Collective](http://yoonglai.com/)** – Artistic concept, exhibition design, and cultural framing
+
 
 ### AI-Assisted Development
 
