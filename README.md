@@ -33,6 +33,8 @@ A playful critique of So Sethaputra's authoritative *New Model English-Thai Dict
 
 **Then comes the magic.** A printer whirs to life and outputs a personalized mini-dictionary booklet. Your word appears prominently inside, nestled among random entries from the hundreds of other visitors who came before you. No two booklets are identical. Sometimes you get lucky—a "jackpot" giving you eight pages instead of one, or the system playfully claims it's been "hacked" and shows you the entire database.
 
+**But there's one more surprise.** On the last page of your booklet, you discover a personal fortune—like opening a fortune cookie, but with your slang word woven into the prediction. "Your fierce energy will impress everyone around you" or "Everything you do will shine effortlessly." Each fortune randomly selected from a curated collection, making your dictionary not just a linguistic record but a small moment of delight.
+
 **You leave with a dictionary you helped create.** Your word joins 534 others in a living archive that grows with each visitor, where "จาบ" has seven different definitions and every contradiction is preserved. This is language as it really works: messy, democratic, and constantly in flux.
 
 ![Sample dictionary booklet showing user-contributed entries](https://github.com/user-attachments/assets/84312ad4-1ce3-4ec5-b464-3ec6595a4b0b)
@@ -85,7 +87,7 @@ Language isn't owned by experts. It's co-created by all of us, every time we spe
 
 - 👥 **Participatory Lexicography** – Every visitor becomes a dictionary contributor, not just a reader
 - 📚 **Living Database** – 534 unique slang terms collected from 462 contributors during the exhibition
-- 🎁 **Personalized Booklets** – Each visitor receives a unique printout featuring their word alongside random entries
+- 🎁 **Personalized Booklets** – Each visitor receives a unique printout featuring their word alongside random entries, with a fortune-cookie-style prediction on the last page
 - 👁️ **Motion-Activated Interface** – Camera-based presence detection automatically greets approaching visitors
 - 🔊 **Bilingual Audio Experience** – Thai and English text-to-speech guides users through the process
 - 🎰 **Gamified Easter Eggs** – Random jackpots, "system hacked" alerts, and AI-generated fortunes (25% combined probability)
@@ -283,10 +285,37 @@ python -c "from main import run_debug_mode; run_debug_mode()"
    - User's word featured prominently
    - Random selection from existing database (controlled by easter egg probability)
    - Statistics footer (total words, authors, current date)
+   - **Fortune page** – Random fortune selected from prediction templates on the last page
 3. **Font Handling:**
    - `fonts/Kinnari.ttf` for Thai script
    - `fonts/NotoEmoji-Regular.ttf` for emoji support
 4. **Output:** `output/slang_dictionary.pdf` → Send to printer
+
+### Fortune System
+
+**Fortune Cookie Feature:**
+Every booklet includes a personalized fortune on the last page, selected randomly from curated prediction templates.
+
+**Template Files:**
+- `template/th-en-ln_slang_predictions_99.json` – Standard edition fortunes (99 predictions)
+- `template/th-en-ln_slang_predictions_lastweek.json` – Special last-week edition fortunes
+
+**Fortune Structure (trilingual):**
+```json
+{
+  "ปัง": {
+    "th": "สิ่งที่คุณทำจะออกมาปังแบบไม่ต้องพยายามมาก",
+    "en": "Everything you do will shine effortlessly.",
+    "ln": "អ្វីគ្រប់យ៉ាងដែលអ្នកធ្វើនឹងចេញមកល្អឥតខ្ចោះដោយមិនចាំបាច់ប្រឹងប្រែងច្រើន។"
+  }
+}
+```
+
+**Implementation:**
+- Fortunes are keyed by slang words, creating thematic connections
+- Each fortune includes Thai (th), English (en), and Lao/Khmer (ln) translations
+- Random selection during PDF generation ensures variety
+- Creates a "fortune cookie" moment of delight for every visitor
 
 ### Idle Management & Timers
 
