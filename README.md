@@ -3,6 +3,11 @@
 
 *A collaborative art installation where language becomes living, evolving, and collectively owned*
 
+**The Not-So-Modern Dictionary** is a participatory art installation where visitors become lexicographers - contributing slang definitions that instantly print as personalized mini-dictionary booklets.
+
+Built with Python, PyQt5, and motion detection, the kiosk system collected **534 unique slang terms from 462 contributors** during its exhibition in Bangkok Kunsthalle, proving language belongs to everyone. Watch your word join a living archive where contradictory definitions coexist and every visitor takes home a unique snapshot of collective meaning-making.
+
+
 <img width="753" height="762" alt="image" src="https://github.com/user-attachments/assets/16d74ae1-58eb-4ff7-960d-5a4cec986033" />
 
 *Visitors interact with the dictionary kiosk at Bangkok Kunsthalle.*
