@@ -720,7 +720,7 @@ class PDFGenerator:
 
         if random_page is None:
             page_order = [0, 1, 2, 3, 4, 5,
-                         random.randint(7, total_pages - 2) if total_pages > 6 else 6,
+                         random.randint(7, total_pages - 2) if total_pages > 8 else 7,
                          total_pages - 1 if total_pages > 0 else 0]
         else:
             page_order = [0, 1, 2, 3, 4, 5, random_page - 1, total_pages - 1 if total_pages > 0 else 0]
@@ -1018,7 +1018,7 @@ class PDFGenerator:
         os.remove(output_file)
         os.rename(output_temp, output_file)
 
-        random_page = random.randint(7, total_pages - 2) if total_pages > 6 else 6
+        random_page = random.randint(7, total_pages - 2) if total_pages > 8 else 7
         app_logger.info(f"Random page: {random_page}")
         self.add_template_background(self.template_pdf_path3, output_file, output_temp,
                                     random_page - 1, random_page - 1)

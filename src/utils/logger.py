@@ -27,10 +27,17 @@ class DictionaryLogger:
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )
 
-        # Console handler
-        console_handler = logging.StreamHandler()
+        # Console handler with UTF-8 encoding support
+        import sys
+        console_handler = logging.StreamHandler(sys.stdout)
         console_handler.setLevel(logging.INFO)
         console_handler.setFormatter(formatter)
+        # Handle Unicode characters gracefully on Windows
+        if hasattr(console_handler.stream, 'reconfigure'):
+            try:
+                console_handler.stream.reconfigure(encoding='utf-8', errors='replace')
+            except Exception:
+                pass
         self.logger.addHandler(console_handler)
 
         # File handler

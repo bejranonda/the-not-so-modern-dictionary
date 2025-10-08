@@ -651,7 +651,7 @@ def make_foldable_booklet(input_path, output_path, random_page = None):
     # The original page_order has a random element, which is unusual for a standard booklet.
     # Keeping it as is, but noting this for future improvements.
     if random_page is None:
-        page_order = [0, 1, 2, 3, 4, 5, random.randint(7, total_pages - 2) if total_pages > 6 else 6, total_pages - 1 if total_pages > 0 else 0]
+        page_order = [0, 1, 2, 3, 4, 5, random.randint(7, total_pages - 2) if total_pages > 8 else 7, total_pages - 1 if total_pages > 0 else 0]
     else:
         page_order = [0, 1, 2, 3, 4, 5, random_page-1, total_pages - 1 if total_pages > 0 else 0]
         
@@ -715,7 +715,7 @@ def printpdf(
     thai_bold_font_path="assets/fonts/Kinnari-Bold.ttf",
     thai_italic_font_path="assets/fonts/Kinnari-Italic.ttf",
     emoji_font_path="assets/fonts/NotoEmoji-Regular.ttf",
-    ln_font_path="NotoSansKhmer-Regular.ttf",
+    ln_font_path="assets/fonts/NotoSansKhmer-Regular.ttf",
     cover_append_file="assets/templates/PP1-4.pdf",  # ไฟล์ PDF ที่จะเพิ่มหน้า
     author=None,
     fortune_json_path="assets/templates/th-en-ln_slang_predictions_lastweek.json"
@@ -971,7 +971,7 @@ def printpdf(
     os.rename(output_temp, output_file)
 
     ## Random page
-    random_page = random.randint(7, total_pages - 2) if total_pages > 6 else 6
+    random_page = random.randint(7, total_pages - 2) if total_pages > 8 else 7
     print(f"random_page: {random_page}")
     add_template_background(template_pdf_path3, output_file, output_temp, random_page-1, random_page-1)
     os.remove(output_file)

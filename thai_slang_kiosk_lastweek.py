@@ -507,11 +507,15 @@ class SlangKiosk(QWidget):
     def save_data(self):
         """Saves the new slang entry to the JSON file."""
         json_file = "output/user_added_slang.json"
+
+        # Ensure output directory exists
+        os.makedirs("output", exist_ok=True)
+
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         word = self.data.get("word")
         meaning = self.data.get("meaning")
         example = self.data.get("example")
-        
+
         # Load existing data
         if os.path.exists(json_file):
             with open(json_file, "r", encoding="utf-8") as f:
@@ -548,6 +552,10 @@ class SlangKiosk(QWidget):
         in the JSON database, moving the author to the end if already present.
         """
         json_file = "output/user_added_slang.json"
+
+        # Ensure output directory exists
+        os.makedirs("output", exist_ok=True)
+
         if not os.path.exists(json_file):
             print(f"❌ ไม่พบไฟล์ JSON '{json_file}' ไม่สามารถอัปเดตผู้แต่งได้.")
             return
