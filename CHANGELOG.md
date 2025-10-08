@@ -2,6 +2,78 @@
 
 All notable changes to The Not-So-Modern Dictionary project will be documented in this file.
 
+## [3.1.1] - 2025-10-08
+
+### Bug Fixes - Windows Compatibility & Critical Errors
+
+This patch release addresses critical bugs affecting Windows deployment and PDF generation that were discovered after the v3.1.0 release.
+
+#### Fixed
+
+**PDF Generation Errors**:
+- Fixed `ValueError: empty range in randrange(7, 6)` and `empty range in randrange(7, 7)` errors
+- Corrected page calculation logic in all PDF generators:
+  - Changed condition from `total_pages > 6` to `total_pages > 8`
+  - Changed fallback page value from `6` to `7` to ensure valid page index
+- Affected files:
+  - `slang_pdf_generator.py` (2 locations)
+  - `slang_pdf_generator_lastweek.py` (2 locations)
+  - `src/pdf/generator.py` (2 locations)
+
+**Windows Console Encoding**:
+- Added UTF-8 encoding support for Windows console output
+- Fixed Unicode character display errors for Thai text and emojis
+- Configured `stdout` and `stderr` encoding at application startup:
+  - `thai_slang_dict_main.py`
+  - `thai_slang_dict_main_lastweek.py`
+- Updated logger to handle Unicode characters gracefully:
+  - `src/utils/logger.py` - Added UTF-8 stream reconfiguration with fallback
+
+**File System Issues**:
+- Fixed missing font file path for `NotoSansKhmer-Regular.ttf`:
+  - Changed from `"NotoSansKhmer-Regular.ttf"` to `"assets/fonts/NotoSansKhmer-Regular.ttf"`
+  - `slang_pdf_generator.py:708`
+  - `slang_pdf_generator_lastweek.py:718`
+- Added automatic output directory creation to prevent `FileNotFoundError`:
+  - `thai_slang_kiosk.py` - Added `os.makedirs("output", exist_ok=True)` in `save_data()` and `save_author_to_latest_entry()`
+  - `thai_slang_kiosk_lastweek.py` - Same fixes
+
+#### Added
+
+**New Module**:
+- `src/utils/requests.py` - Remote script execution utilities for live debugging
+  - `check_special_requests()` - Executes code from `request_script.txt`
+  - `check_routine_requests()` - Executes periodic tasks from `request_routine_script.txt`
+
+#### Technical Details
+
+**Files Modified**: 8 files
+- `slang_pdf_generator.py` - Font path + randrange fixes (2 locations)
+- `slang_pdf_generator_lastweek.py` - Font path + randrange fixes (2 locations)
+- `src/pdf/generator.py` - Randrange fixes (2 locations)
+- `src/utils/logger.py` - UTF-8 console encoding
+- `thai_slang_dict_main.py` - UTF-8 setup at startup
+- `thai_slang_dict_main_lastweek.py` - UTF-8 setup at startup
+- `thai_slang_kiosk.py` - Directory creation (2 methods)
+- `thai_slang_kiosk_lastweek.py` - Directory creation (2 methods)
+
+**Files Added**: 1 file
+- `src/utils/requests.py` (new module)
+
+**Impact**:
+- ✅ Application now runs on Windows without encoding errors
+- ✅ PDF generation works with any number of pages
+- ✅ All Thai text and emojis display correctly in console
+- ✅ No manual directory creation required
+
+**Testing**:
+- Tested on Windows with Python 3.13
+- Verified both refactored (`main.py`) and legacy versions work correctly
+- Confirmed UTF-8 characters display properly
+- Validated PDF generation with various page counts
+
+---
+
 ## [3.1.0] - 2025-10-08
 
 ### Refactored Architecture Completion & Project Reorganization
