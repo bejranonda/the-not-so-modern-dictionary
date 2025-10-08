@@ -1,0 +1,30 @@
+# Claude Code project files
+CLAUDE.md
+.claude/
+
+# User data and generated files
+user_added_slang.json
+request_log.txt
+output/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
