@@ -4,8 +4,11 @@ CLAUDE.md
 
 # User data and generated files
 user_added_slang.json
-request_log.txt
 output/
+scripts/request_log.txt
+scripts/do_request_special_routine
+scripts/request_script.txt
+scripts/request_routine_script.txt
 
 # Python cache
 __pycache__/

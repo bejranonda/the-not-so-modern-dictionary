@@ -38,14 +38,14 @@ console = Console()
     # "flipping sound/flipping-through-a-book-98901.mp3",
     # "flipping sound/one-page-book-flip-101928.mp3"
 # ]
-flipping_sounds = ["flipping sound/pageturn-102978.mp3"]
+flipping_sounds = ["assets/audio/flipping sound/pageturn-102978.mp3"]
 invalid_sounds = [
-    "error sound/error-call-to-attention-129258.mp3",
+    "assets/audio/error sound/error-call-to-attention-129258.mp3",
 ]
-correct_sound = "correct sound/correct-6033.mp3"
-systemstart_sound = "systemstart sound/game-start-6104.mp3"
-start_sound = "beep sound/point-smooth-beep-230573.mp3"
-end_sound = "beep sound/short-beep-tone-47916.mp3"
+correct_sound = "assets/audio/correct sound/correct-6033.mp3"
+systemstart_sound = "assets/audio/systemstart sound/game-start-6104.mp3"
+start_sound = "assets/audio/beep sound/point-smooth-beep-230573.mp3"
+end_sound = "assets/audio/beep sound/short-beep-tone-47916.mp3"
 
 
 ## Words

@@ -31,12 +31,12 @@ from PyQt5.QtWidgets import QApplication
 import sys
 
 # เสียงต่าง ๆ
-flipping_sounds = ["flipping sound/pageturn-102978.mp3"]
-invalid_sounds = ["error sound/error-call-to-attention-129258.mp3"]
-correct_sound = "correct sound/correct-6033.mp3"
-systemstart_sound = "systemstart sound/game-start-6104.mp3"
-start_sound = "beep sound/point-smooth-beep-230573.mp3"
-end_sound = "beep sound/short-beep-tone-47916.mp3"
+flipping_sounds = ["assets/audio/flipping sound/pageturn-102978.mp3"]
+invalid_sounds = ["assets/audio/error sound/error-call-to-attention-129258.mp3"]
+correct_sound = "assets/audio/correct sound/correct-6033.mp3"
+systemstart_sound = "assets/audio/systemstart sound/game-start-6104.mp3"
+start_sound = "assets/audio/beep sound/point-smooth-beep-230573.mp3"
+end_sound = "assets/audio/beep sound/short-beep-tone-47916.mp3"
 
 # คำทักทาย
 greeting_word  = [
@@ -156,7 +156,7 @@ def recognize_thai_whisper():
 
 def main_loop():
     try:
-        printpdf(json_path="output/user_added_slang.json", output_path="output/slang_dictionary.pdf", thai_font_path="fonts/Kinnari.ttf", emoji_font_path="fonts/NotoEmoji-Regular.ttf")
+        printpdf(json_path="output/user_added_slang.json", output_path="output/slang_dictionary.pdf", thai_font_path="assets/fonts/Kinnari.ttf", emoji_font_path="assets/fonts/NotoEmoji-Regular.ttf")
         #exit()
         while True:
             print("🚀 Starting AI")

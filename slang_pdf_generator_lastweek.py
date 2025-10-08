@@ -53,10 +53,10 @@ from PyPDF2 import PdfReader, PdfWriter
 import re
 
 ## Template
-template_pdf_path1 = "template/pp1.pdf"
-template_pdf_path2 = "template/pp2.pdf"
-template_pdf_path3 = "template/pp3.pdf"
-template_pdf_path4 = "template/pp4.pdf"
+template_pdf_path1 = "assets/templates/pp1.pdf"
+template_pdf_path2 = "assets/templates/pp2.pdf"
+template_pdf_path3 = "assets/templates/pp3.pdf"
+template_pdf_path4 = "assets/templates/pp4.pdf"
 
 ## Printer enable
 printer_active = True
@@ -711,14 +711,14 @@ def log_request_message(message):
 def printpdf(
     json_path="output/user_added_slang.json",
     output_path="output/slang_dictionary.pdf",
-    thai_font_path="fonts/Kinnari.ttf",
-    thai_bold_font_path="fonts/Kinnari-Bold.ttf",
-    thai_italic_font_path="fonts/Kinnari-Italic.ttf",
-    emoji_font_path="fonts/NotoEmoji-Regular.ttf",
+    thai_font_path="assets/fonts/Kinnari.ttf",
+    thai_bold_font_path="assets/fonts/Kinnari-Bold.ttf",
+    thai_italic_font_path="assets/fonts/Kinnari-Italic.ttf",
+    emoji_font_path="assets/fonts/NotoEmoji-Regular.ttf",
     ln_font_path="NotoSansKhmer-Regular.ttf",
-    cover_append_file="template/PP1-4.pdf",  # ไฟล์ PDF ที่จะเพิ่มหน้า
+    cover_append_file="assets/templates/PP1-4.pdf",  # ไฟล์ PDF ที่จะเพิ่มหน้า
     author=None,
-    fortune_json_path="template/th-en-ln_slang_predictions_lastweek.json"
+    fortune_json_path="assets/templates/th-en-ln_slang_predictions_lastweek.json"
 ):
     # ในฟังก์ชันถ้า author มีค่า ให้ใช้ค่า author แทน `
     lastauthor = author if author else "ไม่ระบุ"

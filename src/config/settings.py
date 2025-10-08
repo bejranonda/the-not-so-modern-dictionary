@@ -6,10 +6,11 @@ from pathlib import Path
 
 # Base paths
 BASE_DIR = Path(__file__).parent.parent.parent
-FONTS_DIR = BASE_DIR / "fonts"
-TEMPLATE_DIR = BASE_DIR / "template"
+ASSETS_DIR = BASE_DIR / "assets"
+FONTS_DIR = ASSETS_DIR / "fonts"
+TEMPLATE_DIR = ASSETS_DIR / "templates"
 OUTPUT_DIR = BASE_DIR / "output"
-SOUNDS_DIR = BASE_DIR
+SOUNDS_DIR = ASSETS_DIR / "audio"
 
 # Audio settings
 AUDIO_PATHS = {

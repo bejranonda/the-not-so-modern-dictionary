@@ -21,11 +21,11 @@ from slang_pdf_generator import printpdf
 
 from greetings import greeting_word
 
-correct_sound = "correct sound/correct-6033.mp3"
-systemstart_sound = "systemstart sound/game-start-6104.mp3"
-start_sound = "beep sound/point-smooth-beep-230573.mp3"
-end_sound = "beep sound/short-beep-tone-47916.mp3"
-logo_path = "template/PNGYOONGLAI.png" # Path to your image file
+correct_sound = "assets/audio/correct sound/correct-6033.mp3"
+systemstart_sound = "assets/audio/systemstart sound/game-start-6104.mp3"
+start_sound = "assets/audio/beep sound/point-smooth-beep-230573.mp3"
+end_sound = "assets/audio/beep sound/short-beep-tone-47916.mp3"
+logo_path = "assets/templates/PNGYOONGLAI.png" # Path to your image file
 
 ideal_warning = 30 * 1000 # mil.second to announce warning before reset
 reset_warning = 60 * 1000 # mil.second to go to reset

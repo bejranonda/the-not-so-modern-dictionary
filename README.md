@@ -174,7 +174,9 @@ python main.py
 
 The system will open in full-screen kiosk mode. Press any key when you see the standby screen to begin. Your entries will be saved to `user_added_slang.json` and booklets will be generated in the `output/` folder.
 
-**Note:** You'll need to place Thai font files (`Kinnari.ttf` and `NotoEmoji-Regular.ttf`) in the `fonts/` directory and audio files in the respective sound folders for the complete experience.
+**Python 3.13+ Note:** If you encounter issues with the `playsound` library, the project automatically falls back to `pygame` for audio playback. See [INSTALLATION.md](INSTALLATION.md) for detailed setup instructions and troubleshooting.
+
+**Asset Files:** All required fonts and audio files are included in the `assets/` directory after installation.
 
 
 ## 🔧 For Developers
