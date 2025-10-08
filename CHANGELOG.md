@@ -2,55 +2,113 @@
 
 All notable changes to The Not-So-Modern Dictionary project will be documented in this file.
 
-## [2.1.0] - 2025-10-08
+## [3.1.0] - 2025-10-08
 
-### Major Reorganization
+### Refactored Architecture Completion & Project Reorganization
+
+This release completes the refactored modular architecture (v2.0) and reorganizes the project structure for better maintainability while preserving the legacy code for production stability.
 
 #### Added
+
+**Refactored Modules Completed**:
+- **`src/ui/kiosk.py`**: Complete refactored kiosk UI module (865 lines)
+  - Dependency injection for database, easter_eggs, speech_engine, sound_manager
+  - Settings integration from `src.config.settings`
+  - Structured logging with app_logger
+  - Full 7-step workflow preserved
+- **`src/pdf/generator.py`**: Complete refactored PDF generator (1046 lines)
+  - PDFGenerator class with mode support (normal/lastweek)
+  - All helper functions from legacy code preserved
+  - Template merging, booklet layout, printer integration
+  - Locale handling for Thai text collation
+
+**Project Organization**:
 - **New Directory Structure**: Organized project into logical directories
   - `assets/` - All media files (audio, fonts, templates)
   - `docs/` - Documentation and example files
   - `scripts/` - Utility scripts and deployment tools
   - `legacy/` - Archived experimental code
+  - `src/ui/` - User interface modules
+  - `src/pdf/` - PDF generation modules
+- **CHANGELOG.md**: Comprehensive version history tracking
 - **INSTALLATION.md**: Comprehensive installation and setup guide
 - **test_reorganization.py**: Automated validation suite (62 tests)
 - **audio_compat.py**: Cross-version audio compatibility wrapper
 - **PyPDF2>=3.0.0**: PDF manipulation library (was missing)
 - **pygame>=2.5.0**: Python 3.13+ compatible audio alternative
 
+**Enhanced Documentation**:
+- Added development history and acknowledgments
+- Included exhibition photos and booklet samples
+- Added fortune teller feature explanation
+- Created non-technical visitor guide
+- Improved README.md formatting and visual documentation
+
 #### Changed
-- **File Organization**:
-  - Moved audio files to `assets/audio/`
-  - Moved fonts to `assets/fonts/`
-  - Moved templates to `assets/templates/`
-  - Moved example PDFs to `docs/examples/`
-  - Moved utility scripts to `scripts/`
-  - Archived old code to `legacy/`
-- **Path References**: Updated all file paths in codebase to match new structure
-- **Requirements**: Updated `requirements.txt` with missing dependencies and Python 3.13+ support
-- **Documentation**: Updated README.md and CLAUDE.md with new structure
-- **.gitignore**: Added patterns for temporary files and logs
+
+**Refactored Architecture**:
+- **Modular imports**: All new modules use dependency injection
+- **Centralized settings**: All constants moved to `src.config.settings`
+- **Type hints**: Added throughout refactored modules
+- **Logging**: Replaced print() with structured app_logger
+- **Code quality**: Comprehensive docstrings and error handling
+
+**File Organization**:
+- Moved audio files to `assets/audio/`
+- Moved fonts to `assets/fonts/`
+- Moved templates to `assets/templates/`
+- Moved example PDFs to `docs/examples/`
+- Moved utility scripts to `scripts/`
+- Archived old code to `legacy/`
+- Updated all file paths in codebase to match new structure
+
+**Configuration & Requirements**:
+- Updated `requirements.txt` with missing dependencies and Python 3.13+ support
+- Updated CLAUDE.md with complete architecture documentation
+- Enhanced .gitignore to protect privacy and temporary files
 
 #### Fixed
+- **Module imports**: Fixed missing `src.ui.kiosk` and `src.pdf.generator` modules
 - Python 3.13+ compatibility issues with audio libraries
 - Missing PyPDF2 dependency causing import errors
 - Incorrect path references after reorganization
 - Temporary files being tracked by git
+- Version numbering consistency in documentation
 
 #### Preserved
+
+**Legacy Code** (maintained for production stability):
+- All original exhibition code in root directory remains functional
+- `thai_slang_dict_main.py` - Normal edition (executable)
+- `thai_slang_dict_main_lastweek.py` - Last week edition (executable)
+- `thai_slang_kiosk.py` - Normal edition UI
+- `thai_slang_kiosk_lastweek.py` - Last week edition UI
+- `slang_pdf_generator.py` - Normal edition PDF generator
+- `slang_pdf_generator_lastweek.py` - Last week edition PDF generator
+
+**Functionality**:
 - All exhibition functionality (normal and last-week editions)
 - GUI emoji displays
 - Console emoji output
-- Database format and compatibility
+- Database format and compatibility (`user_added_slang.json`)
 - PDF generation features
 - Motion detection and audio feedback
+- Easter eggs (jackpot, system hacked, fortune telling)
+- 7-step kiosk workflow
+- Automatic printing functionality
 
 ### Technical Details
 
-**Files Changed**: 147 files
+**Refactored Modules Statistics**:
+- `src/ui/kiosk.py`: 865 lines
+- `src/pdf/generator.py`: 1046 lines
+- Full feature parity with legacy code
+- 100% backward compatible
+
+**Files Changed**: 150+ files
 - 100+ file relocations
 - 20+ path updates
-- 4+ new files created
+- 8+ new modules created
 - 3 temporary files removed
 
 **Testing**: All 62 validation tests passing
@@ -60,11 +118,25 @@ All notable changes to The Not-So-Modern Dictionary project will be documented i
 - Fonts and templates ✓
 - Python syntax ✓
 - Dependencies ✓
+- Module imports ✓
 
 **Compatibility**:
 - Python 3.8 - 3.13+ ✓
 - Windows / macOS / Linux ✓
 - PyQt5 5.15+ ✓
+
+### Running the Application
+
+**Refactored Version** (recommended for development):
+```bash
+python main.py  # Kiosk mode (default)
+```
+
+**Legacy Version** (preserved for production):
+```bash
+python thai_slang_dict_main.py              # Normal edition
+python thai_slang_dict_main_lastweek.py     # Last week edition
+```
 
 ---
 
