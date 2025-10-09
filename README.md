@@ -57,6 +57,10 @@ A playful critique of So Sethaputra's authoritative *New Model English-Thai Dict
 
 Language isn't owned by experts. It's co-created by all of us, every time we speak.
 
+### Exhibition Context
+
+The Not-So-Modern Dictionary is designed as an art installation piece that challenges traditional notions of language documentation. It creates a space where language becomes fluid, collaborative, and constantly evolving—reflecting how meaning is negotiated in our digital age.
+
 
 ![The Not-So-Modern Dictionary installation at Bangkok Kunsthalle](https://github.com/user-attachments/assets/e99736a3-1984-4f89-8f80-16ca84b7d280)
 
