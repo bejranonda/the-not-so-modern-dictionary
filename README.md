@@ -12,7 +12,7 @@ Built with Python, PyQt5, and motion detection, the kiosk system collected **534
 
 *Visitors interact with the dictionary kiosk at Bangkok Kunsthalle.*
 
-## 📍 Exhibition Context
+## 📍 Exhibition
 
 - **Project Name:** The Not-So-Modern Dictionary (ปทานุกรมแบบสับ)
 - **Medium:** Interactive installation (software interface, kiosk station, printed booklets)
@@ -65,6 +65,19 @@ Language isn't owned by experts. It's co-created by all of us, every time we spe
 
 ## The Technology: Making Language Magic
 
+### ✨ Key Features
+
+- 👥 **Participatory Lexicography** – Every visitor becomes a dictionary contributor, not just a reader
+- 📚 **Living Database** – 534 unique slang terms collected from 462 contributors during the exhibition
+- 🎁 **Personalized Booklets** – Each visitor receives a unique printout featuring their word alongside random entries, with a fortune-cookie-style prediction on the last page
+- 👁️ **Motion-Activated Interface** – Camera-based presence detection automatically greets approaching visitors
+- 🔊 **Bilingual Audio Experience** – Thai and English text-to-speech guides users through the process
+- 🎰 **Gamified Easter Eggs** – Random jackpots, "system hacked" alerts, and AI-generated fortunes (25% combined probability)
+- 🔄 **Multiple Meanings Welcome** – The system embraces contradictory definitions of the same word
+- 📊 **Real-Time Statistics** – Live tracking of total words, authors, and most popular terms
+
+### 🚶 The Journey
+
 **The journey begins with your movement.** A camera watches in standby mode. When you approach, it detects the change and triggers a welcoming voice speaking Thai through text-to-speech. You're guided through five simple steps on a full-screen interface designed to focus your attention entirely on defining your word.
 
 **Behind the friendly interface,** the system works hard:
@@ -84,20 +97,69 @@ Language isn't owned by experts. It's co-created by all of us, every time we spe
 
 **The participatory loop continues.** Your entry becomes part of the pool that future visitors might receive in their booklets. After 30 seconds of inactivity, the system gently asks if you're still there. After 60 seconds, it returns to standby, waiting for the next person to add their voice to this collective archive.
 
+
+### 👥 What Visitors Experience
+
+**The 7-Step Journey**
+
+**1. 👁️ Arrival** – A motion sensor detects your presence. The screen awakens: "Touch any key to start"
+
+**2. 👋 Greeting** – A synthesized Thai voice welcomes you warmly with random greetings ("สวัสดี", "ยินดีต้อนรับ"), making you feel like a collaborator.
+
+**3. ✏️ Your Word** – Enter your slang word—that term only your friend group understands, or the word you've always used "wrong" but prefer your way. Maybe "จาบ", joining seven other definitions already in the system.
+
+**4. 💭 The Meaning** – Define it in your own words. No experts to consult, no "correct" answer. Just your understanding. The system doesn't judge—it listens.
+
+**5. 💬 Usage Example** – Show your word in action (optional). Demonstrate how it lives in real conversation and text messages.
+
+**6. 👀 Review** – The system reads your complete entry back to you via text-to-speech. Does it capture what you meant?
+
+**7. 📖 Take It Home** – Add your name (or stay anonymous), then the printer whirs to life.
+
+**Your personalized booklet includes:**
+- Your word as the "Latest Entry"
+- Random selections from 534+ community-contributed words
+- Live statistics (total words, contributors, popular terms)
+- **A fortune on the last page**—drawn from a slang word in the database
+
+**Hidden surprises (25% chance):**
+- 🎰 **Jackpot** (10%) – Eight pages instead of one
+- 🔓 **System Hacked** (5%) – Complete database revealed
+- 🔮 **Special Fortune** (15%) – AI-generated prediction
+
+The booklet is still warm from the printer. No two are ever identical. You leave with a tangible piece of a collaborative, ever-evolving archive.
+
+
 ![Visitor interacting with the kiosk](https://github.com/user-attachments/assets/165949d4-04e1-401c-8e76-724502dcea29)
 
 *A visitor was captured and drawn in by the kiosk. Photo by Phenphan Anantacharoen*
 
-## ✨ Key Features
+### 🔮 The Fortune Cookie Surprise
 
-- 👥 **Participatory Lexicography** – Every visitor becomes a dictionary contributor, not just a reader
-- 📚 **Living Database** – 534 unique slang terms collected from 462 contributors during the exhibition
-- 🎁 **Personalized Booklets** – Each visitor receives a unique printout featuring their word alongside random entries, with a fortune-cookie-style prediction on the last page
-- 👁️ **Motion-Activated Interface** – Camera-based presence detection automatically greets approaching visitors
-- 🔊 **Bilingual Audio Experience** – Thai and English text-to-speech guides users through the process
-- 🎰 **Gamified Easter Eggs** – Random jackpots, "system hacked" alerts, and AI-generated fortunes (25% combined probability)
-- 🔄 **Multiple Meanings Welcome** – The system embraces contradictory definitions of the same word
-- 📊 **Real-Time Statistics** – Live tracking of total words, authors, and most popular terms
+**Every booklet ends with a prediction—powered by slang words**
+
+Flip to the last page and discover a personal fortune, like opening a fortune cookie. But here's the twist: **each fortune is generated from a random slang word in the database**, creating thematic connections between your linguistic contribution and your prediction.
+
+**How it works:**
+
+Each slang word is paired with a trilingual fortune (Thai/English/Lao-Khmer). The system randomly selects one word and delivers its associated prediction.
+
+**Examples from Standard Edition:**
+- **"ปัง"** (pang - "awesome/shining") → *"Everything you do will shine effortlessly."*
+- **"เข้ม"** (khem - "intense/fierce") → *"Your fierce energy will impress everyone around you."*
+
+**Examples from Last-Week Special Edition:**
+- **"วาร์ป"** (warp - "teleport") → *"You are about to warp to a new dimension full of opportunities. Be ready to step out of your comfort zone."*
+- **"ปังไม่หยุด"** (pang-mai-yut - "unstoppable hit") → *"The unstoppable hit energy is flowing around you. Everything you think and do will succeed continuously."*
+
+**Why fortunes in a dictionary?**
+
+Traditional dictionaries end with definitions—cold, factual, authoritative. We wanted visitors to leave with something more: a moment of delight that transforms a reference document into a personal keepsake. Your fortune is literally drawn from the collective slang archive—**the words themselves speak your future**.
+
+
+<img width="643" height="707" alt="image" src="https://github.com/user-attachments/assets/f5480de6-ec37-408b-9c14-9009fb5df112" />
+
+*At the last page of their dictionary booklet, each visitor discovered a personal fortune.*
 
 ## Exhibition Results: By the Numbers
 
@@ -127,17 +189,15 @@ The Bangkok Kunsthalle deployment (13 June - 17 August 2025) achieved remarkable
 
 ## If you need to understand more
 
-### What It Does
+### What It Does (Value for different audiences)
 
 Imagine approaching a glowing computer station where you're invited not just to look up words, but to create them. The Not-So-Modern Dictionary transforms every visitor into a contributor to an ever-changing collective dictionary. You type in a slang word that exists only in your friend group, a term that's emerged from social media, or a word you've always used "wrong" but prefer your way. The system adds your word to a growing database of hundreds of other contributions, then instantly prints you a personalized mini-dictionary booklet to take home. Your booklet features your new word prominently, alongside random entries from previous visitors—creating a unique snapshot of this living language archive that's never quite the same twice. As you interact with the kiosk, the system speaks to you in Thai, detects your presence through a camera, and occasionally surprises you with "easter eggs": a jackpot that gives you eight pages instead of one, a playful "system hacked" alert that reveals the entire database, or an AI-generated fortune based on your word. Over the course of the exhibition, 462 people contributed 534 unique slang terms, creating 748 complete dictionary entries and printing 544 personalized booklets. The most popular word? "จาบ" (Jaab)—submitted seven times by different visitors who each defined it their own way. This is language as democracy: messy, contradictory, constantly negotiated, and beautifully alive.
 
-### Why It Exists
+### The Experience (What people encounter)
 
 Traditional dictionaries present language as fixed and authoritative—words have the correct meaning, determined by experts and printed in unchanging ink. But language doesn't actually work that way, especially in our digital age where new slang emerges daily, meanings shift across communities, and "correct" usage is constantly contested in comment sections and group chats. We created this installation as a gentle rebellion against linguistic authority, inspired by So Sethaputra's influential Thai-English dictionary that shaped how generations understood "proper" language. By making every visitor a lexicographer, we ask: who really owns language? The system doesn't validate or correct your entries—it simply asks what words mean to you, then preserves your definition alongside everyone else's. The result is a dictionary that reflects how meaning is actually created: collectively, messily, and in constant flux between street language and screens, grassroots communities and algorithmic culture.
 
-<img width="643" height="707" alt="image" src="https://github.com/user-attachments/assets/f5480de6-ec37-408b-9c14-9009fb5df112" />
 
-*At the last page of their dictionary booklet, each visitor discovered a personal fortune.*
 
 ### How It Works
 
@@ -224,6 +284,23 @@ src/
 5. **Example (3)** – Provide usage example (optional)
 6. **Review (4)** – Confirm entry with audio read-back
 7. **Attribution (5)** – Add your name → Generate PDF → Print booklet
+
+```
+Visitor Interaction (PyQt5 Kiosk Interface)
+           ↓
+Motion Detection (Camera)
+           ↓
+7-Step Data Entry Flow
+           ↓
+Real-time Database (SQLite)
+           ↓
+PDF Generation (ReportLab + Thai Fonts)
+           ↓
+Automatic Printing (Desktop Printer)
+           ↓
+Physical Mini-Dictionary
+```
+
 
 **Easter Egg System (in `src/core/easter_eggs.py`):**
 - **Jackpot** (10%) – Receive 8 pages instead of 1
