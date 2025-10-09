@@ -76,6 +76,12 @@ Language isn't owned by experts. It's co-created by all of us, every time we spe
 - 🔄 **Multiple Meanings Welcome** – The system embraces contradictory definitions of the same word
 - 📊 **Real-Time Statistics** – Live tracking of total words, authors, and most popular terms
 
+
+<img width="1813" height="982" alt="Screenshot 2025-08-12 170049" src="https://github.com/user-attachments/assets/98d433c2-67e8-4973-ad7a-1115f6723b3d" />
+
+*A greeting is triggered when a visitor walks in front of the kiosk.*
+
+
 ### 🚶 The Journey
 
 **The journey begins with your movement.** A camera watches in standby mode. When you approach, it detects the change and triggers a welcoming voice speaking Thai through text-to-speech. You're guided through five simple steps on a full-screen interface designed to focus your attention entirely on defining your word.
@@ -96,6 +102,11 @@ Language isn't owned by experts. It's co-created by all of us, every time we spe
 5. 🖨️ **Prints immediately** – Your personalized dictionary emerges warm from the printer, unique in all the world.
 
 **The participatory loop continues.** Your entry becomes part of the pool that future visitors might receive in their booklets. After 30 seconds of inactivity, the system gently asks if you're still there. After 60 seconds, it returns to standby, waiting for the next person to add their voice to this collective archive.
+
+
+<img width="1919" height="1079" alt="Lastweek_01" src="https://github.com/user-attachments/assets/ab11d559-3f57-4c1f-8541-65cf1568df7e" />
+
+*The greetings were updated remotely to match the final week of the exhibition.*
 
 
 ### 👥 What Visitors Experience
@@ -121,11 +132,6 @@ Language isn't owned by experts. It's co-created by all of us, every time we spe
 - Random selections from 534+ community-contributed words
 - Live statistics (total words, contributors, popular terms)
 - **A fortune on the last page**—drawn from a slang word in the database
-
-**Hidden surprises (25% chance):**
-- 🎰 **Jackpot** (10%) – Eight pages instead of one
-- 🔓 **System Hacked** (5%) – Complete database revealed
-- 🔮 **Special Fortune** (15%) – AI-generated prediction
 
 The booklet is still warm from the printer. No two are ever identical. You leave with a tangible piece of a collaborative, ever-evolving archive.
 
