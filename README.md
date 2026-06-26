@@ -244,7 +244,7 @@ python main.py
 
 The system will open in full-screen kiosk mode. Press any key when you see the standby screen to begin. Your entries will be saved to `user_added_slang.json` and booklets will be generated in the `output/` folder.
 
-**Python 3.13+ Note:** If you encounter issues with the `playsound` library, the project automatically falls back to `pygame` for audio playback. See [INSTALLATION.md](INSTALLATION.md) for detailed setup instructions and troubleshooting.
+**Python 3.13+ Note:** The `playsound` library is no longer compatible with Python 3.13+ and has been removed from `requirements.txt`. Audio playback in the refactored `src/` code now routes through a compatibility layer (`src/audio/player.py`) that automatically selects `pygame` (or any installed `playsound`), and degrades to a silent no-op if no audio backend is available—so the kiosk starts even on headless machines. See [INSTALLATION.md](INSTALLATION.md) for detailed setup instructions and troubleshooting.
 
 **Asset Files:** All required fonts and audio files are included in the `assets/` directory after installation.
 
@@ -302,7 +302,7 @@ Motion Detection (Camera)
            ↓
 7-Step Data Entry Flow
            ↓
-Real-time Database (SQLite)
+Real-time Database (JSON: user_added_slang.json)
            ↓
 PDF Generation (ReportLab + Thai Fonts)
            ↓
@@ -374,15 +374,15 @@ python -c "from main import run_debug_mode; run_debug_mode()"
 
 ### PDF Generation Process
 
-1. **Template Selection** – Load from `template/*.json` (predictions, database snapshots)
+1. **Template Selection** – Load from `assets/templates/*.json` (predictions, database snapshots)
 2. **Content Assembly:**
    - User's word featured prominently
    - Random selection from existing database (controlled by easter egg probability)
    - Statistics footer (total words, authors, current date)
    - **Fortune page** – Random fortune selected from prediction templates on the last page
 3. **Font Handling:**
-   - `fonts/Kinnari.ttf` for Thai script
-   - `fonts/NotoEmoji-Regular.ttf` for emoji support
+   - `assets/fonts/Kinnari.ttf` for Thai script
+   - `assets/fonts/NotoEmoji-Regular.ttf` for emoji support
 4. **Output:** `output/slang_dictionary.pdf` → Send to printer
 
 ### Fortune System
@@ -391,8 +391,8 @@ python -c "from main import run_debug_mode; run_debug_mode()"
 Every booklet includes a personalized fortune on the last page, selected randomly from curated prediction templates.
 
 **Template Files:**
-- `template/th-en-ln_slang_predictions_99.json` – Standard edition fortunes (99 predictions)
-- `template/th-en-ln_slang_predictions_lastweek.json` – Special last-week edition fortunes
+- `assets/templates/th-en-ln_slang_predictions_99.json` – Standard edition fortunes (99 predictions)
+- `assets/templates/th-en-ln_slang_predictions_lastweek.json` – Special last-week edition fortunes
 
 **Fortune Structure (trilingual):**
 ```json
@@ -443,6 +443,25 @@ sound_mgr.play_audio_file(AUDIO_PATHS["new_sound"])
 - **Font Paths** – PDF generation fails silently if Thai fonts missing
 - **Process Management** – Application kills previous instances on startup
 - **Cross-Platform** – Uses `pathlib.Path` for compatibility; process commands branch by OS
+- **Audio Imports** – Inside `src/`, import `playsound` from `src/audio/player.py`, never the `playsound` package directly (see [Known Issues](docs/KNOWN_ISSUES.md))
+
+### Testing & Validation
+
+A dependency-light validation suite lives in `tests/`. It exercises the
+database, easter-egg, audio-compatibility and console subsystems **without**
+requiring PyQt5, OpenCV, a camera, a printer or an audio device, so it runs in
+CI and on headless machines.
+
+```bash
+# Run all validation tests
+python -m unittest discover -s tests
+
+# Or, in console/debug mode (no GUI), exercise the app interactively
+python -c "from main import run_debug_mode; run_debug_mode()"
+```
+
+See [docs/APPROACH_AND_METHOD.md](docs/APPROACH_AND_METHOD.md) for the full
+bug-hunting and validation methodology.
 
 ### Technology Stack
 
@@ -464,8 +483,11 @@ See [CHANGELOG.md](CHANGELOG.md) for complete release history.
 
 ### Further Reading
 
-- [REFACTORING.md](REFACTORING.md) – Detailed migration guide from v1.x to v2.0 architecture
-- [CLAUDE.md](CLAUDE.md) – Complete project documentation for AI assistance and development
+- [CLAUDE.md](CLAUDE.md) – Project documentation and guidance for AI-assisted development
+- [docs/KNOWLEDGE_BASE.md](docs/KNOWLEDGE_BASE.md) – Architecture, data flow, and component reference
+- [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md) – Known limitations, gotchas, and their workarounds
+- [docs/DEVELOPMENT_GUIDELINES.md](docs/DEVELOPMENT_GUIDELINES.md) – Coding standards and contribution guidelines
+- [docs/APPROACH_AND_METHOD.md](docs/APPROACH_AND_METHOD.md) – Bug-hunting approach, methodology, and validation process
 
 
 ## 🤝 Project Credits

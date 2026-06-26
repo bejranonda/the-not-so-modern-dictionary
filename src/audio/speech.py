@@ -12,7 +12,7 @@ import sounddevice as sd
 import numpy as np
 import scipy.io.wavfile as wavfile
 from gtts import gTTS
-import playsound
+from .player import playsound
 
 from ..config.settings import SPEECH_SETTINGS
 from ..utils.logger import app_logger
@@ -40,7 +40,7 @@ class SpeechEngine:
 
                 tts = gTTS(text=text, lang='th')
                 tts.save(filename)
-                playsound.playsound(filename)
+                playsound(filename)
 
             except Exception as e:
                 app_logger.error(f"Error in speak_thai: {e}")
@@ -81,7 +81,7 @@ class SpeechEngine:
 
                 # Play both files in sequence
                 for file in files:
-                    playsound.playsound(file)
+                    playsound(file)
 
             except Exception as e:
                 app_logger.error(f"Error in speak_both: {e}")

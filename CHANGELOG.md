@@ -2,6 +2,55 @@
 
 All notable changes to The Not-So-Modern Dictionary project will be documented in this file.
 
+## [3.1.2] - 2026-06-26
+
+### Bug Fixes - Startup Crashes, Debug Mode & Documentation
+
+A bug-hunting and validation pass on the refactored `src/` codebase, with new
+documentation and a headless test suite.
+
+#### Fixed
+
+**Critical: startup crash on clean install (`ModuleNotFoundError: playsound`)**
+- `src/audio/speech.py` and `src/audio/sound_effects.py` hard-imported
+  `playsound`, which is commented out of `requirements.txt` (incompatible with
+  Python 3.13+). Importing `SpeechEngine`/`SoundManager` at startup therefore
+  crashed on a clean install. The advertised `audio_compat.py` fallback was never
+  imported by `src/`.
+- Added `src/audio/player.py`, a backend-selecting compatibility layer
+  (`playsound` → `pygame` → silent no-op), and redirected both modules to it.
+- Made `src/audio/__init__.py` lazy so the player imports without gTTS/SpeechRecognition.
+
+**High: debug/console mode crashed (missing `ConsoleInterface`)**
+- `src/app.py::run_console_mode()` imported `src/ui/console.py`, which did not
+  exist; `run_debug_mode()` was broken.
+- Added `src/ui/console.py` (headless `ConsoleInterface`) and made
+  `src/ui/__init__.py` lazy so console mode works without PyQt5/OpenCV.
+
+**Low: `SlangDatabase.search_entries` could raise `KeyError`**
+- Now uses `entry.get(...)` for `word`/`meaning` to tolerate malformed entries.
+
+**Documentation corrections**
+- README: database described as JSON (not SQLite); asset paths corrected to
+  `assets/templates/` and `assets/fonts/`; dead links to `REFACTORING.md`/
+  `CLAUDE.md` replaced.
+- INSTALLATION: audio-compatibility section now documents `src/audio/player.py`.
+
+#### Added
+- `tests/test_validation.py` — headless validation suite (database, easter eggs,
+  audio compatibility, console). No GUI/camera/printer/audio device required.
+- `CLAUDE.md` — AI-assistant and developer guidance.
+- `docs/KNOWLEDGE_BASE.md`, `docs/KNOWN_ISSUES.md`,
+  `docs/DEVELOPMENT_GUIDELINES.md`, `docs/APPROACH_AND_METHOD.md`.
+
+#### Affected files
+- `src/audio/player.py` (new), `src/audio/speech.py`, `src/audio/sound_effects.py`,
+  `src/audio/__init__.py`
+- `src/ui/console.py` (new), `src/ui/__init__.py`
+- `src/core/database.py`
+- `README.md`, `INSTALLATION.md`, `CHANGELOG.md`
+- `tests/test_validation.py` (new), `CLAUDE.md` (new), `docs/*` (new)
+
 ## [3.1.1] - 2025-10-08
 
 ### Bug Fixes - Windows Compatibility & Critical Errors

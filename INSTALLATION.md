@@ -35,19 +35,41 @@ pip install PyQt5 gtts pygame sounddevice scipy numpy SpeechRecognition reportla
 
 ### 3. Audio Compatibility
 
-The project includes `audio_compat.py` which provides automatic fallback:
-- **First choice**: `playsound` (if available)
-- **Fallback**: `pygame` (Python 3.13+ compatible)
-- **No audio**: Prints warnings instead of playing sounds
+The refactored application (`src/`) plays all audio through a compatibility
+layer, `src/audio/player.py`, which selects a backend automatically at import
+time:
+- **First choice**: `playsound` (if the legacy library happens to be installed)
+- **Fallback**: `pygame` (Python 3.13+ compatible, shipped in `requirements.txt`)
+- **No audio**: logs a warning and skips playback so the app still starts
 
-To use the compatibility layer in your code:
+Because `playsound` is **not** installed by `requirements.txt`, the speech and
+sound-effect modules import `playsound` from this layer rather than from the
+`playsound` package directly. This prevents the `ModuleNotFoundError: No module
+named 'playsound'` startup crash on a clean install.
+
+To use the compatibility layer in your own code inside `src/`:
 ```python
 # Instead of:
-# from playsound import playsound
+# import playsound
 
 # Use:
-from audio_compat import playsound
+from src.audio.player import playsound
+playsound("path/to/sound.mp3")
 ```
+
+> A standalone `audio_compat.py` with the same fallback strategy also lives at
+> the project root for the legacy root-level scripts.
+
+### 4. Verify the Installation
+
+Run the dependency-light validation suite (no GUI, camera, printer or audio
+device required):
+
+```bash
+python -m unittest discover -s tests
+```
+
+All tests should report `OK`.
 
 ## Platform-Specific Notes
 
