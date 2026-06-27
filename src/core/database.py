@@ -159,8 +159,8 @@ class SlangDatabase:
         results = []
 
         for entry in self._data.values():
-            if (query_lower in entry["word"].lower() or
-                query_lower in entry["meaning"].lower() or
+            if (query_lower in entry.get("word", "").lower() or
+                query_lower in entry.get("meaning", "").lower() or
                 query_lower in entry.get("example", "").lower()):
                 results.append(entry)
 

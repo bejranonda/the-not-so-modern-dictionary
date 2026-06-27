@@ -1,6 +1,8 @@
 # Claude Code project files
-CLAUDE.md
 .claude/
+
+# Application log
+app.log
 
 # User data and generated files
 user_added_slang.json

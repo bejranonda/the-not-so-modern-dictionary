@@ -4,7 +4,7 @@ Sound effects management for the dictionary application.
 import random
 from typing import List
 
-import playsound
+from .player import playsound
 
 from ..config.settings import AUDIO_PATHS
 from ..utils.logger import app_logger
@@ -21,7 +21,7 @@ class SoundManager:
         try:
             sound_file = random.choice(self.audio_paths["flipping"])
             app_logger.info(f"Playing flipping sound: {sound_file}")
-            playsound.playsound(sound_file)
+            playsound(sound_file)
         except Exception as e:
             app_logger.error(f"Error playing flipping sound: {e}")
 
@@ -30,35 +30,35 @@ class SoundManager:
         try:
             sound_file = random.choice(self.audio_paths["invalid"])
             app_logger.info(f"Playing invalid sound: {sound_file}")
-            playsound.playsound(sound_file)
+            playsound(sound_file)
         except Exception as e:
             app_logger.error(f"Error playing invalid sound: {e}")
 
     def play_correct_sound(self) -> None:
         """Play a correct input sound."""
         try:
-            playsound.playsound(self.audio_paths["correct"])
+            playsound(self.audio_paths["correct"])
         except Exception as e:
             app_logger.error(f"Error playing correct sound: {e}")
 
     def play_system_start_sound(self) -> None:
         """Play system startup sound."""
         try:
-            playsound.playsound(self.audio_paths["system_start"])
+            playsound(self.audio_paths["system_start"])
         except Exception as e:
             app_logger.error(f"Error playing system start sound: {e}")
 
     def play_start_beep(self) -> None:
         """Play start recording beep."""
         try:
-            playsound.playsound(self.audio_paths["start_beep"])
+            playsound(self.audio_paths["start_beep"])
         except Exception as e:
             app_logger.error(f"Error playing start beep: {e}")
 
     def play_end_beep(self) -> None:
         """Play end recording beep."""
         try:
-            playsound.playsound(self.audio_paths["end_beep"])
+            playsound(self.audio_paths["end_beep"])
         except Exception as e:
             app_logger.error(f"Error playing end beep: {e}")
 
